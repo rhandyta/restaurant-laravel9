@@ -12,7 +12,7 @@
                 <h3>@yield('page-heading')</h3>
             </div>
             <div class="page-content">
-              <h1>ok</h1>
+              @yield('content')
             </div>
 
          

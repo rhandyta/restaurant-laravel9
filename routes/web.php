@@ -24,7 +24,7 @@ Route::group(['prefix' => 'auth'], function () {
 
 
 // Manager start
-Route::group(['middleware' => ['isManager'], 'prefix' => 'manager'], function () {
+Route::group(['middleware' => ['isManager', 'isMenu'], 'prefix' => 'manager'], function () {
     Route::get('/', [ManagerDashboard::class, 'index'])->name('manager.index');
 
     Route::get('logout', function () {
