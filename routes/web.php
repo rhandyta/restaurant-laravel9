@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,7 +14,36 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
+// auth start
+Route::group(['prefix' => 'auth'], function () {
+    Route::get('login', [LoginController::class, 'index'])->name('login.index');
+    Route::post('login', [LoginController::class, 'store'])->name('login.store');
 });
+// auth end
+
+
+// Manager start
+Route::group(['middleware' => ['isManager'], 'prefix' => 'manager'], function () {
+    Route::get('/', function () {
+        return 'manager ok';
+    })->name('manager.index');
+
+    Route::get('logout', function () {
+        Auth::logout();
+        return redirect()->route('login.index');
+    })->name('manager.logout');
+});
+// Manager end
+
+
+// Cashier Start
+Route::group(['middleware' => ['isCashier'], 'prefix' => 'cashier'], function () {
+    Route::get('/', function () {
+        return 'cashier ok';
+    })->name('cashier.index');
+    Route::get('logout', function () {
+        Auth::logout();
+    })->name('cashier.logout');
+});
+
+// Cashier end
