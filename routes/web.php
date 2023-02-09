@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Manager\DashboardController as ManagerDashboard;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -24,9 +25,7 @@ Route::group(['prefix' => 'auth'], function () {
 
 // Manager start
 Route::group(['middleware' => ['isManager'], 'prefix' => 'manager'], function () {
-    Route::get('/', function () {
-        return 'manager ok';
-    })->name('manager.index');
+    Route::get('/', [ManagerDashboard::class, 'index'])->name('manager.index');
 
     Route::get('logout', function () {
         Auth::logout();
