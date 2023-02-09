@@ -16,9 +16,10 @@ return new class extends Migration
         Schema::create('menu_managements', function (Blueprint $table) {
             $table->id();
             $table->foreignId('labelmenu_id')->references('id')->on('labelmenu_managements')->cascadeOnUpdate();
-            $table->string('role')->nullable();
             $table->string('label_menu');
+            $table->string('role')->nullable();
             $table->string('path');
+            $table->string('icon');
             $table->timestamps();
         });
     }

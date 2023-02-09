@@ -15,10 +15,10 @@ return new class extends Migration
     {
         Schema::create('submenu_managements', function (Blueprint $table) {
             $table->id();
-            $table->string('role')->nullable();
             $table->foreignId('menu_id')->references('id')->on('menu_managements')->cascadeOnUpdate();
             $table->string('label_submenu');
             $table->string('path');
+            $table->string('role')->nullable();
             $table->timestamps();
         });
     }
