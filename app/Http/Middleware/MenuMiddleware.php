@@ -21,7 +21,12 @@ class MenuMiddleware
         $user = $request->user();
         $menus = LabelMenuManagement::where('role', $user->roles)
             ->orWhereNull('role')
-            ->with('menus', 'menus.submenus')
+            ->with(['menus' => function ($q) {
+                $q->orderBy('important', 'asc');
+            }, 'menus.submenus' => function ($q) {
+                $q->orderBy('important', 'asc');
+            }])
+            ->orderBy('important', 'asc')
             ->get();
         $request->attributes->add(['menus' => $menus]);
         return $next($request);

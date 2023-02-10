@@ -17,13 +17,13 @@
                             <div class="d-flex justify-content-between">
                                 <label class="form-check-label"
                                     for="label_{{ $label->id }}">{{ $label->label_title }}</label>
-                                <fieldset class="form-group ">
-                                    <select class="form-select form-select-sm" id="labelmenu_{{ $label->id }}">
+                                <fieldset class="form-group">
+                                    <select class="form-select form-select-sm label_menu" data-id="label-{{ $label->id }}">
                                         <option value="manager" {{ $label->role == 'manager' ? 'selected' : null }}>
                                             Manager</option>
                                         <option value="cashier" {{ $label->role == 'cashier' ? 'selected' : null }}>
                                             Cashier</option>
-                                        <option value=" " {{ $label->role == null ? 'selected' : null }}>Both
+                                        <option value="both" {{ $label->role == null ? 'selected' : null }}>Both
                                         </option>
                                     </select>
                                 </fieldset>
@@ -35,7 +35,7 @@
                                     <label class="form-check-label"
                                         for="menu_{{ $menu->id }}">{{ $menu->label_menu }}</label>
                                     <fieldset class="form-group ">
-                                        <select class="form-select form-select-sm" id="menu_{{ $menu->id }}">
+                                        <select class="form-select form-select-sm">
                                             <option value="manager" {{ $menu->role == 'manager' ? 'selected' : null }}>
                                                 Manager</option>
                                             <option value="cashier" {{ $menu->role == 'cashier' ? 'selected' : null }}>
@@ -54,7 +54,7 @@
                                         <label class="form-check-label"
                                             for="submenu_{{ $submenu->id }}">{{ $submenu->label_submenu }}</label>
                                         <fieldset class="form-group ">
-                                            <select class="form-select form-select-sm" id="submenu_{{ $submenu->id }}">
+                                            <select class="form-select form-select-sm">
                                                 <option value="manager"
                                                     {{ $submenu->role == 'manager' ? 'selected' : null }}>
                                                     Manager</option>
@@ -91,9 +91,19 @@
     <script src="{{ asset('assets/extensions/simple-datatables/umd/simple-datatables.js') }}"></script>
     <script src="{{ asset('assets/js/pages/simple-datatables.js') }}"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
+        const __handleChangeLabelMenu = async (label_id, label_value) => {
+            // const response = await fetch()
+        }
 
-            console.log('oke')
+        document.addEventListener("DOMContentLoaded", () => {
+            const handleChangeLabel = document.querySelectorAll('.label_menu')
+            handleChangeLabel.forEach((labelMenu) => {
+                labelMenu.addEventListener('change', event => {
+                    const label_id = event.target.getAttribute('data-id')
+                    const label_value = event.target.value
+                    __handleChangeLabelMenu(label_id, label_value)
+                })
+            })
 
         });
     </script>
