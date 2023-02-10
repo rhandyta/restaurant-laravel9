@@ -9,7 +9,7 @@
             </header>
             
             <div class="page-heading">
-                <h3>@yield('page-heading')</h3>
+                <h3>@yield('title')</h3>
             </div>
             <div class="page-content">
               @yield('content')

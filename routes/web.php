@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Manager\DashboardController as ManagerDashboard;
+use App\Http\Controllers\Manager\MenuManagementController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +27,10 @@ Route::group(['prefix' => 'auth'], function () {
 // Manager start
 Route::group(['middleware' => ['isManager', 'isMenu'], 'prefix' => 'manager'], function () {
     Route::get('/', [ManagerDashboard::class, 'index'])->name('manager.index');
+    Route::get('menu-managements', [MenuManagementController::class, 'index'])->name('menumanagement.index');
+
+
+
 
     Route::get('logout', function () {
         Auth::logout();
