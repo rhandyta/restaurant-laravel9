@@ -18,7 +18,7 @@
                                 <label class="form-check-label"
                                     for="label_{{ $label->id }}">{{ $label->label_title }}</label>
                                 <fieldset class="form-group">
-                                    <select class="form-select form-select-sm label_menu" data-id="label-{{ $label->id }}">
+                                    <select class="form-select form-select-sm label_menu" data-id="{{ $label->id }}">
                                         <option value="manager" {{ $label->role == 'manager' ? 'selected' : null }}>
                                             Manager</option>
                                         <option value="cashier" {{ $label->role == 'cashier' ? 'selected' : null }}>
@@ -84,27 +84,14 @@
 @section('css')
     <link rel="stylesheet" href="{{ asset('assets/extensions/simple-datatables/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/pages/simple-datatables.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/extensions/toastify-js/src/toastify.css') }}">
 
 @endsection
 
 @section('javascript')
     <script src="{{ asset('assets/extensions/simple-datatables/umd/simple-datatables.js') }}"></script>
     <script src="{{ asset('assets/js/pages/simple-datatables.js') }}"></script>
-    <script>
-        const __handleChangeLabelMenu = async (label_id, label_value) => {
-            // const response = await fetch()
-        }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            const handleChangeLabel = document.querySelectorAll('.label_menu')
-            handleChangeLabel.forEach((labelMenu) => {
-                labelMenu.addEventListener('change', event => {
-                    const label_id = event.target.getAttribute('data-id')
-                    const label_value = event.target.value
-                    __handleChangeLabelMenu(label_id, label_value)
-                })
-            })
-
-        });
-    </script>
+    <script src="{{ asset('assets/extensions/toastify-js/src/toastify.js') }}"></script>
+    <script src="{{ asset('assets/src/manager/main.js') }}"></script>
+    <script src="{{ asset('assets/src/manager/menumanagement.js') }}"></script>
 @endsection

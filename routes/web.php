@@ -27,8 +27,10 @@ Route::group(['prefix' => 'auth'], function () {
 // Manager start
 Route::group(['middleware' => ['isManager', 'isMenu'], 'prefix' => 'manager'], function () {
     Route::get('/', [ManagerDashboard::class, 'index'])->name('manager.index');
-    Route::get('menu-managements', [MenuManagementController::class, 'index'])->name('menumanagement.index');
 
+
+    Route::get('menu-managements', [MenuManagementController::class, 'index'])->name('menumanagement.index');
+    Route::post('menu-managements/label', [MenuManagementController::class, 'handleLabelMenu'])->name('menumanagement.labelMenu');
 
 
 
