@@ -2,44 +2,73 @@
 @section('content')
     <!-- table bordered -->
     <div class="table-responsive">
-        <table class="table table-bordered" id="table1">
+        <table class="table table-striped" id="table1">
             <thead>
                 <tr>
                     <th>Label Menu</th>
                     <th>Menu</th>
                     <th>Sub Menu</th>
-                    <th>Role</th>
-                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse ($label_menus as $label)
                     <tr>
-                        <td>{{ $label->label_title }}</td>
+                        <td>
+                            <div class="d-flex justify-content-between">
+                                <label class="form-check-label"
+                                    for="label_{{ $label->id }}">{{ $label->label_title }}</label>
+                                <fieldset class="form-group ">
+                                    <select class="form-select form-select-sm" id="labelmenu_{{ $label->id }}">
+                                        <option value="manager" {{ $label->role == 'manager' ? 'selected' : null }}>
+                                            Manager</option>
+                                        <option value="cashier" {{ $label->role == 'cashier' ? 'selected' : null }}>
+                                            Cashier</option>
+                                        <option value=" " {{ $label->role == null ? 'selected' : null }}>Both
+                                        </option>
+                                    </select>
+                                </fieldset>
+                            </div>
+                        </td>
                         <td>
                             @foreach ($label->menus as $menu)
-                                <div class="form-check">
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="form-check-input form-check-primary"
-                                            name="menu_{{ $menu->id }}" id="menu_{{ $menu->id }}">
-                                        <label class="form-check-label"
-                                            for="menu_{{ $menu->id }}">{{ $menu->label_menu }}</label>
-                                    </div>
+                                <div class="d-flex justify-content-between">
+                                    <label class="form-check-label"
+                                        for="menu_{{ $menu->id }}">{{ $menu->label_menu }}</label>
+                                    <fieldset class="form-group ">
+                                        <select class="form-select form-select-sm" id="menu_{{ $menu->id }}">
+                                            <option value="manager" {{ $menu->role == 'manager' ? 'selected' : null }}>
+                                                Manager</option>
+                                            <option value="cashier" {{ $menu->role == 'cashier' ? 'selected' : null }}>
+                                                Cashier</option>
+                                            <option value="both" {{ $menu->role == null ? 'selected' : null }}>Both
+                                            </option>
+                                        </select>
+                                    </fieldset>
                                 </div>
                             @endforeach
                         </td>
-                        <td>(01653) 27844</td>
                         <td>
-                            <fieldset class="form-group">
-                                <select class="form-select" id="basicSelect">
-                                    <option>Manager</option>
-                                    <option>Cashier</option>
-                                    <option>Both</option>
-                                </select>
-                            </fieldset>
-                        </td>
-                        <td>
-                            <span class="badge bg-success">Active</span>
+                            @foreach ($label->menus as $menu)
+                                @foreach ($menu->submenus as $submenu)
+                                    <div class="d-flex justify-content-between">
+                                        <label class="form-check-label"
+                                            for="submenu_{{ $submenu->id }}">{{ $submenu->label_submenu }}</label>
+                                        <fieldset class="form-group ">
+                                            <select class="form-select form-select-sm" id="submenu_{{ $submenu->id }}">
+                                                <option value="manager"
+                                                    {{ $submenu->role == 'manager' ? 'selected' : null }}>
+                                                    Manager</option>
+                                                <option value="cashier"
+                                                    {{ $submenu->role == 'cashier' ? 'selected' : null }}>
+                                                    Cashier</option>
+                                                <option value="both" {{ $submenu->role == null ? 'selected' : null }}>
+                                                    Both
+                                                </option>
+                                            </select>
+                                        </fieldset>
+                                    </div>
+                                @endforeach
+                            @endforeach
                         </td>
                     </tr>
                 @empty
