@@ -35,7 +35,7 @@
                                     <label class="form-check-label"
                                         for="menu_{{ $menu->id }}">{{ $menu->label_menu }}</label>
                                     <fieldset class="form-group ">
-                                        <select class="form-select form-select-sm">
+                                        <select class="form-select form-select-sm menu_menu" data-id="{{ $menu->id }}">
                                             <option value="manager" {{ $menu->role == 'manager' ? 'selected' : null }}>
                                                 Manager</option>
                                             <option value="cashier" {{ $menu->role == 'cashier' ? 'selected' : null }}>
