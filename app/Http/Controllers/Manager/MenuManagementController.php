@@ -37,10 +37,14 @@ class MenuManagementController extends Controller
 
             $label_menu = LabelMenuManagement::where('role', '=', $auth->roles)
                 ->orWhereNull('role')
-                ->with(['menus' => function ($q) {
-                    $q->orderBy('important', 'asc');
-                }, 'menus.submenus' => function ($q) {
-                    $q->orderBy('important', 'asc');
+                ->with(['menus' => function ($q) use ($auth) {
+                    $q->where('role', '=', $auth->roles)
+                        ->orWhereNull('role')
+                        ->orderBy('important', 'asc');
+                }, 'menus.submenus' => function ($q) use ($auth) {
+                    $q->where('role', '=', $auth->roles)
+                        ->orWhereNull('role')
+                        ->orderBy('important', 'asc');
                 }])
                 ->orderBy('important', 'asc')
                 ->get();
@@ -63,16 +67,22 @@ class MenuManagementController extends Controller
             $auth = Auth::user();
             $menu_id = (int)$request->input('menu_id');
             $role_value = $request->input('role_value');
-
+            if ($role_value == 'both') $role_value = null;
             ManagementMenu::where('id', '=', $menu_id)
                 ->update(['role' => $role_value]);
 
             $label_menu = LabelMenuManagement::where('role', '=', $auth->roles)
                 ->orWhereNull('role')
-                ->with(['menus' => function ($q) {
-                    $q->orderBy('important', 'asc');
-                }, 'menus.submenus' => function ($q) {
-                    $q->orderBy('important', 'asc');
+                ->with(['menus' => function ($q) use ($auth) {
+                    $q->where('role', '=', $auth->roles)
+                        ->where('role', '=', $auth->roles)
+                        ->orWhereNull('role')
+                        ->orderBy('important', 'asc');
+                }, 'menus.submenus' => function ($q) use ($auth) {
+                    $q->where('role', '=', $auth->roles)
+                        ->where('role', '=', $auth->roles)
+                        ->orWhereNull('role')
+                        ->orderBy('important', 'asc');
                 }])
                 ->orderBy('important', 'asc')
                 ->get();

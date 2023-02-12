@@ -18,13 +18,17 @@ class MenuMiddleware
     public function handle(Request $request, Closure $next)
     {
 
-        $user = $request->user();
-        $menus = LabelMenuManagement::where('role', $user->roles)
+        $auth = $request->user();
+        $menus = LabelMenuManagement::where('role', '=', $auth->roles)
             ->orWhereNull('role')
-            ->with(['menus' => function ($q) {
-                $q->orderBy('important', 'asc');
-            }, 'menus.submenus' => function ($q) {
-                $q->orderBy('important', 'asc');
+            ->with(['menus' => function ($q) use ($auth) {
+                $q->where('role', '=', $auth->roles)
+                    ->orWhereNull('role')
+                    ->orderBy('important', 'asc');
+            }, 'menus.submenus' => function ($q) use ($auth) {
+                $q->where('role', '=', $auth->roles)
+                    ->orWhereNull('role')
+                    ->orderBy('important', 'asc');
             }])
             ->orderBy('important', 'asc')
             ->get();
