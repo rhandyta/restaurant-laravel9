@@ -17,30 +17,102 @@ const __handleChangeLabelMenu = async (label_id, role_value) => {
             throw new Error("Something went wrong");
         }
 
-        let menu = document.querySelector(".menu");
+        let menuSidebar = document.querySelector(".menu");
         let titleSidebar = document.querySelectorAll(".sidebar-title");
         let itemSidebar = document.querySelectorAll(".sidebar-item");
+
         titleSidebar.forEach((li, index) => {
-            menu.removeChild(li);
+            menuSidebar.removeChild(li);
         });
         itemSidebar.forEach((li, index) => {
-            menu.removeChild(li);
+            menuSidebar.removeChild(li);
         });
 
-        response.results.map((title, index) => {
-            const li = document.createElement("li");
-            li.classList.add("sidebar-title");
-            li.textContent = title.label_title;
-            document.querySelector(".menu").appendChild(li);
+        await response.results.forEach((title, index) => {
+            const liElement1 = document.createElement("li");
+            const liElement2 = document.createElement("li");
+            const aElement1 = document.createElement("a");
+            const iElement1 = document.createElement("i");
+            const spanElement1 = document.createElement("span");
+            liElement1.classList.add("sidebar-title");
+            liElement1.textContent = title.label_title;
+            menuSidebar.appendChild(liElement1);
+
+            title.menus.forEach((menu, indexMenu) => {
+                const liElement2 = document.createElement("li");
+                const aElement1 = document.createElement("a");
+                const iElement1 = document.createElement("i");
+                const spanElement1 = document.createElement("span");
+
+                liElement2.classList.add("sidebar-item");
+                if (menu.submenus.length > 0) {
+                    liElement2.classList.add("has-sub");
+                }
+
+                aElement1.classList.add("sidebar-link");
+                aElement1.setAttribute("href", `${menu.path}`);
+                iElement1.classList.add("bi");
+                iElement1.classList.add(`${menu.icon}`);
+                spanElement1.textContent = menu.label_menu;
+
+                liElement2.appendChild(aElement1);
+                aElement1.appendChild(iElement1);
+                aElement1.appendChild(spanElement1);
+                menuSidebar.appendChild(liElement2);
+
+                if (menu.submenus.length > 0) {
+                    const ulElement = document.createElement("ul");
+                    ulElement.classList.add("submenu");
+                    liElement2.appendChild(ulElement);
+
+                    menu.submenus.forEach((submenu, indexSubmenu) => {
+                        const liElement3 = document.createElement("li");
+                        const aElement2 = document.createElement("a");
+                        liElement3.classList.add("submenu-item");
+                        aElement2.setAttribute("href", `${submenu.path}`);
+                        aElement2.textContent = submenu.label_submenu;
+                        liElement3.appendChild(aElement2);
+                        ulElement.appendChild(liElement3);
+                    });
+                }
+            });
+            // title.menus.forEach((menu, indexMenu) => {
+            //     liElement2.classList.add("sidebar-item");
+            //     if (menu.submenus.length > 0) {
+            //         liElement2.classList.add("has-sub");
+            //     }
+            //     aElement1.classList.add("sidebar-link");
+            //     aElement1.setAttribute("href", `${menu.path}`);
+            //     iElement1.classList.add("bi");
+            //     iElement1.classList.add(`${menu.icon}`);
+            //     spanElement1.textContent = menu.label_menu;
+            // });
+            // menuSidebar.appendChild(liElement2);
+            // document.querySelector(".sidebar-item").appendChild(aElement1);
+            // document.querySelector(".sidebar-link").appendChild(iElement1);
+            // document.querySelector(".sidebar-link").appendChild(spanElement1);
         });
+
         return successToast(response.message);
     } catch (error) {
+        console.error(error);
         errorToast(error.message);
     }
 };
 
 const __handleChangeMenu = async (menu_id, role_value) => {
-    console.log(menu_id, role_value);
+    try {
+        const request = await fetch(`${SEGMENT_URL}menu`, {
+            method: "POST",
+            headers,
+            body: JSON.stringify({ menu_id, role_value }),
+        });
+
+        const response = await request.json();
+        console.log(response);
+    } catch (error) {
+        errorToast(error.message);
+    }
 };
 
 document.addEventListener("DOMContentLoaded", () => {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Manager;
 
 use App\Http\Controllers\Controller;
 use App\Models\LabelMenuManagement;
+use App\Models\ManagementMenu;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,7 +28,7 @@ class MenuManagementController extends Controller
     {
         try {
             $auth = Auth::user();
-            $label_id = $request->input('label_id');
+            $label_id = (int)$request->input('label_id');
             $role_value =  $request->input('role_value');
             if ($role_value == 'both') $role_value = null;
 
@@ -60,6 +61,26 @@ class MenuManagementController extends Controller
     {
         try {
             $auth = Auth::user();
+            $menu_id = (int)$request->input('menu_id');
+            $role_value = $request->input('role_value');
+
+            ManagementMenu::where('id', '=', $menu_id)
+                ->update(['role' => $role_value]);
+
+            $label_menu = LabelMenuManagement::where('role', '=', $auth->roles)
+                ->orWhereNull('role')
+                ->with(['menus' => function ($q) {
+                    $q->orderBy('important', 'asc');
+                }, 'menus.submenus' => function ($q) {
+                    $q->orderBy('important', 'asc');
+                }])
+                ->orderBy('important', 'asc')
+                ->get();
+            return response()->json([
+                'status_code' => 200,
+                'message' => 'Data has been updated',
+                'results' => $label_menu
+            ], 200);
         } catch (Exception $e) {
             return response()->json([
                 'status_code' => $e->getCode(),
