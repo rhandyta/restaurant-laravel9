@@ -50,11 +50,11 @@
                         <td>
                             @foreach ($label->menus as $menu)
                                 @foreach ($menu->submenus as $submenu)
-                                    <div class="d-flex justify-content-between">
+                                    <div class="d-flex justify-content-between submenu">
                                         <label class="form-check-label"
                                             for="submenu_{{ $submenu->id }}">{{ $submenu->label_submenu }}</label>
                                         <fieldset class="form-group ">
-                                            <select class="form-select form-select-sm">
+                                            <select class="form-select form-select-sm" data-id="{{ $submenu->id }}">
                                                 <option value="manager"
                                                     {{ $submenu->role == 'manager' ? 'selected' : null }}>
                                                     Manager</option>
@@ -85,7 +85,6 @@
     <link rel="stylesheet" href="{{ asset('assets/extensions/simple-datatables/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/pages/simple-datatables.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/extensions/toastify-js/src/toastify.css') }}">
-
 @endsection
 
 @section('javascript')
