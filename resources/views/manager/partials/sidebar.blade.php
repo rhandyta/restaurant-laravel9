@@ -18,7 +18,7 @@
                 @if ($menu->submenus->count() > 0)
                     <li class="sidebar-item has-sub {{ request()->path() == substr($menu->path, 1) ? 'active' : null }}">
                         <a href="{{ $menu->path }}" class='sidebar-link'>
-                            <i class="bi bi-{{ $menu->icon }}"></i>
+                            <i class="bi {{ $menu->icon }}"></i>
                             <span>{{ $menu->label_menu }}</span>
                         </a>
                         <ul class="submenu">
