@@ -1,4 +1,4 @@
-@extends('manager.layout') @section('title', 'Menu Management')
+@extends('layout') @section('title', 'Menu Management')
 @section('content')
     <!-- table bordered -->
     <div class="table-responsive">
@@ -85,11 +85,6 @@
     <link rel="stylesheet" href="{{ asset('assets/extensions/simple-datatables/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/pages/simple-datatables.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/extensions/toastify-js/src/toastify.css') }}">
-    <style>
-        .submenu {
-            display: none;
-        }
-    </style>
 @endsection
 
 @section('javascript')

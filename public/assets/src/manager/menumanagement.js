@@ -34,7 +34,6 @@ async function manipulateSubMenu(results) {
                 liElement2.classList.add("has-sub");
             }
             if (menu.label_menu == "Menu Managements") {
-                console.log("Menu Managements");
                 liElement2.classList.add("active");
             }
             aElement1.classList.add("sidebar-link");

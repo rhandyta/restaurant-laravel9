@@ -22,7 +22,7 @@ class MenuManagementController extends Controller
         }])
             ->orderBy('important', 'asc')
             ->get();
-        return view('manager.menumanagement.index', compact('label_menus'));
+        return view('menumanagement.index', compact('label_menus'));
     }
 
     public function handleLabelMenu(Request $request)
