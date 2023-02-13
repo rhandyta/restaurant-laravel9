@@ -33,7 +33,10 @@ async function manipulateSubMenu(results) {
             if (menu.submenus.length > 0) {
                 liElement2.classList.add("has-sub");
             }
-
+            if (menu.label_menu == "Menu Managements") {
+                console.log("Menu Managements");
+                liElement2.classList.add("active");
+            }
             aElement1.classList.add("sidebar-link");
             aElement1.setAttribute("href", `${menu.path}`);
             iElement1.classList.add("bi");
@@ -60,20 +63,12 @@ async function manipulateSubMenu(results) {
                     ulElement.appendChild(liElement3);
                 });
             }
-
-            // liElement4.addEventListener("click", function (event) {
-            //     event.preventDefault();
-            //     const submenus = document.querySelectorAll(".submenu");
-            //     submenus.forEach((submenu) => {
-            //         submenu.classList.toggle("active");
-            //     });
-            // });
         });
     });
-    const liElement4 = document.querySelectorAll(
+    const addSubMenu = document.querySelectorAll(
         ".sidebar-item.has-sub .sidebar-link"
     );
-    liElement4.forEach((liElement2) => {
+    addSubMenu.forEach((liElement2) => {
         liElement2.addEventListener("click", function (event) {
             event.preventDefault();
             const submenu = liElement2.parentElement.querySelector(".submenu");
