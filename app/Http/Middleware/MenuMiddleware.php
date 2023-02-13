@@ -20,14 +20,14 @@ class MenuMiddleware
 
         $auth = $request->user();
         $menus = LabelMenuManagement::where('role', '=', $auth->roles)
-            ->orWhereNull('role')
+            ->orWhere('role', 'both')
             ->with(['menus' => function ($q) use ($auth) {
                 $q->where('role', '=', $auth->roles)
-                    ->orWhereNull('role')
+                    ->orWhere('role', 'both')
                     ->orderBy('important', 'asc');
             }, 'menus.submenus' => function ($q) use ($auth) {
                 $q->where('role', '=', $auth->roles)
-                    ->orWhereNull('role')
+                    ->orWhere('role', 'both')
                     ->orderBy('important', 'asc');
             }])
             ->orderBy('important', 'asc')

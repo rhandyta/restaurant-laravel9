@@ -23,7 +23,7 @@
                                             Manager</option>
                                         <option value="cashier" {{ $label->role == 'cashier' ? 'selected' : null }}>
                                             Cashier</option>
-                                        <option value="both" {{ $label->role == null ? 'selected' : null }}>Both
+                                        <option value="both" {{ $label->role == 'both' ? 'selected' : null }}>Both
                                         </option>
                                     </select>
                                 </fieldset>
@@ -40,7 +40,7 @@
                                                 Manager</option>
                                             <option value="cashier" {{ $menu->role == 'cashier' ? 'selected' : null }}>
                                                 Cashier</option>
-                                            <option value="both" {{ $menu->role == null ? 'selected' : null }}>Both
+                                            <option value="both" {{ $menu->role == 'both' ? 'selected' : null }}>Both
                                             </option>
                                         </select>
                                     </fieldset>
@@ -61,7 +61,7 @@
                                                 <option value="cashier"
                                                     {{ $submenu->role == 'cashier' ? 'selected' : null }}>
                                                     Cashier</option>
-                                                <option value="both" {{ $submenu->role == null ? 'selected' : null }}>
+                                                <option value="both" {{ $submenu->role == 'both' ? 'selected' : null }}>
                                                     Both
                                                 </option>
                                             </select>

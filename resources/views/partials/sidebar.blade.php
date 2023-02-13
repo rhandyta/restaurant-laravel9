@@ -3,29 +3,30 @@
 
 
     <ul class="menu">
-
         @forelse (request()->attributes->get('menus') as $labelMenu)
             <li class="sidebar-title">{{ $labelMenu->label_title }}</li>
             @forelse ($labelMenu->menus as $menu)
                 @if ($menu->submenus->count() < 1)
-                    <li class="sidebar-item {{ request()->path() == substr($menu->path, 1) ? 'active' : null }}">
-                        <a href="{{ $menu->path }}" class='sidebar-link'>
+                    <li class="sidebar-item {{ request()->segment(2) == substr($menu->path, 1) ? 'active' : null }}">
+                        <a href="{{ '/' . auth()->user()->roles . $menu->path }}" class='sidebar-link'>
                             <i class="bi {{ $menu->icon }}"></i>
                             <span>{{ $menu->label_menu }}</span>
                         </a>
                     </li>
                 @endif
                 @if ($menu->submenus->count() > 0)
-                    <li class="sidebar-item has-sub {{ request()->path() == substr($menu->path, 1) ? 'active' : null }}">
-                        <a href="{{ $menu->path }}" class='sidebar-link'>
+                    <li
+                        class="sidebar-item has-sub {{ request()->segment(2) == substr($menu->path, 1) ? 'active' : null }}">
+                        <a href="{{ '/' . auth()->user()->roles . $menu->path }}" class='sidebar-link'>
                             <i class="bi {{ $menu->icon }}"></i>
                             <span>{{ $menu->label_menu }}</span>
                         </a>
                         <ul class="submenu">
                             @forelse ($menu->submenus as $submenu)
                                 <li
-                                    class="submenu-item {{ request()->path() == substr($submenu->path, 1) ? 'active' : null }}">
-                                    <a href="{{ $menu->path . $submenu->path }}">{{ $submenu->label_submenu }}</a>
+                                    class="submenu-item {{ request()->segment(2) == substr($submenu->path, 1) ? 'active' : null }}">
+                                    <a
+                                        href="{{ '/' . auth()->user()->roles . $menu->path . $submenu->path }}">{{ $submenu->label_submenu }}</a>
                                 </li>
                             @empty
                                 {{-- submenus --}}

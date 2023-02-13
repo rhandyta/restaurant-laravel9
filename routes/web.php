@@ -51,6 +51,7 @@ Route::group(['middleware' => ['isCashier'], 'prefix' => 'cashier'], function ()
     })->name('cashier.index');
     Route::get('logout', function () {
         Auth::logout();
+        return redirect()->route('login.index');
     })->name('cashier.logout');
 });
 

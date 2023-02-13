@@ -31,20 +31,19 @@ class MenuManagementController extends Controller
             $auth = Auth::user();
             $label_id = (int)$request->input('label_id');
             $role_value =  $request->input('role_value');
-            if ($role_value == 'both') $role_value = null;
 
             LabelMenuManagement::where('id', '=', $label_id)
                 ->update(['role' => $role_value]);
 
             $label_menu = LabelMenuManagement::where('role', '=', $auth->roles)
-                ->orWhereNull('role')
+                ->orWhere('role', 'both')
                 ->with(['menus' => function ($q) use ($auth) {
                     $q->where('role', '=', $auth->roles)
-                        ->orWhereNull('role')
+                        ->orWhere('role', 'both')
                         ->orderBy('important', 'asc');
                 }, 'menus.submenus' => function ($q) use ($auth) {
                     $q->where('role', '=', $auth->roles)
-                        ->orWhereNull('role')
+                        ->orWhere('role', 'both')
                         ->orderBy('important', 'asc');
                 }])
                 ->orderBy('important', 'asc')
@@ -68,19 +67,19 @@ class MenuManagementController extends Controller
             $auth = Auth::user();
             $menu_id = (int)$request->input('menu_id');
             $role_value = $request->input('role_value');
-            if ($role_value == 'both') $role_value = null;
+
             ManagementMenu::where('id', '=', $menu_id)
                 ->update(['role' => $role_value]);
 
             $label_menu = LabelMenuManagement::where('role', '=', $auth->roles)
-                ->orWhereNull('role')
+                ->orWhere('role', 'both')
                 ->with(['menus' => function ($q) use ($auth) {
                     $q->where('role', '=', $auth->roles)
-                        ->orWhereNull('role')
+                        ->orWhere('role', 'both')
                         ->orderBy('important', 'asc');
                 }, 'menus.submenus' => function ($q) use ($auth) {
                     $q->where('role', '=', $auth->roles)
-                        ->orWhereNull('role')
+                        ->orWhere('role', 'both')
                         ->orderBy('important', 'asc');
                 }])
                 ->orderBy('important', 'asc')
@@ -104,19 +103,18 @@ class MenuManagementController extends Controller
             $auth = Auth::user();
             $submenu_id = (int)$request->input('submenu_id');
             $role_value = $request->input('role_value');
-            if ($role_value == 'both') $role_value = null;
             ManagementSubMenu::where('id', '=', $submenu_id)
                 ->update(['role' => $role_value]);
 
             $submenu = LabelMenuManagement::where('role', '=', $auth->roles)
-                ->orWhereNull('role')
+                ->orWhere('role', 'both')
                 ->with(['menus' => function ($q) use ($auth) {
                     $q->where('role', '=', $auth->roles)
-                        ->orWhereNull('role')
+                        ->orWhere('role', 'both')
                         ->orderBy('important', 'asc');
                 }, 'menus.submenus' => function ($q) use ($auth) {
                     $q->where('role', '=', $auth->roles)
-                        ->orWhereNull('role')
+                        ->orWhere('role', 'both')
                         ->orderBy('important', 'asc');
                 }])
                 ->orderBy('important', 'asc')

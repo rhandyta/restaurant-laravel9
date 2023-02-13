@@ -1,4 +1,5 @@
 const SEGMENT_URL = `${BASE_URL}manager/menu-managements/`;
+const auth = "/manager";
 const headers = {
     Accept: "application/json",
     "Content-Type": "application/json",
@@ -37,7 +38,7 @@ async function manipulateSubMenu(results) {
                 liElement2.classList.add("active");
             }
             aElement1.classList.add("sidebar-link");
-            aElement1.setAttribute("href", `${menu.path}`);
+            aElement1.setAttribute("href", `${auth}${menu.path}`);
             iElement1.classList.add("bi");
             iElement1.classList.add(`${menu.icon}`);
             spanElement1.textContent = menu.label_menu;
@@ -56,7 +57,10 @@ async function manipulateSubMenu(results) {
                     const liElement3 = document.createElement("li");
                     const aElement2 = document.createElement("a");
                     liElement3.classList.add("submenu-item");
-                    aElement2.setAttribute("href", `${submenu.path}`);
+                    aElement2.setAttribute(
+                        "href",
+                        `${auth}${menu.path}${submenu.path}`
+                    );
                     aElement2.textContent = submenu.label_submenu;
                     liElement3.appendChild(aElement2);
                     ulElement.appendChild(liElement3);
