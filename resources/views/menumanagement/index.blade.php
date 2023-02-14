@@ -91,6 +91,6 @@
     <script src="{{ asset('assets/extensions/simple-datatables/umd/simple-datatables.js') }}"></script>
     <script src="{{ asset('assets/js/pages/simple-datatables.js') }}"></script>
     <script src="{{ asset('assets/extensions/toastify-js/src/toastify.js') }}"></script>
-    <script src="{{ asset('assets/src/manager/main.js') }}"></script>
-    <script src="{{ asset('assets/src/manager/menumanagement.js') }}"></script>
+    <script src="{{ asset('assets/src/main.js') }}"></script>
+    <script src="{{ asset('assets/src/menumanagement.js') }}"></script>
 @endsection

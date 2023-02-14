@@ -1,7 +1,5 @@
 <div class="sidebar-menu">
 
-
-
     <ul class="menu">
         @forelse (request()->attributes->get('menus') as $labelMenu)
             <li class="sidebar-title">{{ $labelMenu->label_title }}</li>
@@ -21,10 +19,11 @@
                             <i class="bi {{ $menu->icon }}"></i>
                             <span>{{ $menu->label_menu }}</span>
                         </a>
-                        <ul class="submenu">
+                        <ul class="submenu"
+                            style="display: {{ request()->segment(2) == substr($menu->path, 1) ? 'block' : 'none' }};">
                             @forelse ($menu->submenus as $submenu)
                                 <li
-                                    class="submenu-item {{ request()->segment(2) == substr($submenu->path, 1) ? 'active' : null }}">
+                                    class="submenu-item {{ request()->segment(3) == substr($submenu->path, 1) ? 'active' : null }}">
                                     <a
                                         href="{{ '/' . auth()->user()->roles . $menu->path . $submenu->path }}">{{ $submenu->label_submenu }}</a>
                                 </li>
