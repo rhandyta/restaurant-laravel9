@@ -2,8 +2,9 @@
 @section('content')
     <!-- table bordered -->
     <div class="table-responsive">
-        <button type="button" class="btn btn-primary block" data-bs-toggle="modal" data-bs-target="#default">
-            Launch Modal
+        <button type="button" class="btn btn-primary block" data-bs-toggle="modal" data-bs-target="#categorytable"
+            id="addcategorytable">
+            Add Category Table
         </button>
 
         <table class="table table-striped" id="table1">
@@ -26,8 +27,11 @@
                             @endif
                         </td>
                         <td>
-                            <button class="btn btn-success btn-sm">Edit</button>
-                            <button class="btn btn-danger btn-sm">Delete</button>
+                            <div class="d-flex gap-1">
+                                <button class="btn btn-success btn-sm" id="editcategorytable" data-id="{{ $table->id }}"
+                                    data-bs-toggle="modal" data-bs-target="#categorytable">Edit</button>
+                                <button class="btn btn-danger btn-sm" data-id="{{ $table->id }}">Delete</button>
+                            </div>
                         </td>
                     </tr>
                 @empty
@@ -40,25 +44,25 @@
         {{ $categorytables->links('pagination::bootstrap-5') }}
     </div>
     <!--Basic Modal -->
-    <div class="modal fade text-left" id="default" tabindex="-1" role="dialog" aria-labelledby="CreateCategoryTable"
+    <div class="modal fade text-left" id="categorytable" tabindex="-1" role="dialog" aria-labelledby="categorytable"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="CreateCategoryTable">Add Category Table</h5>
+                    <h5 class="modal-title name_form"></h5>
                     <button type="button" class="close rounded-pill" data-bs-dismiss="modal" aria-label="Close">
                         <i data-feather="x"></i>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form class="form form-horizontal">
+                    <form id="formcategorytable">
                         <div class="form-body">
                             <div class="row">
                                 <div class="col-md-4">
                                     <label for="categorytable">Category Table</label>
                                 </div>
                                 <div class="col-md-8 form-group">
-                                    <input type="text" id="categorytable" class="form-control" name="ctable"
+                                    <input type="text" id="categorytable" class="form-control" name="category"
                                         placeholder="Category Table">
                                 </div>
                                 <div class="col-md-4">
@@ -66,24 +70,25 @@
                                 </div>
                                 <div class="col-md-8 form-group">
                                     <select name="status" id="status" class="form-select">
-                                        <option selected>-- Status Table --</option>
+                                        <option disabled selected>-- Status Table --</option>
                                         <option value="active">Active</option>
                                         <option value="deactive">Deactive</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn" data-bs-dismiss="modal">
+                                <i class="bx bx-x d-block d-sm-none"></i>
+                                <span class="d-none d-sm-block">Close</span>
+                            </button>
+                            <button type="submit" class="btn btn-primary ml-1" data-bs-dismiss="modal">
+                                <i class="bx bx-check d-block d-sm-none"></i>
+                                <span class="d-none d-sm-block name_form"></span>
+                            </button>
+                        </div>
                     </form>
-                    <div class="modal-footer">
-                        <button type="button" class="btn" data-bs-dismiss="modal">
-                            <i class="bx bx-x d-block d-sm-none"></i>
-                            <span class="d-none d-sm-block">Close</span>
-                        </button>
-                        <button type="button" class="btn btn-primary ml-1" data-bs-dismiss="modal">
-                            <i class="bx bx-check d-block d-sm-none"></i>
-                            <span class="d-none d-sm-block">Add Category Table</span>
-                        </button>
-                    </div>
                 </div>
             </div>
         </div>
