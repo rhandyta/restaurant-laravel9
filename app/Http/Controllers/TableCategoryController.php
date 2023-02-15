@@ -17,19 +17,37 @@ class TableCategoryController extends Controller
     public function store(CategoryTableStoreRequest $request)
     {
         try {
-            TableCategory::create([
+            $categoryTable = TableCategory::create([
                 'category' => $request->input('category'),
-                'status' => $request->input('status')
+                'status' => $request->input('status') == null ? 'Deactive' : $request->input('status')
             ]);
             return response()->json([
                 'status_code' => 201,
-                'message' => 'Data has been added'
+                'message' => 'Data has been added',
+                'results' => $categoryTable
             ]);
         } catch (Exception $e) {
             return response()->json([
                 'status_code' => $e->getCode(),
-                'message' => $e->getMessage()
+                'messages' => $e->getMessage()
+            ], $e->getCode());
+        }
+    }
+
+    public function show($id)
+    {
+        try {
+            $categoryTable = TableCategory::findOrFail($id);
+            return response()->json([
+                'status_code' => 200,
+                'message' => 'Fetch data success',
+                'results' => $categoryTable
             ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status_code' => $e->getCode(),
+                'messages' => $e->getMessage()
+            ], $e->getCode());
         }
     }
 

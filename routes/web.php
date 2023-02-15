@@ -35,9 +35,7 @@ Route::group(['middleware' => ['isManager', 'isMenu'], 'prefix' => 'manager'], f
     Route::post('menu-managements/menu', [MenuManagementController::class, 'handleMenu'])->name('menumanagement.menu');
     Route::post('menu-managements/submenu', [MenuManagementController::class, 'handleSubMenu'])->name('menumanagement.submenu');
 
-    Route::group(['prefix' => 'tables'], function () {
-        Route::resource('categories-tables', TableCategoryController::class);
-    });
+    Route::resource('tables/categories-tables', TableCategoryController::class, ['except' => ['edit', 'create']]);
 
 
     Route::get('logout', function () {

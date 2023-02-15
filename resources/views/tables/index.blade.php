@@ -23,7 +23,7 @@
                             @if ($table->status == 'active')
                                 <span class="badge bg-success">Active</span>
                             @else
-                                <span class="badge bg-danger">Active</span>
+                                <span class="badge bg-danger">Deactive</span>
                             @endif
                         </td>
                         <td>
@@ -55,7 +55,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="formcategorytable">
+                    <form id="formcategorytable" autocomplete="off">
                         <div class="form-body">
                             <div class="row">
                                 <div class="col-md-4">
@@ -83,10 +83,11 @@
                                 <i class="bx bx-x d-block d-sm-none"></i>
                                 <span class="d-none d-sm-block">Close</span>
                             </button>
-                            <button type="submit" class="btn btn-primary ml-1" data-bs-dismiss="modal">
+                            <button type="submit" class="btn btn-primary ml-1" data-bs-dismiss="modal" id="submitbutton">
                                 <i class="bx bx-check d-block d-sm-none"></i>
                                 <span class="d-none d-sm-block name_form"></span>
                             </button>
+                            @include('partials.spinner')
                         </div>
                     </form>
                 </div>
