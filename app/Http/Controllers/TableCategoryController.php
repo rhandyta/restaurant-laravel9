@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CategoryTableStoreRequest;
 use App\Models\TableCategory;
 use Exception;
+use Illuminate\Http\Request;
 
 class TableCategoryController extends Controller
 {
@@ -25,7 +26,7 @@ class TableCategoryController extends Controller
                 'status_code' => 201,
                 'message' => 'Data has been added',
                 'results' => $categoryTable
-            ]);
+            ], 201);
         } catch (Exception $e) {
             return response()->json([
                 'status_code' => $e->getCode(),
@@ -42,7 +43,29 @@ class TableCategoryController extends Controller
                 'status_code' => 200,
                 'message' => 'Fetch data success',
                 'results' => $categoryTable
-            ]);
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'status_code' => $e->getCode(),
+                'messages' => $e->getMessage()
+            ], $e->getCode());
+        }
+    }
+
+    public function update($id, Request $request)
+    {
+        try {
+            $category = $request->input('category');
+            $status = $request->input('status');
+            TableCategory::where('id', '=', $id)
+                ->update([
+                    'category' => $category,
+                    'status' => $status
+                ]);
+            return response()->json([
+                'status_code' => 201,
+                'message' => 'Data has been updated'
+            ], 201);
         } catch (Exception $e) {
             return response()->json([
                 'status_code' => $e->getCode(),
