@@ -74,8 +74,19 @@ class TableCategoryController extends Controller
         }
     }
 
-    public function destroy()
+    public function destroy($id)
     {
-        // 
+        try {
+            TableCategory::firstOrFail($id)->delete();
+            return response()->json([
+                'status_code' => 200,
+                'message' => 'Data has been deleted'
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'status_code' => $e->getCode(),
+                'messages' => $e->getMessage()
+            ], $e->getCode());
+        }
     }
 }
