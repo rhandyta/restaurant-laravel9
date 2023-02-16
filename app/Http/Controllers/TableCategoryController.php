@@ -63,9 +63,9 @@ class TableCategoryController extends Controller
                     'status' => $status
                 ]);
             return response()->json([
-                'status_code' => 201,
+                'status_code' => 200,
                 'message' => 'Data has been updated'
-            ], 201);
+            ], 200);
         } catch (Exception $e) {
             return response()->json([
                 'status_code' => $e->getCode(),
@@ -77,7 +77,7 @@ class TableCategoryController extends Controller
     public function destroy($id)
     {
         try {
-            TableCategory::firstOrFail($id)->delete();
+            TableCategory::where('id', '=', $id)->firstOrFail()->delete();
             return response()->json([
                 'status_code' => 200,
                 'message' => 'Data has been deleted'

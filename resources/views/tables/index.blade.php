@@ -30,7 +30,8 @@
                             <div class="d-flex gap-1">
                                 <button class="btn btn-success btn-sm btn-edit" data-id="{{ $table->id }}"
                                     data-bs-toggle="modal" data-bs-target="#editcategorytable">Edit</button>
-                                <button class="btn btn-danger btn-sm" data-id="{{ $table->id }}">Delete</button>
+                                <button class="btn btn-danger btn-sm btn-delete"
+                                    data-id="{{ $table->id }}">Delete</button>
                             </div>
                         </td>
                     </tr>
@@ -138,7 +139,6 @@
                                 <i class="bx bx-check d-block d-sm-none"></i>
                                 <span class="d-none d-sm-block ">Edit Categoty Table</span>
                             </button>
-                            @include('partials.spinner')
                         </div>
                     </form>
                 </div>
@@ -149,13 +149,11 @@
 @section('css')
     <link rel="stylesheet" href="{{ asset('assets/extensions/simple-datatables/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/pages/simple-datatables.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/extensions/toastify-js/src/toastify.css') }}">
 @endsection
 
 @section('javascript')
     <script src="{{ asset('assets/extensions/simple-datatables/umd/simple-datatables.js') }}"></script>
     <script src="{{ asset('assets/js/pages/simple-datatables.js') }}"></script>
-    <script src="{{ asset('assets/extensions/toastify-js/src/toastify.js') }}"></script>
     <script src="{{ asset('assets/src/main.js') }}"></script>
     <script src="{{ asset('assets/src/categorytables.js') }}"></script>
 @endsection
