@@ -84,13 +84,10 @@
 @section('css')
     <link rel="stylesheet" href="{{ asset('assets/extensions/simple-datatables/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/pages/simple-datatables.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/extensions/toastify-js/src/toastify.css') }}">
 @endsection
 
 @section('javascript')
     <script src="{{ asset('assets/extensions/simple-datatables/umd/simple-datatables.js') }}"></script>
     <script src="{{ asset('assets/js/pages/simple-datatables.js') }}"></script>
-    <script src="{{ asset('assets/extensions/toastify-js/src/toastify.js') }}"></script>
-    <script src="{{ asset('assets/src/main.js') }}"></script>
     <script src="{{ asset('assets/src/menumanagement.js') }}"></script>
 @endsection

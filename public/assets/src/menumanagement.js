@@ -1,4 +1,3 @@
-const SEGMENT_URL = `${BASE_URL}manager/menu-managements/`;
 const auth = "/manager";
 const headers = {
     Accept: "application/json",
@@ -97,7 +96,7 @@ async function manipulateSubMenu(results) {
 
 const __handleChangeLabelMenu = async (label_id, role_value) => {
     try {
-        const request = await fetch(`${SEGMENT_URL}label`, {
+        const request = await fetch(`${SEGMENT_URL}/label`, {
             method: "POST",
             body: JSON.stringify({ label_id, role_value }),
             headers,
@@ -118,7 +117,7 @@ const __handleChangeLabelMenu = async (label_id, role_value) => {
 
 const __handleChangeMenu = async (menu_id, role_value) => {
     try {
-        const request = await fetch(`${SEGMENT_URL}menu`, {
+        const request = await fetch(`${SEGMENT_URL}/menu`, {
             method: "POST",
             headers,
             body: JSON.stringify({ menu_id, role_value }),
@@ -139,7 +138,7 @@ const __handleChangeMenu = async (menu_id, role_value) => {
 
 const __handleChangeSubMenu = async (submenu_id, role_value) => {
     try {
-        const request = await fetch(`${SEGMENT_URL}submenu`, {
+        const request = await fetch(`${SEGMENT_URL}/submenu`, {
             method: "POST",
             headers,
             body: JSON.stringify({ submenu_id, role_value }),

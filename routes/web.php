@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Cashier\DashbordController as CashierDashboard;
 use App\Http\Controllers\Manager\DashboardController as ManagerDashboard;
 use App\Http\Controllers\Manager\MenuManagementController;
 use App\Http\Controllers\TableCategoryController;
@@ -47,10 +48,11 @@ Route::group(['middleware' => ['isManager', 'isMenu'], 'prefix' => 'manager'], f
 
 
 // Cashier Start
-Route::group(['middleware' => ['isCashier'], 'prefix' => 'cashier'], function () {
-    Route::get('/', function () {
-        return 'cashier ok';
-    })->name('cashier.index');
+Route::group(['middleware' => ['isCashier', 'isMenu'], 'prefix' => 'cashier'], function () {
+    Route::get('/', [CashierDashboard::class, 'index'])->name('cashier.index');
+
+    Route::resource('tables/categories-tables', TableCategoryController::class, ['except' => ['edit', 'create']]);
+
     Route::get('logout', function () {
         Auth::logout();
         return redirect()->route('login.index');

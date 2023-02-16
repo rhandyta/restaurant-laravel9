@@ -1,8 +1,3 @@
-const SEGMENT_URL = `${BASE_URL}manager/tables/categories-tables`;
-const headers = {
-    "X-CSRF-TOKEN": csrfToken,
-};
-
 const form = document.querySelector("#formcategorytable");
 const formEdit = document.querySelector("#editformcategorytable");
 const addCategoryTable = document.querySelector("#addcategorytable");
@@ -15,7 +10,9 @@ const __submitStoreHandler = async (event) => {
         const formData = new FormData(form);
         const request = await fetch(`${SEGMENT_URL}`, {
             method: "POST",
-            headers,
+            headers: {
+                "X-CSRF-TOKEN": csrfToken,
+            },
             body: formData,
         });
         const response = await request.json();
@@ -35,7 +32,9 @@ const __getDataById = async (id) => {
     try {
         const request = await fetch(`${SEGMENT_URL}/${id}`, {
             method: "GET",
-            headers,
+            headers: {
+                "X-CSRF-TOKEN": csrfToken,
+            },
         });
         const response = await request.json();
         if (response.status_code != 200) {

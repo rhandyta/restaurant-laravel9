@@ -1,5 +1,6 @@
-const BASE_URL = "http://restaurant.test/";
-
+const BASE_URL = "http://restaurant.test";
+const pathname = window.location.pathname;
+const SEGMENT_URL = `${BASE_URL}${pathname}`;
 const csrfToken = document
     .querySelector('meta[name="csrf-token"]')
     .getAttribute("content");
