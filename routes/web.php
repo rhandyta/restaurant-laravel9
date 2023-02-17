@@ -56,6 +56,8 @@ Route::group(['middleware' => ['isCashier', 'isMenu'], 'prefix' => 'cashier'], f
 
     Route::resource('tables/categories-tables', TableCategoryController::class, ['except' => ['edit', 'create']]);
 
+    Route::resource('tables/information-tables', InformationTableController::class);
+
     Route::get('logout', function () {
         Auth::logout();
         return redirect()->route('login.index');
