@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\InformationTableStoreRequest;
 use App\Models\InformationTable;
 use App\Models\TableCategory;
-use Illuminate\Http\Request;
 
 class InformationTableController extends Controller
 {
@@ -15,5 +15,10 @@ class InformationTableController extends Controller
             ->orderBy('id', 'desc')
             ->paginate(25);
         return view('tables.informationtable', compact('informationTables', 'categoriesTables'));
+    }
+
+    public function store(InformationTableStoreRequest $request)
+    {
+        dd($request->all());
     }
 }

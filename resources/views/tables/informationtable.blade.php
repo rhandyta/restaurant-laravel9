@@ -72,12 +72,13 @@
                         <div class="form-body">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label for="categorytable">Category Table</label>
+                                    <label for="categorytablestore">Category Table</label>
                                 </div>
                                 <div class="col-md-8 form-group">
-                                    <select name="status" id="category_table_id" class="form-select">
+                                    <select name="category_table_id" id="category_table_id" class="form-select">
                                         @forelse ($categoriesTables as $category)
-                                            <option value="{{ $category->id }}">{{ $category->category }} -
+                                            <option value="{{ $category->id }}" data-status="{{ $category->status }}">
+                                                {{ $category->category }} -
                                                 {{ $category->status }}</option>
 
                                         @empty
