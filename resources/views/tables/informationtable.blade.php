@@ -1,29 +1,41 @@
-@extends('layout') @section('title', 'Category Tables')
+@extends('layout') @section('title', 'Information Tables')
 @section('content')
     <!-- table bordered -->
     <div class="table-responsive">
-        <button type="button" class="btn btn-primary block" data-bs-toggle="modal" data-bs-target="#categorytable"
-            id="addcategorytable">
-            Add Category Table
+        <button type="button" class="btn btn-primary block" data-bs-toggle="modal" data-bs-target="#addinformationtable"
+            id="btnaddinformationtable">
+            Add Table
         </button>
 
         <table class="table table-striped" id="table1">
             <thead>
                 <tr>
                     <th>Category Table</th>
-                    <th>Status</th>
+                    <th>Category Status</th>
+                    <th>Seating Capacity</th>
+                    <th>Availability</th>
+                    <th>Location</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse ($categorytables as $table)
+                @forelse ($informationTables as $table)
                     <tr>
-                        <td>{{ $table->category }}</td>
+                        <td>{{ $table->tablecategory->category }}</td>
                         <td>
-                            @if ($table->status == 'active')
+                            @if ($table->tablecategory->status == 'active')
                                 <span class="badge bg-success">Active</span>
                             @else
                                 <span class="badge bg-danger">Deactive</span>
+                            @endif
+                        </td>
+                        <td>{{ $table->seating_capacity }}</td>
+                        <td>{{ $table->location }}</td>
+                        <td>
+                            @if ($table->available == 'available')
+                                <span class="badge bg-success">Available</span>
+                            @else
+                                <span class="badge bg-danger">Not Available</span>
                             @endif
                         </td>
                         <td>
@@ -42,38 +54,59 @@
                 @endforelse
             </tbody>
         </table>
-        {{ $categorytables->links('pagination::bootstrap-5') }}
+        {{ $informationTables->links('pagination::bootstrap-5') }}
     </div>
     <!--Store Modal -->
-    <div class="modal fade text-left" id="categorytable" tabindex="-1" role="dialog" aria-labelledby="categorytable"
-        aria-hidden="true">
+    <div class="modal fade text-left" id="addinformationtable" tabindex="-1" role="dialog"
+        aria-labelledby="addinformationtable" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add Categoty Table</h5>
+                    <h5 class="modal-title">Add Information Table</h5>
                     <button type="button" class="close rounded-pill" data-bs-dismiss="modal" aria-label="Close">
                         <i data-feather="x"></i>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="formcategorytable" autocomplete="off">
+                    <form id="formaddinformationtable" autocomplete="off">
                         <div class="form-body">
                             <div class="row">
                                 <div class="col-md-4">
                                     <label for="categorytable">Category Table</label>
                                 </div>
                                 <div class="col-md-8 form-group">
-                                    <input type="text" id="categorytable" class="form-control" name="category"
-                                        placeholder="Category Table">
+                                    <select name="status" id="category_table_id" class="form-select">
+                                        @forelse ($categoriesTables as $category)
+                                            <option value="{{ $category->id }}">{{ $category->category }} -
+                                                {{ $category->status }}</option>
+
+                                        @empty
+                                            <option disabled selected>No data</option>
+                                        @endforelse
+                                    </select>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="status">Status</label>
+                                    <label for="seatingcapacity">Seating Capacity</label>
                                 </div>
                                 <div class="col-md-8 form-group">
-                                    <select name="status" id="status" class="form-select">
-                                        <option value="active">Active</option>
-                                        <option value="deactive">Deactive</option>
+                                    <input type="number" min="0" id="seatingcapacity" class="form-control"
+                                        name="seating_capacity">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="available">Available</label>
+                                </div>
+                                <div class="col-md-8 form-group">
+                                    <select name="available" id="available" class="form-select">
+                                        <option value="Available">Available</option>
+                                        <option value="Not Available">Not Available</option>
                                     </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="location">Location</label>
+                                </div>
+                                <div class="col-md-8 form-group">
+                                    <input type="text" id="location" class="form-control" name="location"
+                                        placeholder="Location Table">
                                 </div>
                             </div>
                         </div>
@@ -83,9 +116,9 @@
                                 <i class="bx bx-x d-block d-sm-none"></i>
                                 <span class="d-none d-sm-block">Close</span>
                             </button>
-                            <button type="submit" class="btn btn-primary ml-1" data-bs-dismiss="modal">
+                            <button type="submit" class="btn btn-primary ml-1" data-bs-dismiss="modal" id="submitbutton">
                                 <i class="bx bx-check d-block d-sm-none"></i>
-                                <span class="d-none d-sm-block">Add Categoty Table</span>
+                                <span class="d-none d-sm-block">Add Information Table</span>
                             </button>
                         </div>
                     </form>
@@ -94,7 +127,7 @@
         </div>
     </div>
     <!--Edit Modal -->
-    <div class="modal fade text-left" id="editcategorytable" tabindex="-1" role="dialog" aria-labelledby="edit"
+    {{-- <div class="modal fade text-left" id="editcategorytable" tabindex="-1" role="dialog" aria-labelledby="edit"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable" role="document">
             <div class="modal-content">
@@ -133,7 +166,8 @@
                                 <i class="bx bx-x d-block d-sm-none"></i>
                                 <span class="d-none d-sm-block">Close</span>
                             </button>
-                            <button type="submit" class="btn btn-primary ml-1" data-bs-dismiss="modal">
+                            <button type="submit" class="btn btn-primary ml-1" data-bs-dismiss="modal"
+                                id="submitbutton">
                                 <i class="bx bx-check d-block d-sm-none"></i>
                                 <span class="d-none d-sm-block ">Edit Categoty Table</span>
                             </button>
@@ -142,7 +176,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 @endsection
 @section('css')
     <link rel="stylesheet" href="{{ asset('assets/extensions/simple-datatables/style.css') }}">
@@ -152,5 +186,5 @@
 @section('javascript')
     <script src="{{ asset('assets/extensions/simple-datatables/umd/simple-datatables.js') }}"></script>
     <script src="{{ asset('assets/js/pages/simple-datatables.js') }}"></script>
-    <script src="{{ asset('assets/src/categorytables.js') }}"></script>
+    <script src="{{ asset('assets/src/informationtables.js') }}"></script>
 @endsection

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Cashier\DashbordController as CashierDashboard;
+use App\Http\Controllers\InformationTableController;
 use App\Http\Controllers\Manager\DashboardController as ManagerDashboard;
 use App\Http\Controllers\Manager\MenuManagementController;
 use App\Http\Controllers\TableCategoryController;
@@ -37,6 +38,8 @@ Route::group(['middleware' => ['isManager', 'isMenu'], 'prefix' => 'manager'], f
     Route::post('menu-managements/submenu', [MenuManagementController::class, 'handleSubMenu'])->name('menumanagement.submenu');
 
     Route::resource('tables/categories-tables', TableCategoryController::class, ['except' => ['edit', 'create']]);
+
+    Route::resource('tables/information-tables', InformationTableController::class);
 
 
     Route::get('logout', function () {

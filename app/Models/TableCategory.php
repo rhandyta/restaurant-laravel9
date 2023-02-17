@@ -21,4 +21,16 @@ class TableCategory extends Model
             get: fn ($value) => ucwords($value),
         );
     }
+
+    public function stataus(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => ucfirst($value)
+        );
+    }
+
+    public function informationtables()
+    {
+        return $this->hasMany(InformationTable::class, 'category_table_id', 'id');
+    }
 }
