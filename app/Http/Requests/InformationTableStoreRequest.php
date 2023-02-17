@@ -27,7 +27,7 @@ class InformationTableStoreRequest extends FormRequest
     {
         return [
             'category_table_id' => 'required',
-            'seating_capacity' => 'required|min:0',
+            'seating_capacity' => 'required|min:1',
             'available' => 'required',
             'location' => 'required|string'
         ];

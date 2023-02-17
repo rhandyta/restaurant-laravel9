@@ -90,7 +90,7 @@
                                     <label for="seatingcapacity">Seating Capacity</label>
                                 </div>
                                 <div class="col-md-8 form-group">
-                                    <input type="number" min="0" id="seatingcapacity" class="form-control"
+                                    <input type="number" min="1" id="seatingcapacity" class="form-control"
                                         name="seating_capacity">
                                 </div>
                                 <div class="col-md-4">
