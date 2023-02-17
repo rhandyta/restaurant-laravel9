@@ -30,7 +30,6 @@
                             @endif
                         </td>
                         <td>{{ $table->seating_capacity }}</td>
-                        <td>{{ $table->location }}</td>
                         <td>
                             @if ($table->available == 'available')
                                 <span class="badge bg-success">Available</span>
@@ -38,10 +37,11 @@
                                 <span class="badge bg-danger">Not Available</span>
                             @endif
                         </td>
+                        <td>{{ $table->location }}</td>
                         <td>
                             <div class="d-flex gap-1">
                                 <button class="btn btn-success btn-sm btn-edit" data-id="{{ $table->id }}"
-                                    data-bs-toggle="modal" data-bs-target="#editcategorytable">Edit</button>
+                                    data-bs-toggle="modal" data-bs-target="#editinformationtable">Edit</button>
                                 <button class="btn btn-danger btn-sm btn-delete"
                                     data-id="{{ $table->id }}">Delete</button>
                             </div>
@@ -75,7 +75,7 @@
                                     <label for="categorytablestore">Category Table</label>
                                 </div>
                                 <div class="col-md-8 form-group">
-                                    <select name="category_table_id" id="category_table_id" class="form-select">
+                                    <select name="category_table_id" id="categorytablestore" class="form-select">
                                         @forelse ($categoriesTables as $category)
                                             <option value="{{ $category->id }}" data-status="{{ $category->status }}">
                                                 {{ $category->category }} -
@@ -87,26 +87,26 @@
                                     </select>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="seatingcapacity">Seating Capacity</label>
+                                    <label for="seatingcapacitystore">Seating Capacity</label>
                                 </div>
                                 <div class="col-md-8 form-group">
-                                    <input type="number" min="1" id="seatingcapacity" class="form-control"
+                                    <input type="number" min="1" id="seatingcapacitystore" class="form-control"
                                         name="seating_capacity">
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="available">Available</label>
+                                    <label for="availablestore">Available</label>
                                 </div>
                                 <div class="col-md-8 form-group">
-                                    <select name="available" id="available" class="form-select">
-                                        <option value="Available">Available</option>
-                                        <option value="Not Available">Not Available</option>
+                                    <select name="available" id="availablestore" class="form-select">
+                                        <option value="available">Available</option>
+                                        <option value="not available">Not Available</option>
                                     </select>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="location">Location</label>
+                                    <label for="locationstore">Location</label>
                                 </div>
                                 <div class="col-md-8 form-group">
-                                    <input type="text" id="location" class="form-control" name="location"
+                                    <input type="text" id="locationstore" class="form-control" name="location"
                                         placeholder="Location Table">
                                 </div>
                             </div>
@@ -128,7 +128,7 @@
         </div>
     </div>
     <!--Edit Modal -->
-    {{-- <div class="modal fade text-left" id="editcategorytable" tabindex="-1" role="dialog" aria-labelledby="edit"
+    <div class="modal fade text-left" id="editinformationtable" tabindex="-1" role="dialog" aria-labelledby="edit"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable" role="document">
             <div class="modal-content">
@@ -139,26 +139,47 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="editformcategorytable" autocomplete="off">
+                    <form id="formeditinformationtable" autocomplete="off">
                         <div class="form-body">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label for="categorytable">Category Table</label>
+                                    <label for="categorytableedit">Category Table</label>
                                 </div>
                                 <div class="col-md-8 form-group">
-                                    <input type="text" id="categorytableedit" class="form-control" name="category"
-                                        placeholder="Category Table">
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="status">Status</label>
-                                </div>
-                                <div class="col-md-8 form-group">
-                                    <select name="status" id="statusedit" class="form-select">
-                                        <option value="active">Active</option>
-                                        <option value="deactive">Deactive</option>
+                                    <select name="category_table_id" id="categorytableedit" class="form-select">
+                                        @forelse ($categoriesTables as $category)
+                                            <option value="{{ $category->id }}" data-status="{{ $category->status }}">
+                                                {{ $category->category }} -
+                                                {{ $category->status }}</option>
+
+                                        @empty
+                                            <option disabled selected>No data</option>
+                                        @endforelse
                                     </select>
                                 </div>
-                                <input type="hidden" name="categoryId" id='categoryId'>
+                                <div class="col-md-4">
+                                    <label for="seatingcapacityedit">Seating Capacity</label>
+                                </div>
+                                <div class="col-md-8 form-group">
+                                    <input type="number" min="1" id="seatingcapacityedit" class="form-control"
+                                        name="seating_capacity">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="availableedit">Available</label>
+                                </div>
+                                <div class="col-md-8 form-group">
+                                    <select name="available" id="availableedit" class="form-select">
+                                        <option value="available">Available</option>
+                                        <option value="not available">Not Available</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="locationedit">Location</label>
+                                </div>
+                                <div class="col-md-8 form-group">
+                                    <input type="text" id="locationedit" class="form-control" name="location"
+                                        placeholder="Location Table">
+                                </div>
                             </div>
                         </div>
 
@@ -170,14 +191,14 @@
                             <button type="submit" class="btn btn-primary ml-1" data-bs-dismiss="modal"
                                 id="submitbutton">
                                 <i class="bx bx-check d-block d-sm-none"></i>
-                                <span class="d-none d-sm-block ">Edit Categoty Table</span>
+                                <span class="d-none d-sm-block">Edit Information Table</span>
                             </button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
 @endsection
 @section('css')
     <link rel="stylesheet" href="{{ asset('assets/extensions/simple-datatables/style.css') }}">
