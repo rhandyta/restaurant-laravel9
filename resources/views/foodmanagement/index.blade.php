@@ -2,9 +2,9 @@
 @section('content')
     <!-- table bordered -->
     <div class="table-responsive">
-        <button type="button" class="btn btn-primary block" data-bs-toggle="modal" data-bs-target="#categorytable"
-            id="addcategorytable">
-            Add Category Table
+        <button type="button" class="btn btn-primary block" data-bs-toggle="modal" data-bs-target="#foodcategory"
+            id="addfoodcategory">
+            Add Food Category
         </button>
 
         <table class="table table-striped" id="table1">
@@ -25,7 +25,7 @@
                         <td>
                             <div class="d-flex gap-1">
                                 <button class="btn btn-success btn-sm btn-edit" data-id="{{ $food->id }}"
-                                    data-bs-toggle="modal" data-bs-target="#editcategorytable">Edit</button>
+                                    data-bs-toggle="modal" data-bs-target="#editcategoryfood">Edit</button>
                                 <button class="btn btn-danger btn-sm btn-delete"
                                     data-id="{{ $food->id }}">Delete</button>
                             </div>
@@ -41,35 +41,32 @@
         {{ $foodCategories->links('pagination::bootstrap-5') }}
     </div>
     <!--Store Modal -->
-    {{-- <div class="modal fade text-left" id="categorytable" tabindex="-1" role="dialog" aria-labelledby="categorytable"
+    <div class="modal fade text-left" id="foodcategory" tabindex="-1" role="dialog" aria-labelledby="foodcategory"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add Categoty Table</h5>
+                    <h5 class="modal-title">Add Food Category</h5>
                     <button type="button" class="close rounded-pill" data-bs-dismiss="modal" aria-label="Close">
                         <i data-feather="x"></i>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="formcategorytable" autocomplete="off">
+                    <form id="formfoodcategory" autocomplete="off">
                         <div class="form-body">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label for="categorytable">Category Table</label>
+                                    <label for="category_name">Category Name</label>
                                 </div>
                                 <div class="col-md-8 form-group">
-                                    <input type="text" id="categorytable" class="form-control" name="category"
-                                        placeholder="Category Table">
+                                    <input type="text" id="category_name" class="form-control" name="category_name"
+                                        placeholder="Category Name">
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="status">Status</label>
+                                    <label for="status">Description</label>
                                 </div>
                                 <div class="col-md-8 form-group">
-                                    <select name="status" id="status" class="form-select">
-                                        <option value="active">Active</option>
-                                        <option value="deactive">Deactive</option>
-                                    </select>
+                                    <textarea name="category_description" rows="5" class="form-control"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -81,46 +78,42 @@
                             </button>
                             <button type="submit" class="btn btn-primary ml-1" data-bs-dismiss="modal">
                                 <i class="bx bx-check d-block d-sm-none"></i>
-                                <span class="d-none d-sm-block">Add Categoty Table</span>
+                                <span class="d-none d-sm-block">Add Category</span>
                             </button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
     <!--Edit Modal -->
-    {{-- <div class="modal fade text-left" id="editcategorytable" tabindex="-1" role="dialog" aria-labelledby="edit"
+    <div class="modal fade text-left" id="editcategoryfood" tabindex="-1" role="dialog" aria-labelledby="edit"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit Categoty Table</h5>
+                    <h5 class="modal-title">Edit Category Food</h5>
                     <button type="button" class="close rounded-pill" data-bs-dismiss="modal" aria-label="Close">
                         <i data-feather="x"></i>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="editformcategorytable" autocomplete="off">
+                    <form id="formeditcategoryfood" autocomplete="off">
                         <div class="form-body">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label for="categorytable">Category Table</label>
+                                    <label for="category_name">Category Name</label>
                                 </div>
                                 <div class="col-md-8 form-group">
-                                    <input type="text" id="categorytableedit" class="form-control" name="category"
-                                        placeholder="Category Table">
+                                    <input type="text" id="category_name" class="form-control" name="category_name"
+                                        placeholder="Category Name">
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="status">Status</label>
+                                    <label for="status">Description</label>
                                 </div>
                                 <div class="col-md-8 form-group">
-                                    <select name="status" id="statusedit" class="form-select">
-                                        <option value="active">Active</option>
-                                        <option value="deactive">Deactive</option>
-                                    </select>
+                                    <textarea name="category_description" rows="5" class="form-control"></textarea>
                                 </div>
-                                <input type="hidden" name="categoryId" id='categoryId'>
                             </div>
                         </div>
 
@@ -131,14 +124,14 @@
                             </button>
                             <button type="submit" class="btn btn-primary ml-1" data-bs-dismiss="modal">
                                 <i class="bx bx-check d-block d-sm-none"></i>
-                                <span class="d-none d-sm-block ">Edit Categoty Table</span>
+                                <span class="d-none d-sm-block">Edit Category</span>
                             </button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
 @endsection
 @section('css')
     <link rel="stylesheet" href="{{ asset('assets/extensions/simple-datatables/style.css') }}">

@@ -50,7 +50,6 @@ const __submitEditHandler = async (id) => {
     try {
         const formData = new FormData(formEdit);
         const formEncodedData = new URLSearchParams(formData).toString();
-        console.log(formEncodedData);
         const request = await fetch(`${SEGMENT_URL}/${id}`, {
             method: "PATCH",
             headers: {
