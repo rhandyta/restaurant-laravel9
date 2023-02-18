@@ -1,6 +1,7 @@
 const formStore = document.querySelector("#formfoodcategory");
 const btnEdit = document.querySelectorAll(".btn-edit");
 const formEdit = document.querySelector("#formeditcategoryfood");
+const btnDestroy = document.querySelectorAll(".btn-delete");
 
 const __formStoreSubmitHandler = async (event) => {
     try {
@@ -73,6 +74,24 @@ const __formUpdateSubmitHandler = async (id, event) => {
     }
 };
 
+const __submitDestroyHandler = async (id) => {
+    try {
+        const request = await fetch(`${SEGMENT_URL}/${id}`, {
+            method: "DELETE",
+            headers: {
+                "X-CSRF-TOKEN": csrfToken,
+            },
+        });
+        const response = await request.json();
+        if (response?.status_code != 200) {
+            throw new Error("something went wrong");
+        }
+        return response;
+    } catch (error) {
+        errorToast(error);
+    }
+};
+
 document.addEventListener("DOMContentLoaded", () => {
     formStore.addEventListener("submit", __formStoreSubmitHandler);
 
@@ -87,14 +106,54 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
+    const clickDestroyHandler = (event) => {
+        let id = event.target.getAttribute("data-id");
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!",
+        }).then(async (result) => {
+            try {
+                if (result.isConfirmed) {
+                    const response = await __submitDestroyHandler(id);
+                    if (response.status_code != 200)
+                        throw new Error("something went wrong");
+                    if (response.status_code == 200) {
+                        await Swal.fire(
+                            "Deleted!",
+                            "Your data has been deleted.",
+                            "success"
+                        );
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 300);
+                    }
+                }
+            } catch (error) {
+                errorToast(error);
+            }
+        });
+    };
+
     btnEdit.forEach((selectId) => {
         selectId.addEventListener("click", clickEditHandler);
+    });
+
+    btnDestroy.forEach((selectId) => {
+        selectId.addEventListener("click", clickDestroyHandler);
     });
 
     return () => {
         formStore.removeEventListener("submit", __formStoreSubmitHandler);
         btnEdit.forEach((selectId) => {
             selectId.removeEventListener("click", clickEditHandler);
+        });
+        btnDestroy.forEach((selectId) => {
+            selectId.removeEventListener("click", clickDestroyHandler);
         });
     };
 });

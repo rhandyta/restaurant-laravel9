@@ -56,7 +56,6 @@ class FoodCategoryController extends Controller
 
     public function update($id, FoodCategoryUpdateRequest $request)
     {
-        dd($request->all());
         try {
             FoodCategory::where('id', '=', $id)
                 ->update([
@@ -77,6 +76,17 @@ class FoodCategoryController extends Controller
 
     public function destroy($id)
     {
-        // 
+        try {
+            FoodCategory::findOrFail($id)->delete();
+            return response()->json([
+                'status_code' => 200,
+                'message' => 'Data has been deleted'
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status_code' => $e->getCode(),
+                'messages' => $e->getMessage()
+            ], $e->getCode());
+        }
     }
 }
