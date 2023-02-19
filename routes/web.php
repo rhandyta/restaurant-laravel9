@@ -40,7 +40,9 @@ Route::group(['middleware' => ['isManager', 'isMenu'], 'prefix' => 'manager'], f
 
     Route::resource('tables/categories-tables', TableCategoryController::class, ['except' => ['edit', 'create']]);
 
-    Route::resource('tables/information-tables', InformationTableController::class);
+    Route::resource('tables/information-tables', InformationTableController::class, ['except' => ['edit', 'create']]);
+
+    Route::resource('food-managements/food-categories', FoodCategoryController::class, ['except' => 'edit', 'create']);
 
 
     Route::get('logout', function () {
