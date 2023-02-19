@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Cashier\DashbordController as CashierDashboard;
 use App\Http\Controllers\FoodCategoryController;
+use App\Http\Controllers\FoodListController;
 use App\Http\Controllers\InformationTableController;
 use App\Http\Controllers\Manager\DashboardController as ManagerDashboard;
 use App\Http\Controllers\Manager\MenuManagementController;
@@ -44,6 +45,7 @@ Route::group(['middleware' => ['isManager', 'isMenu'], 'prefix' => 'manager'], f
 
     Route::resource('food-managements/food-categories', FoodCategoryController::class, ['except' => 'edit', 'create']);
 
+    Route::resource('food-managements/food', FoodListController::class, ['except' => ['create', 'edit']]);
 
     Route::get('logout', function () {
         Auth::logout();
