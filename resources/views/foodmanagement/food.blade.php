@@ -5,8 +5,8 @@
         <button type="button" class="btn btn-primary block" data-bs-toggle="modal" data-bs-target="#food" id="addfood">
             Add Food
         </button>
-        <div class="progress my-2" style="display: none">
-            <div class="progress-bar" role="progressbar" aria-label="progress with label" style="width: 0%;"
+        <div class="progress my-2" style="display: none;" id="progress">
+            <div class="progress-bar" role="progressbar" aria-label="progress with label" style="width: 25%;"
                 aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" id="progressbar"></div>
         </div>
         <table class="table table-striped" id="table1">
@@ -41,7 +41,7 @@
                     </tr>
                 @empty
                     <tr class="text-center">
-                        <td colspan="3">No records data</td>
+                        <td colspan="6">No records data</td>
                     </tr>
                 @endforelse
             </tbody>
@@ -92,7 +92,8 @@
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">
                                         <label for="images">Images</label>
-                                        <input type="file" name="images[]" id="images" multiple class="form-control">
+                                        <input type="file" name="images[]" id="images" multiple
+                                            class="form-control inputFile">
                                     </div>
                                 </div>
                                 <div class="col-md-12">

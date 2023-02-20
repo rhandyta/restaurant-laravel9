@@ -50,7 +50,8 @@ class FoodListStoreRequest extends FormRequest
             'food_name' => 'food name',
             'food_description' => 'food description',
             'price' => 'price',
-            'images' => 'image'
+            'images' => 'image',
+            'images.*' => 'image'
         ];
     }
 }

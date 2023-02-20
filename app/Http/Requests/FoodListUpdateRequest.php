@@ -30,6 +30,8 @@ class FoodListUpdateRequest extends FormRequest
             'food_name' => 'required|string|min:3|max:100',
             'food_description' => 'required|string|min:3',
             'price' => 'required|numeric',
+            'images' => 'required|array',
+            'images.*' => 'image|mimes:png,jpg,jpeg|max:2048'
         ];
     }
 
@@ -47,7 +49,9 @@ class FoodListUpdateRequest extends FormRequest
             'food_category_id' => 'food category',
             'food_name' => 'food name',
             'food_description' => 'food description',
-            'price' => 'price'
+            'price' => 'price',
+            'images' => 'image',
+            'images.*' => 'image'
         ];
     }
 }

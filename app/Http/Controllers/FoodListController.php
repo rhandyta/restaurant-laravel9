@@ -15,9 +15,10 @@ class FoodListController extends Controller
         $foodCategories = FoodCategory::select('id', 'category_name')
             ->orderBy('id', 'desc')
             ->get();
-        $foodLists = FoodList::with('foodcategory')
+        $foodLists = FoodList::with(['foodcategory', 'foodimages'])
             ->orderBy('id', 'desc')
             ->paginate(25);
+        dd($foodLists);
         return view('foodmanagement.food', compact('foodLists', 'foodCategories'));
     }
 
