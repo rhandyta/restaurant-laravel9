@@ -23,7 +23,11 @@
             <tbody>
                 @forelse ($foodLists as $food)
                     <tr>
-                        <td>{{ $food->img_url }}</td>
+                        <td>
+                            @foreach ($food->foodimages as $image)
+                                <img src="{{ $image->image_url }}" alt="{{ $food->food_name }}" width="50">
+                            @endforeach
+                        </td>
                         <td>{{ $food->foodcategory->category_name }}</td>
                         <td>{{ $food->food_name }}</td>
                         <td>{{ $food->price }}</td>

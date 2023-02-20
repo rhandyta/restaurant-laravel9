@@ -12,13 +12,10 @@ class FoodImage extends Model
     protected $table = 'food_images';
     protected $fillable = ['food_list_id', 'image_url', 'public_id'];
 
-    public function image_url(): Attribute
+    public function imageUrl(): Attribute
     {
         return Attribute::make(
-            get: fn (mixed $value, array $attributes) => new Address(
-                $attributes['address_line_one'],
-                $attributes['address_line_two'],
-            ),
+            get: fn ($value) => preg_replace('/^(https:\/\/res.cloudinary.com\/[\w\/]+\/image\/upload)\/(\w+)\/(.+)$/', '$1/w_300,h_300,c_fill/$2/$3', $value),
         );
     }
 

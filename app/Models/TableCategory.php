@@ -22,7 +22,7 @@ class TableCategory extends Model
         );
     }
 
-    public function stataus(): Attribute
+    public function status(): Attribute
     {
         return Attribute::make(
             get: fn ($value) => ucfirst($value)
