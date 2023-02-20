@@ -16,4 +16,9 @@ class FoodList extends Model
     {
         return $this->belongsTo(FoodCategory::class, 'food_category_id', 'id');
     }
+
+    public function foodimages()
+    {
+        return $this->hasMany(FoodImage::class, 'food_list_id', 'id');
+    }
 }

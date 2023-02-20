@@ -11,15 +11,6 @@ class FoodListController extends Controller
 {
     public function index()
     {
-        $response = cloudinary()->search()->expression("folder:YelpCamp/*")->execute();
-        $datas = [];
-
-        foreach ($response["resources"] as $resource) {
-            array_push($datas, $resource["public_id"]);
-        }
-
-        $storage = $response["resources"][0];
-        dd($storage);
         $foodLists = FoodList::with('foodcategory')
             ->orderBy('id', 'desc')
             ->paginate(25);
