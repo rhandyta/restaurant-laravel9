@@ -16,7 +16,8 @@ return new class extends Migration
         Schema::create('food_images', function (Blueprint $table) {
             $table->id();
             $table->foreignId('food_list_id')->references('id')->on('food_lists')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->string('image_url');
+            $table->text('public_id');
+            $table->text('image_url');
             $table->timestamps();
         });
     }

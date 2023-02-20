@@ -5,7 +5,10 @@
         <button type="button" class="btn btn-primary block" data-bs-toggle="modal" data-bs-target="#food" id="addfood">
             Add Food
         </button>
-
+        <div class="progress my-2" style="display: none">
+            <div class="progress-bar" role="progressbar" aria-label="progress with label" style="width: 0%;"
+                aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" id="progressbar"></div>
+        </div>
         <table class="table table-striped" id="table1">
             <thead>
                 <tr>
@@ -57,14 +60,19 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="formfood" autocomplete="off">
+                    <form id="formfood" autocomplete="off" enctype="multipart/form-data" method="POST">
                         <div class="form-body">
                             <div class="row">
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">
-                                        <label for="first-name-column">First Name</label>
-                                        <input type="text" id="first-name-column" class="form-control"
-                                            placeholder="First Name" name="fname-column">
+                                        <label for="food_category_id">Food Category</label>
+                                        <select name="food_category_id" id="food_category_id" class="form-select">
+                                            @forelse ($foodCategories as $category)
+                                                <option value="{{ $category->id }}">{{ $category->category_name }}</option>
+                                            @empty
+                                                <h5>No data</h5>
+                                            @endforelse
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
@@ -76,46 +84,21 @@
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">
-                                        <label for="food_description">Food Description</label>
-                                        <textarea name="food_description" id="food_description" rows="5" class="form-control"></textarea>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-12">
-                                    <div class="form-group">
                                         <label for="price">Price</label>
                                         <input type="number" min="0" id="price" class="form-control"
                                             name="price">
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
-                                    <div class="filepond--root image-resize-filepond filepond--hopper"
-                                        data-style-button-remove-item-position="left"
-                                        data-style-button-process-item-position="right"
-                                        data-style-load-indicator-position="right"
-                                        data-style-progress-indicator-position="right"
-                                        data-style-button-remove-item-align="false" style="height: 76px;"><input
-                                            class="filepond--browser" type="file" id="filepond--browser-mtubuqc1x"
-                                            aria-controls="filepond--assistant-mtubuqc1x"
-                                            aria-labelledby="filepond--drop-label-mtubuqc1x" name="filepond">
-                                        <div class="filepond--drop-label"
-                                            style="transform: translate3d(0px, 0px, 0px); opacity: 1;"><label
-                                                for="filepond--browser-mtubuqc1x" id="filepond--drop-label-mtubuqc1x"
-                                                aria-hidden="true">Drag &amp; Drop your files or <span
-                                                    class="filepond--label-action" tabindex="0">Browse</span></label>
-                                        </div>
-                                        <div class="filepond--list-scroller" style="transform: translate3d(0px, 0px, 0px);">
-                                            <ul class="filepond--list" role="list"></ul>
-                                        </div>
-                                        <div class="filepond--panel filepond--panel-root" data-scalable="true">
-                                            <div class="filepond--panel-top filepond--panel-root"></div>
-                                            <div class="filepond--panel-center filepond--panel-root"
-                                                style="transform: translate3d(0px, 8px, 0px) scale3d(1, 0.6, 1);"></div>
-                                            <div class="filepond--panel-bottom filepond--panel-root"
-                                                style="transform: translate3d(0px, 68px, 0px);"></div>
-                                        </div><span class="filepond--assistant" id="filepond--assistant-mtubuqc1x"
-                                            role="status" aria-live="polite" aria-relevant="additions"></span>
-                                        <fieldset class="filepond--data"></fieldset>
-                                        <div class="filepond--drip"></div>
+                                    <div class="form-group">
+                                        <label for="images">Images</label>
+                                        <input type="file" name="images[]" id="images" multiple class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="food_description">Food Description</label>
+                                        <textarea name="food_description" id="food_description" rows="5" class="form-control"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -186,16 +169,11 @@
 @section('css')
     <link rel="stylesheet" href="{{ asset('assets/extensions/simple-datatables/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/pages/simple-datatables.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/extensions/filepond/filepond.css') }}">
-    <link rel="stylesheet"
-        href="{{ asset('assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/pages/filepond.css') }}">
+
 @endsection
 
 @section('javascript')
     <script src="{{ asset('assets/extensions/simple-datatables/umd/simple-datatables.js') }}"></script>
     <script src="{{ asset('assets/js/pages/simple-datatables.js') }}"></script>
-    <script src="{{ asset('assets/extensions/filepond/filepond.js') }}"></script>
-    <script src="{{ asset('assets/js/pages/filepond.js') }}"></script>
     <script src="{{ asset('assets/src/food.js') }}"></script>
 @endsection

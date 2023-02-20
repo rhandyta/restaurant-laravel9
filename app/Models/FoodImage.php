@@ -9,7 +9,7 @@ class FoodImage extends Model
 {
     use HasFactory;
     protected $table = 'food_images';
-    protected $fillable = ['food_list_id', 'image_url'];
+    protected $fillable = ['food_list_id', 'image_url', 'public_id'];
 
     public function food()
     {
