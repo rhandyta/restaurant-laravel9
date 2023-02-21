@@ -8,6 +8,7 @@ use App\Models\FoodCategory;
 use App\Models\FoodImage;
 use App\Models\FoodList;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class FoodListController extends Controller
@@ -48,7 +49,7 @@ class FoodListController extends Controller
             return response()->json([
                 'status_code' => 201,
                 'message' => "Data has been created"
-            ]);
+            ], 201);
         } catch (Exception $e) {
             return response()->json([
                 'status_code' => $e->getCode(),
@@ -71,21 +72,22 @@ class FoodListController extends Controller
             return response()->json([
                 'status_code' => $e->getCode(),
                 'messages' => $e->getMessage()
-            ]);
+            ], $e->getCode());
         }
     }
 
-    public function update($id, FoodListUpdateRequest $request)
+    public function update($id, Request $request)
     {
-        // DB::beginTransaction();
+        DB::beginTransaction();
         try {
-            if (!$request->hasFile('images')) {
+            if ($request->hasFile('images') == null) {
                 FoodList::where('id', '=', $id)->update([
                     'food_category_id' => (int)$request->input('food_category_id'),
                     'food_name' => $request->input('food_name'),
                     'food_description' => $request->input('food_description'),
-                    'price' => $request->input('price'),
+                    'price' => (int)$request->input('price'),
                 ]);
+                DB::commit();
                 return response()->json([
                     'status_code' => 200,
                     'message' => 'Data has been updated',
@@ -106,23 +108,25 @@ class FoodListController extends Controller
                     'food_category_id' => (int)$request->input('food_category_id'),
                     'food_name' => $request->input('food_name'),
                     'food_description' => $request->input('food_description'),
-                    'price' => $request->input('price'),
-                ]);
+                    'price' => (int)$request->input('price'),
+                ], 200);
 
-            $foodImages = FoodImage::where('food_category_id', '=', $food->id)->get();
+            $foodImages = FoodImage::select('id')
+                ->where('food_category_id', '=', $food->id)
+                ->get();
 
             $food->foodimages()->detach($foodImages);
-            // DB::commit();
+            DB::commit();
             return response()->json([
                 'status_code' => 200,
                 'message' => 'Data has been updated'
-            ]);
+            ], 200);
         } catch (Exception $e) {
-            // DB::rollBack();
+            DB::rollBack();
             return response()->json([
                 'status_code' => $e->getCode(),
                 'messages' => $e->getMessage(),
-            ]);
+            ], $e->getCode());
         }
     }
 

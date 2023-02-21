@@ -136,7 +136,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="formeditfood" autocomplete="off">
+                    <form id="formeditfood" autocomplete="off" enctype="multipart/form-data">
                         <div class="form-body">
                             <div class="row">
                                 <div class="col-md-6 col-12">

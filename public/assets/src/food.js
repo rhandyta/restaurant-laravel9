@@ -57,7 +57,7 @@ const __getDataById = async (id) => {
         }
         formEdit.elements[0].value = response.results.food_category_id;
         formEdit.elements[1].value = response.results.food_name;
-        formEdit.elements[2].value = response.results.price;
+        formEdit.elements[2].value = Number(response.results.price);
         formEdit.elements[4].value = response.results.food_description;
 
         for (let i = 0; i < imagePreview.childNodes.length + 1; i++) {
@@ -80,14 +80,12 @@ const __editSubmitHandler = async (id, event) => {
     try {
         event.preventDefault();
         const formData = new FormData(formEdit);
-        const formEncoded = new URLSearchParams(formData).toString();
         const request = await fetch(`${SEGMENT_URL}/${id}`, {
-            method: "PATCH",
+            method: "POST",
             headers: {
                 "X-CSRF-TOKEN": csrfToken,
-                "Content-Type": "application/x-www-form-urlencoded",
             },
-            body: formEncoded,
+            body: formData,
         });
         const response = await request.json();
         if (response.status_code != 200) {

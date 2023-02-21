@@ -45,7 +45,8 @@ Route::group(['middleware' => ['isManager', 'isMenu'], 'prefix' => 'manager'], f
 
     Route::resource('food-managements/food-categories', FoodCategoryController::class, ['except' => 'edit', 'create']);
 
-    Route::resource('food-managements/food', FoodListController::class, ['except' => ['create', 'edit']]);
+    Route::resource('food-managements/food', FoodListController::class, ['except' => ['create', 'edit', 'update']]);
+    Route::post('food-managements/food/{id}', [FoodListController::class, 'update'])->name('food.update');
 
     Route::get('logout', function () {
         Auth::logout();
