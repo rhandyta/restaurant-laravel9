@@ -30,7 +30,7 @@ class FoodListUpdateRequest extends FormRequest
             'food_name' => 'required|string|min:3|max:100',
             'food_description' => 'required|string|min:3',
             'price' => 'required|numeric',
-            'images' => 'required|array',
+            'images' => 'array',
             'images.*' => 'image|mimes:png,jpg,jpeg|max:2048'
         ];
     }

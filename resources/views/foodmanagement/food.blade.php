@@ -125,32 +125,63 @@
         </div>
     </div>
     <!--Edit Modal -->
-    {{-- <div class="modal fade text-left" id="editcategoryfood" tabindex="-1" role="dialog" aria-labelledby="edit"
-        aria-hidden="true">
+    <div class="modal modal-lg fade text-left" id="editcategoryfood" tabindex="-1" role="dialog"
+        aria-labelledby="edit" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit Category Food</h5>
+                    <h5 class="modal-title">Edit Food</h5>
                     <button type="button" class="close rounded-pill" data-bs-dismiss="modal" aria-label="Close">
                         <i data-feather="x"></i>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="formeditcategoryfood" autocomplete="off">
+                    <form id="formeditfood" autocomplete="off">
                         <div class="form-body">
                             <div class="row">
-                                <div class="col-md-4">
-                                    <label for="category_name">Category Name</label>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group">
+                                        <label for="food_category_id">Food Category</label>
+                                        <select name="food_category_id" id="food_category_id" class="form-select">
+                                            @forelse ($foodCategories as $category)
+                                                <option value="{{ $category->id }}">{{ $category->category_name }}
+                                                </option>
+                                            @empty
+                                                <h5>No data</h5>
+                                            @endforelse
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="col-md-8 form-group">
-                                    <input type="text" id="category_name" class="form-control" name="category_name"
-                                        placeholder="Category Name">
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group">
+                                        <label for="food_name">Food Name</label>
+                                        <input type="text" id="food_name" class="form-control"
+                                            placeholder="Last Name" name="food_name">
+                                    </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <label for="status">Description</label>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group">
+                                        <label for="price">Price</label>
+                                        <input type="number" min="0" id="price" class="form-control"
+                                            name="price">
+                                    </div>
                                 </div>
-                                <div class="col-md-8 form-group">
-                                    <textarea name="category_description" rows="5" class="form-control"></textarea>
+                                <div class="col-md-6 col-12">
+                                    <div class="card w-full h-20">
+                                        <div class="card-body" id="imagepreview" style="padding: 0">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="images">Images</label>
+                                        <input type="file" name="images[]" id="images" multiple
+                                            class="form-control inputFile">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="food_description">Food Description</label>
+                                        <textarea name="food_description" id="food_description" rows="5" class="form-control"></textarea>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -162,14 +193,14 @@
                             </button>
                             <button type="submit" class="btn btn-primary ml-1" data-bs-dismiss="modal">
                                 <i class="bx bx-check d-block d-sm-none"></i>
-                                <span class="d-none d-sm-block">Edit Category</span>
+                                <span class="d-none d-sm-block">Edit Food</span>
                             </button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
 @endsection
 @section('css')
     <link rel="stylesheet" href="{{ asset('assets/extensions/simple-datatables/style.css') }}">
