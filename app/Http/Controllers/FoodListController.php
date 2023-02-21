@@ -76,11 +76,11 @@ class FoodListController extends Controller
         }
     }
 
-    public function update($id, Request $request)
+    public function update($id, FoodListUpdateRequest $request)
     {
         DB::beginTransaction();
         try {
-            if ($request->hasFile('images') == null) {
+            if (!$request->hasFile('images')) {
                 FoodList::where('id', '=', $id)->update([
                     'food_category_id' => (int)$request->input('food_category_id'),
                     'food_name' => $request->input('food_name'),
@@ -103,19 +103,24 @@ class FoodListController extends Controller
                 ];
             }
 
-            $food = FoodList::where('id', '=', $id)
+            FoodList::where('id', '=', $id)
                 ->update([
                     'food_category_id' => (int)$request->input('food_category_id'),
                     'food_name' => $request->input('food_name'),
                     'food_description' => $request->input('food_description'),
                     'price' => (int)$request->input('price'),
-                ], 200);
+                ]);
 
-            $foodImages = FoodImage::select('id')
-                ->where('food_category_id', '=', $food->id)
-                ->get();
+            $food = FoodList::with('foodimages')
+                ->select('id')
+                ->where('id', '=', $id)
+                ->first();
 
-            $food->foodimages()->detach($foodImages);
+            foreach ($food->foodimages as $img) {
+                cloudinary()->uploadApi()->destroy($img->public_id);
+                $img->delete();
+            }
+            $food->foodimages()->createMany($uploadedImages);
             DB::commit();
             return response()->json([
                 'status_code' => 200,
