@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\FoodListStoreRequest;
 use App\Http\Requests\FoodListUpdateRequest;
 use App\Models\FoodCategory;
+use App\Models\FoodImage;
 use App\Models\FoodList;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class FoodListController extends Controller
 {
@@ -26,7 +28,7 @@ class FoodListController extends Controller
         try {
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $image) {
-                    $path = cloudinary()->uploadApi()->upload($images->getRealPath(), [
+                    $path = cloudinary()->uploadApi()->upload($image->getRealPath(), [
                         'folder' => 'restaurant/food',
                     ]);
                     $uploadedImages[] = [
@@ -75,6 +77,7 @@ class FoodListController extends Controller
 
     public function update($id, FoodListUpdateRequest $request)
     {
+        // DB::beginTransaction();
         try {
             if (!$request->hasFile('images')) {
                 FoodList::where('id', '=', $id)->update([
@@ -88,7 +91,34 @@ class FoodListController extends Controller
                     'message' => 'Data has been updated',
                 ]);
             }
+            foreach ($request->file('images') as $image) {
+                $path = cloudinary()->uploadApi()->upload($image->getRealPath(), [
+                    'folder' => 'restaurant/food',
+                ]);
+                $uploadedImages[] = [
+                    'image_url' => $path['secure_url'],
+                    'public_id' => $path['public_id']
+                ];
+            }
+
+            $food = FoodList::where('id', '=', $id)
+                ->update([
+                    'food_category_id' => (int)$request->input('food_category_id'),
+                    'food_name' => $request->input('food_name'),
+                    'food_description' => $request->input('food_description'),
+                    'price' => $request->input('price'),
+                ]);
+
+            $foodImages = FoodImage::where('food_category_id', '=', $food->id)->get();
+
+            $food->foodimages()->detach($foodImages);
+            // DB::commit();
+            return response()->json([
+                'status_code' => 200,
+                'message' => 'Data has been updated'
+            ]);
         } catch (Exception $e) {
+            // DB::rollBack();
             return response()->json([
                 'status_code' => $e->getCode(),
                 'messages' => $e->getMessage(),
