@@ -124,6 +124,7 @@
             </div>
         </div>
     </div>
+    {{-- start model end --}}
     <!--Edit Modal -->
     <div class="modal modal-lg fade text-left" id="editfood" tabindex="-1" role="dialog" aria-labelledby="edit"
         aria-hidden="true">
@@ -202,6 +203,7 @@
             </div>
         </div>
     </div>
+    {{-- edit model end --}}
 @endsection
 @section('css')
     <link rel="stylesheet" href="{{ asset('assets/extensions/simple-datatables/style.css') }}">
