@@ -20,7 +20,7 @@
                     <tr>
                         <td>{{ $table->category }}</td>
                         <td>
-                            @if ($table->status == 'active')
+                            @if ($table->status == 'Active')
                                 <span class="badge bg-success">Active</span>
                             @else
                                 <span class="badge bg-danger">Deactive</span>

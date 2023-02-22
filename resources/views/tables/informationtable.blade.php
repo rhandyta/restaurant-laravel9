@@ -23,7 +23,7 @@
                     <tr>
                         <td>{{ $table->tablecategory->category }}</td>
                         <td>
-                            @if ($table->tablecategory->status == 'active')
+                            @if ($table->tablecategory->status == 'Active')
                                 <span class="badge bg-success">Active</span>
                             @else
                                 <span class="badge bg-danger">Deactive</span>
@@ -31,8 +31,12 @@
                         </td>
                         <td>{{ $table->seating_capacity }}</td>
                         <td>
-                            @if ($table->available == 'available')
-                                <span class="badge bg-success">Available</span>
+                            @if ($table->tablecategory->status == 'Active')
+                                @if ($table->available == 'available')
+                                    <span class="badge bg-success">Available</span>
+                                @else
+                                    <span class="badge bg-danger">Not Available</span>
+                                @endif
                             @else
                                 <span class="badge bg-danger">Not Available</span>
                             @endif
