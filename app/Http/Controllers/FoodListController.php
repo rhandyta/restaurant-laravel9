@@ -137,6 +137,22 @@ class FoodListController extends Controller
 
     public function destroy($id)
     {
-        // 
+        try {
+            $food = FoodList::findOrFail($id);
+            foreach ($food->foodimages as $f) {
+                cloudinary()->uploadApi()->destroy($f->public_id);
+                $f->delete();
+            }
+            $food->delete();
+            return response()->json([
+                'status_code' => 200,
+                'message' => 'Data has been deleted'
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'status_code' => $e->getCode(),
+                'messages' => $e->getMessage()
+            ], $e->getCode());
+        }
     }
 }

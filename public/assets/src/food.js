@@ -5,6 +5,7 @@ const formStore = document.querySelector("#formfood");
 const formEdit = document.querySelector("#formeditfood");
 const imagePreview = document.querySelector("#imagepreview");
 const editModal = document.querySelector("#editfood");
+const btnDelete = document.querySelectorAll(".btn-delete");
 
 const __progressUpload = (formData) => {
     progress.style.display = "block";
@@ -107,6 +108,24 @@ const __editSubmitHandler = async (event) => {
     }
 };
 
+const __submitDestroyHandler = async (id) => {
+    try {
+        const request = await fetch(`${SEGMENT_URL}/${id}`, {
+            method: "DELETE",
+            headers: {
+                "X-CSRF-TOKEN": csrfToken,
+            },
+        });
+        const response = await request.json();
+        if (response.status_code != 200) {
+            throw Error("something went wrong");
+        }
+        return response;
+    } catch (error) {
+        return errorToast(error);
+    }
+};
+
 document.addEventListener("DOMContentLoaded", () => {
     async function storeHandler(event) {
         try {
@@ -135,6 +154,33 @@ document.addEventListener("DOMContentLoaded", () => {
         __getDataById(id);
     }
 
+    function destroyHandler(event) {
+        const id = event.target.getAttribute("data-id");
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const response = await __submitDestroyHandler(id);
+                if (response.status_code == 200) {
+                    await Swal.fire(
+                        "Deleted!",
+                        "Your data has been deleted.",
+                        "success"
+                    );
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 300);
+                }
+            }
+        });
+    }
+
     // ---------------------------------------------------------------------------------------------------
 
     formStore.addEventListener("submit", storeHandler);
@@ -142,6 +188,10 @@ document.addEventListener("DOMContentLoaded", () => {
     editModal.addEventListener("show.bs.modal", clickEditHandler);
 
     formEdit.addEventListener("submit", __editSubmitHandler);
+
+    btnDelete.forEach((selectId) => {
+        selectId.addEventListener("click", destroyHandler);
+    });
 
     return () => {
         formStore.removeEventListener("submit", storeHandler);
