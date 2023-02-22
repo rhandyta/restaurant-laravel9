@@ -30,7 +30,7 @@
                         </td>
                         <td>{{ $food->foodcategory->category_name }}</td>
                         <td>{{ $food->food_name }}</td>
-                        <td>{{ $food->price }}</td>
+                        <td>{{ number_format($food->price, 2) }}</td>
                         <td>
                             {{ $food->food_description }}
                         </td>
