@@ -37,7 +37,7 @@
                         <td>
                             <div class="d-flex gap-1">
                                 <button class="btn btn-success btn-sm btn-edit" data-id="{{ $food->id }}"
-                                    data-bs-toggle="modal" data-bs-target="#editcategoryfood">Edit</button>
+                                    data-bs-toggle="modal" data-bs-target="#editfood">Edit</button>
                                 <button class="btn btn-danger btn-sm btn-delete"
                                     data-id="{{ $food->id }}">Delete</button>
                             </div>
@@ -125,8 +125,8 @@
         </div>
     </div>
     <!--Edit Modal -->
-    <div class="modal modal-lg fade text-left" id="editcategoryfood" tabindex="-1" role="dialog"
-        aria-labelledby="edit" aria-hidden="true">
+    <div class="modal modal-lg fade text-left" id="editfood" tabindex="-1" role="dialog" aria-labelledby="edit"
+        aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -152,6 +152,7 @@
                                         </select>
                                     </div>
                                 </div>
+                                <input type="hidden" name="id">
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">
                                         <label for="food_name">Food Name</label>

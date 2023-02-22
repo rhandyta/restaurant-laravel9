@@ -2,9 +2,9 @@ const imagesInput = document.querySelectorAll("#images");
 const progress = document.querySelector("#progress");
 const progressLabel = document.querySelector("#progressbar");
 const formStore = document.querySelector("#formfood");
-const btnEdit = document.querySelectorAll(".btn-edit");
 const formEdit = document.querySelector("#formeditfood");
 const imagePreview = document.querySelector("#imagepreview");
+const editModal = document.querySelector("#editfood");
 
 const __progressUpload = (formData) => {
     progress.style.display = "block";
@@ -55,10 +55,13 @@ const __getDataById = async (id) => {
         if (response.status_code != 200) {
             throw new Error("something went wrong");
         }
-        formEdit.elements[0].value = response.results.food_category_id;
-        formEdit.elements[1].value = response.results.food_name;
-        formEdit.elements[2].value = Number(response.results.price);
-        formEdit.elements[4].value = response.results.food_description;
+        formEdit.elements["food_category_id"].value =
+            response.results.food_category_id;
+        formEdit.elements["id"].value = response.results.id;
+        formEdit.elements["food_name"].value = response.results.food_name;
+        formEdit.elements["price"].value = Number(response.results.price);
+        formEdit.elements["food_description"].value =
+            response.results.food_description;
 
         for (let i = 0; i < imagePreview.childNodes.length + 1; i++) {
             imagePreview.childNodes.forEach((item) => item.remove());
@@ -76,8 +79,9 @@ const __getDataById = async (id) => {
     }
 };
 
-const __editSubmitHandler = async (id, event) => {
+const __editSubmitHandler = async (event) => {
     try {
+        let id = event.target.elements["id"].value;
         event.preventDefault();
         const formData = new FormData(formEdit);
         const request = await fetch(`${SEGMENT_URL}/${id}`, {
@@ -111,7 +115,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const formData = new FormData(form);
             const response = await __progressUpload(formData);
             const parsedResponse = JSON.parse(response);
-            console.log(progress);
             progress.style.display = "none";
             progressLabel.style.width = `0%`;
             progressLabel.innerHTML = `0%`;
@@ -128,29 +131,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function clickEditHandler(event) {
-        let id = event.target.getAttribute("data-id");
+        const id = event.relatedTarget.getAttribute("data-id");
         __getDataById(id);
-        const editSubmitHandler = __editSubmitHandler.bind(null, id);
-        formEdit.addEventListener("submit", editSubmitHandler);
-        formEdit.addEventListener("submit", function removeSubmitListener() {
-            formEdit.removeEventListener("submit", editSubmitHandler);
-            formEdit.removeEventListener("submit", removeSubmitListener);
-        });
     }
 
     // ---------------------------------------------------------------------------------------------------
 
     formStore.addEventListener("submit", storeHandler);
 
-    btnEdit.forEach((selectId) => {
-        selectId.addEventListener("click", clickEditHandler);
-    });
+    editModal.addEventListener("show.bs.modal", clickEditHandler);
+
+    formEdit.addEventListener("submit", __editSubmitHandler);
 
     return () => {
         formStore.removeEventListener("submit", storeHandler);
 
-        btnEdit.forEach((selectId) => {
-            selectId.removeEventListener("click", clickEditHandler);
-        });
+        editModal.removeEventListener("show.bs.modal", clickEditHandler);
+
+        formEdit.removeEventListener("submit", __editSubmitHandler);
     };
 });
