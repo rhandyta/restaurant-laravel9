@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\RegisterStoreRequest;
+use App\Http\Requests\API\Auth\RegisterStoreRequest;
 use App\Models\User;
 use Exception;
 use Illuminate\Database\QueryException;

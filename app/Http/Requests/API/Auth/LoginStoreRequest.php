@@ -36,6 +36,6 @@ class LoginStoreRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'status_code' => 422,
             'messages' => $validator->errors(),
-        ]));
+        ], 422));
     }
 }
