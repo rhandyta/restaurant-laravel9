@@ -19,9 +19,10 @@ return new class extends Migration
             $table->foreignId('user_id')->references('id')->on('users')->cascadeOnUpdate();
             $table->string('transaction_id')->nullable();
             $table->string('gross_amount');
-            $table->string('payment_type')->nullable();
+            $table->string('amount');
+            $table->string('payment_type');
             $table->string('transaction_status')->nullable();
-            $table->string('bank')->nullable();
+            $table->string('bank');
             $table->string('va_number')->nullable();
             $table->text('notes')->nullable();
             $table->string('discount')->nullable();
