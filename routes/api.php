@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\Auth\LoginController;
 use App\Http\Controllers\API\Auth\RegisterController;
+use App\Http\Controllers\API\Order\OrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,4 +25,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group(['prefix' => 'auth'], function () {
     Route::post('register', RegisterController::class);
     Route::post('login', LoginController::class);
+});
+
+
+Route::group(['prefix' => 'order', 'middleware' => 'auth:sanctum'], function () {
+    Route::post('checkout', OrderController::class);
 });
