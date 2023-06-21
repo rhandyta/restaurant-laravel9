@@ -39,7 +39,7 @@ class OrderController extends Controller
                 DetailOrder::create($detail);
             }
 
-            $order = [
+            $transaction = [
                 'transaction_details' => [
                     'order_id' => $orderId,
                     'gross_amount' => $grossAmount,
@@ -48,52 +48,41 @@ class OrderController extends Controller
                 'bank_transfer' => ['bank' => $request->input('bank')],
                 // 'item_details' => $detailOrders
             ];
-            // Set your Merchant Server Key
-            \Midtrans\Config::$serverKey = config('midtrans.server_key');
-            // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
-            \Midtrans\Config::$isProduction = false;
-            // Set sanitization on (default)
-            \Midtrans\Config::$isSanitized = true;
-            // Set 3DS transaction for credit card to true
-            \Midtrans\Config::$is3ds = true;
 
-            $response = \Midtrans\CoreApi::charge($order);
-            dd($response);
+            $midtrans = new CreateSnapTokenService($transaction);
+            $response = $midtrans->getSnapToken();
 
-            // $order = [
-            //     'order_id' => $orderId,
-            //     'user_id' => $auth->id,
-            //     "transaction_id" => $request->input("transaction_id"),
-            //     "gross_amount" => $grossAmount,
-            //     "amount" => $amount,
-            //     "payment_type" => $request->input("payment_type"),
-            //     "transaction_status" => $request->input("transaction_status"),
-            //     "bank" => $request->input("bank"),
-            //     "va_number" => $request->input("va_number"),
-            //     "notes" => $request->input('notes'),
-            //     "discount" => $request->input('discount')
-            // ];
 
-            // $order = Order::create($order);
+            $order = [
+                'order_id' => $orderId,
+                'user_id' => $auth->id,
+                "transaction_id" => $response->transaction_id,
+                "gross_amount" => $grossAmount,
+                "amount" => $amount,
+                "payment_type" => $request->input("payment_type"),
+                "transaction_status" => $response->transaction_status,
+                "transaction_code" => $response->status_code,
+                "transaction_message" => $response->status_message,
+                "signature_key" => hash('sha512', $orderId . $response->status_code . $response->gross_amount . config('midtrans.server_key')),
+                "bank" => $request->input("bank"),
+                "va_number" => $response->va_numbers[0]->va_number,
+                "notes" => $request->input('notes'),
+                "discount" => $request->input('discount')
+            ];
 
+
+            $order = Order::create($order);
+            DB::commit();
             return response()->json(
                 [
                     'user' => $auth,
                     'data' => ['order' => $order, 'detail_order' => $detailOrders],
                     'code' => 201,
-                    'messages' => 'create order has been created'
+                    'messages' => $order["transaction_message"]
                 ],
                 201
             );
-            DB::commit();
         } catch (Exception $e) {
-            DB::rollback();
-            if ($e->getCode() === 0) {
-                return response()->json([
-                    'code' => 400,
-                    'message' => 'Bad request'
-                ], 400);
-            }
             return response()->json([
                 'code' => $e->getCode(),
                 'message' => $e->getMessage()

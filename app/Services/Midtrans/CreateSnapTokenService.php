@@ -7,17 +7,18 @@ use Midtrans\Snap;
 class CreateSnapTokenService extends Midtrans
 {
 
-  protected $order;
-  public function __construct($order)
+  protected $transaction;
+  public function __construct($transaction)
   {
     parent::__construct();
-    $this->order = $order;
+    $this->transaction = $transaction;
   }
 
   public function getSnapToken()
   {
-    $snapToken = Snap::getSnapToken($this->order);
 
-    return $snapToken;
+    $response = \Midtrans\CoreApi::charge($this->transaction);
+
+    return $response;
   }
 }

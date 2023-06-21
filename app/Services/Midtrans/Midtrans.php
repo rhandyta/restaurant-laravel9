@@ -14,18 +14,9 @@ class Midtrans
 
   public function __construct()
   {
-    $this->serverKey = config('midtrans.server_key');
-    $this->isProduction = config('midtrans.is_production');
-    $this->isSanitized = config('midtrans.is_sanitized');
-    $this->is3ds = config('midtrans.is_3ds');
-  }
-
-
-  public function _configureMidtrans()
-  {
-    Config::$serverKey = $this->serverKey;
-    Config::$isProduction = $this->isProduction;
-    Config::$isSanitized = $this->isSanitized;
-    Config::$is3ds = $this->is3ds;
+    \Midtrans\Config::$serverKey = config('midtrans.server_key');
+    \Midtrans\Config::$isProduction = config('midtrans.isProduction');
+    \Midtrans\Config::$isSanitized = config('midtrans.isSanitized');
+    \Midtrans\Config::$is3ds = config('midtrans.is3ds');
   }
 }

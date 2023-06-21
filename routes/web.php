@@ -22,6 +22,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 // auth start
+
+Route::get('/', function () {
+    echo 'test';
+});
+
 Route::group(['prefix' => 'auth'], function () {
     Route::get('login', [LoginController::class, 'index'])->name('login.index');
     Route::post('login', [LoginController::class, 'store'])->name('login.store');

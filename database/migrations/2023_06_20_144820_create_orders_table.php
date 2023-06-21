@@ -18,12 +18,15 @@ return new class extends Migration
             $table->string('order_id')->unique();
             $table->foreignId('user_id')->references('id')->on('users')->cascadeOnUpdate();
             $table->string('transaction_id')->nullable();
-            $table->string('gross_amount');
-            $table->string('amount');
-            $table->string('payment_type');
+            $table->string('transaction_code')->nullable();
             $table->string('transaction_status')->nullable();
+            $table->text('transaction_message')->nullable();
+            $table->string('payment_type');
             $table->string('bank');
             $table->string('va_number')->nullable();
+            $table->string('signature_key')->nullable();
+            $table->string('gross_amount');
+            $table->string('amount');
             $table->text('notes')->nullable();
             $table->string('discount')->nullable();
             $table->timestamps();

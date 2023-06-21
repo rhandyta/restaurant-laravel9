@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\Auth\LoginController;
 use App\Http\Controllers\API\Auth\RegisterController;
 use App\Http\Controllers\API\Order\OrderController;
+use App\Http\Controllers\API\Order\PaymentNotificationHandler;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,7 +28,10 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('login', LoginController::class);
 });
 
-
+// Checkout
 Route::group(['prefix' => 'order', 'middleware' => 'auth:sanctum'], function () {
     Route::post('checkout', OrderController::class);
 });
+
+// Webhook
+Route::post('payment-notification-handler', PaymentNotificationHandler::class);
