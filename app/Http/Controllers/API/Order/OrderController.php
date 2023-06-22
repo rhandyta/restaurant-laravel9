@@ -77,15 +77,15 @@ class OrderController extends Controller
                 [
                     'user' => $auth,
                     'data' => ['order' => $order, 'detail_order' => $detailOrders],
-                    'code' => 201,
+                    'status_code' => 201,
                     'messages' => $order["transaction_message"]
                 ],
                 201
             );
         } catch (Exception $e) {
             return response()->json([
-                'code' => $e->getCode(),
-                'message' => $e->getMessage()
+                'status_code' => $e->getCode(),
+                'messages' => $e->getMessage()
             ], $e->getCode());
         }
     }
