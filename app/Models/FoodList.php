@@ -21,4 +21,9 @@ class FoodList extends Model
     {
         return $this->hasMany(FoodImage::class, 'food_list_id', 'id');
     }
+
+    public function detailorders()
+    {
+        return $this->hasMany(DetailOrder::class, 'product_id', 'id');
+    }
 }

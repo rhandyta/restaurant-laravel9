@@ -15,12 +15,14 @@ return new class extends Migration
     {
         Schema::create('detail_orders', function (Blueprint $table) {
             $table->string('order_id')->references('id')->on('orders')->cascadeOnUpdate();
+            $table->integer('product_id');
             $table->string('product');
             $table->integer('quantity');
             $table->double('unit_price');
             $table->double('subtotal');
             $table->double('discount')->nullable();
             $table->double('total_price');
+            $table->integer('rating')->nullable();
             $table->timestamps();
         });
     }
