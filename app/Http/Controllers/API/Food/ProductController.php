@@ -11,7 +11,7 @@ use Illuminate\Http\Response;
 
 class ProductController extends Controller
 {
-    public function TopSelling()
+    public function topSelling()
     {
         $foods = DetailOrder::query()
             ->select('product_id', 'product')
@@ -23,7 +23,7 @@ class ProductController extends Controller
         ], 200);
     }
 
-    public function RegularMenu()
+    public function regularMenu()
     {
         try {
             $regularMenu = DetailOrder::query()

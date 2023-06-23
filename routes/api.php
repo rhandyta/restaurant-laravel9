@@ -38,5 +38,5 @@ Route::group(['prefix' => 'order', 'middleware' => 'auth:sanctum'], function () 
 Route::post('payment-notification-handler', PaymentNotificationHandler::class);
 
 
-Route::get('top-selling', [ProductController::class, 'TopSelling']);
-Route::get('regular-menu', [ProductController::class, 'RegularMenu']);
+Route::get('top-selling', [ProductController::class, 'topSelling']);
+Route::get('regular-menu', [ProductController::class, 'regularMenu']);
