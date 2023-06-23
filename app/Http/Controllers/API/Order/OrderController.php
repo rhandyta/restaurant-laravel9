@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Services\Midtrans\CreateSnapTokenService;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -84,9 +85,11 @@ class OrderController extends Controller
             );
         } catch (Exception $e) {
             return response()->json([
-                'status_code' => $e->getCode(),
-                'messages' => $e->getMessage()
-            ], $e->getCode());
+                'data' => [
+                    'messages' => $e->getMessage(),
+                    'status_code' => Response::HTTP_BAD_REQUEST
+                ]
+            ], Response::HTTP_BAD_REQUEST);
         }
     }
 }

@@ -4,9 +4,7 @@ namespace App\Http\Controllers\API\Food;
 
 use App\Http\Controllers\Controller;
 use App\Models\DetailOrder;
-use App\Models\FoodList;
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class ProductController extends Controller
@@ -14,8 +12,15 @@ class ProductController extends Controller
     public function topSelling()
     {
         $foods = DetailOrder::query()
-            ->select('product_id', 'product')
-            ->orderBy('product_id', 'desc')
+            ->with(['foodlist' => function ($query) {
+                $query->select('id', 'food_name')->with(['foodimages' => function ($query) {
+                    $query->select('id', 'food_list_id', 'image_url');
+                }]);
+            }])
+            ->select('product_id', \DB::raw('COUNT(product_id) as total'))
+            ->groupBy('product_id')
+            ->orderBy('total', 'desc')
+            ->take(3)
             ->get();
 
         return response()->json([

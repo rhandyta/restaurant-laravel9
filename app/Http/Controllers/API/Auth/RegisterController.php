@@ -7,6 +7,7 @@ use App\Http\Requests\API\Auth\RegisterStoreRequest;
 use App\Models\User;
 use Exception;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
@@ -51,15 +52,19 @@ class RegisterController extends Controller
                 ], 409);
             } else {
                 return response()->json([
-                    'status_code' => $e->getCode(),
-                    'messages' => $e->getMessage(),
-                ], $e->getCode());
+                    'data' => [
+                        'messages' => $e->getMessage(),
+                        'status_code' => Response::HTTP_BAD_REQUEST
+                    ]
+                ], Response::HTTP_BAD_REQUEST);
             }
         } catch (Exception $e) {
             return response()->json([
-                'status_code' => $e->getCode(),
-                'messages' => $e->getMessage()
-            ], $e->getCode());
+                'data' => [
+                    'messages' => $e->getMessage(),
+                    'status_code' => Response::HTTP_BAD_REQUEST
+                ]
+            ], Response::HTTP_BAD_REQUEST);
         }
     }
 }
