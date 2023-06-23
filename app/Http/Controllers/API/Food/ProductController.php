@@ -11,21 +11,30 @@ class ProductController extends Controller
 {
     public function topSelling()
     {
-        $foods = DetailOrder::query()
-            ->with(['foodlist' => function ($query) {
-                $query->select('id', 'food_name')->with(['foodimages' => function ($query) {
-                    $query->select('id', 'food_list_id', 'image_url');
-                }]);
-            }])
-            ->select('product_id', \DB::raw('COUNT(product_id) as total'))
-            ->groupBy('product_id')
-            ->orderBy('total', 'desc')
-            ->take(3)
-            ->get();
+        try {
+            $foods = DetailOrder::query()
+                ->with(['foodlist' => function ($query) {
+                    $query->select('id', 'food_name')->with(['foodimages' => function ($query) {
+                        $query->select('id', 'food_list_id', 'image_url');
+                    }]);
+                }])
+                ->select('product_id', \DB::raw('COUNT(product_id) as total'))
+                ->groupBy('product_id')
+                ->orderBy('total', 'desc')
+                ->take(3)
+                ->get();
 
-        return response()->json([
-            'data' => $foods
-        ], 200);
+            return response()->json([
+                'data' => $foods
+            ], 200);
+        } catch (Exception  $e) {
+            return response()->json([
+                'data' => [
+                    'messages' => $e->getMessage(),
+                    'status_code' => Response::HTTP_BAD_REQUEST
+                ]
+            ], Response::HTTP_BAD_REQUEST);
+        }
     }
 
     public function regularMenu()
