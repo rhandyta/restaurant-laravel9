@@ -10,6 +10,10 @@ class FoodList extends Model
     use HasFactory;
     protected $table = 'food_lists';
     protected $fillable = ['food_category_id', 'food_name', 'food_description', 'price', 'img_url'];
+    protected $hidden = [
+        'created_at',
+        'updated_at'
+    ];
 
 
     public function foodcategory()
@@ -20,6 +24,11 @@ class FoodList extends Model
     public function foodimages()
     {
         return $this->hasMany(FoodImage::class, 'food_list_id', 'id');
+    }
+
+    public function carts()
+    {
+        return $this->hasMany(Cart::class, 'product_id', 'id');
     }
 
     public function detailorders()

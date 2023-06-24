@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\Auth\LoginController;
 use App\Http\Controllers\API\Auth\RegisterController;
 use App\Http\Controllers\API\Food\ProductController;
+use App\Http\Controllers\API\Cart\CartController;
 use App\Http\Controllers\API\Order\OrderController;
 use App\Http\Controllers\API\Order\PaymentNotificationHandler;
 use Illuminate\Http\Request;
@@ -27,6 +28,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group(['prefix' => 'auth'], function () {
     Route::post('register', RegisterController::class);
     Route::post('login', LoginController::class);
+});
+
+// Cart
+Route::group(['prefix' => 'cart', 'middleware' => 'auth:sanctum'], function () {
+    Route::get('/', [CartController::class, 'index']);
 });
 
 // Checkout

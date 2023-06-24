@@ -25,6 +25,8 @@ class ProductController extends Controller
                 ->get();
 
             return response()->json([
+                'status_code' => 200,
+                'messages' => "Data successfully fetch",
                 'data' => $foods
             ], 200);
         } catch (Exception  $e) {
