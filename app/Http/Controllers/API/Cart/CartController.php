@@ -39,25 +39,28 @@ class CartController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-
-    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        try {
+            $auth = Auth::user();
+            $carts = $request->input('id');
+            Cart::where('user_id', '=', $auth->id)
+                ->delete(collect($carts));
+
+            return response()->json([
+                'status_code' => Response::HTTP_NO_CONTENT,
+                'messages' => 'Data has been deleted'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status_code' => $e->getCode(),
+                'messages' => Response::HTTP_BAD_REQUEST
+            ], $e->getCode());
+        }
     }
 }
