@@ -33,6 +33,7 @@ Route::group(['prefix' => 'auth'], function () {
 // Cart
 Route::group(['prefix' => 'cart', 'middleware' => 'auth:sanctum'], function () {
     Route::get('/', [CartController::class, 'index']);
+    Route::post('/', [CartController::class, 'store']);
     Route::post('destroy', [CartController::class, 'destroy']);
 });
 
