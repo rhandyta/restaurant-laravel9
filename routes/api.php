@@ -45,6 +45,6 @@ Route::group(['prefix' => 'order', 'middleware' => 'auth:sanctum'], function () 
 // Webhook
 Route::post('payment-notification-handler', PaymentNotificationHandler::class);
 
-
+// LandingPage
 Route::get('top-selling', [ProductController::class, 'topSelling']);
 Route::get('regular-menu', [ProductController::class, 'regularMenu']);
