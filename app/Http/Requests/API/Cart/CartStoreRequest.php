@@ -26,9 +26,9 @@ class CartStoreRequest extends FormRequest
     {
         $data = request()->all();
         return [
-            'user_id' => ['required','numeric'],
-            'product_id' => ['required','numeric'],
-            'quantity' => 'required|numeric|not_in:0'
+            'user_id' => ['required', 'numeric'],
+            'product_id' => ['required', 'numeric'],
+            'quantity' => ['required', 'numeric', "not_in:0"]
         ];
     }
 

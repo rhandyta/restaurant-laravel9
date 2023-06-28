@@ -44,6 +44,8 @@ class ProductController extends Controller
                 ->with(['detailorders' => function ($query) {
                     $query->select('product_id', 'product', \DB::raw('FLOOR(SUM(rating) / NULLIF(COUNT(rating), 0)) as rating'), \DB::raw('COUNT(product_id) as total_product_id'))
                         ->groupBy('product_id', 'product');
+                }, 'foodimages' => function ($query) {
+                    $query->select('id', 'food_list_id', 'image_url');
                 }])
                 ->take(6)
                 ->get();

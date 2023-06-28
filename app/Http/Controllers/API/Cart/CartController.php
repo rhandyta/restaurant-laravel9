@@ -16,7 +16,7 @@ class CartController extends Controller
         try {
             $auth = Auth::user();
             $carts = Cart::query()
-                ->with(['user' => function($query) {
+                ->with(['user' => function ($query) {
                     $query->select('id', 'email');
                 }, 'product'])
                 ->where('user_id', '=', $auth->id)
@@ -38,6 +38,15 @@ class CartController extends Controller
     {
         try {
             $auth = Auth::user();
+            $exists = Cart::where('user_id', '=', $auth->id)->where('product_id', '=', $request->input('product_id'))->select('product_id')->first();
+
+            if ($exists) {
+                return response()->json([
+                    'status_code' => Response::HTTP_CONFLICT,
+                    'messages' => 'Data conflict'
+                ], Response::HTTP_CONFLICT);
+            }
+
             Cart::create([
                 'user_id' => $auth->id,
                 'product_id' => $request->input('product_id'),
@@ -47,8 +56,9 @@ class CartController extends Controller
             return response()->json([
                 'status_code' => Response::HTTP_CREATED,
                 'messages' => 'Data has been created'
-            ],Response::HTTP_CREATED);
+            ], Response::HTTP_CREATED);
         } catch (\Exception $e) {
+            dd($e->getMessage());
             return response()->json([
                 'status_code' => $e->getCode(),
                 'messages' => Response::HTTP_BAD_REQUEST
