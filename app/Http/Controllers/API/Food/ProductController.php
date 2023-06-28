@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\Food;
 
 use App\Http\Controllers\Controller;
 use App\Models\DetailOrder;
+use App\Models\FoodList;
 use Exception;
 use Illuminate\Http\Response;
 
@@ -12,15 +13,11 @@ class ProductController extends Controller
     public function topSelling()
     {
         try {
-            $foods = DetailOrder::query()
-                ->with(['foodlist' => function ($query) {
-                    $query->select('id', 'food_name')->with(['foodimages' => function ($query) {
-                        $query->select('id', 'food_list_id', 'image_url');
-                    }]);
+
+            $foods = FoodList::query()
+                ->with(['foodimages' => function ($query) {
+                    $query->select('id', 'food_list_id', 'image_url');
                 }])
-                ->select('product_id', \DB::raw('COUNT(product_id) as total'))
-                ->groupBy('product_id')
-                ->orderBy('total', 'desc')
                 ->take(3)
                 ->get();
 
@@ -42,16 +39,15 @@ class ProductController extends Controller
     public function regularMenu()
     {
         try {
-            $regularMenu = DetailOrder::query()
-                ->with(['foodlist' => function ($query) {
-                    $query->select('id', 'food_name', 'food_description', 'price')->with(['foodimages' => function ($query) {
-                        $query->select('id', 'food_list_id', 'public_id', 'image_url');
-                    }]);
+
+            $regularMenu = FoodList::query()
+                ->with(['detailorders' => function ($query) {
+                    $query->select('product_id', 'product', \DB::raw('FLOOR(SUM(rating) / NULLIF(COUNT(rating), 0)) as rating'), \DB::raw('COUNT(product_id) as total_product_id'))
+                        ->groupBy('product_id', 'product');
                 }])
-                ->select('product_id', 'product', \DB::raw('FLOOR(SUM(rating) / NULLIF(COUNT(rating), 0)) as rating'), \DB::raw("COUNT(product_id) as total_product_id"))
-                ->groupBy('product_id', 'product')
-                ->limit(6)
+                ->take(6)
                 ->get();
+
             return response()->json([
                 'data' => $regularMenu,
                 'status_code' => 200,
