@@ -2,8 +2,9 @@
     <div id="container"
         style="max-width: 600px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; color: #333;">
         <section id="section">
-            <h1 style="font-size: 24px; margin-bottom: 20px;">Order {{ $order->order_id }} summary</h1>
-            <p style="margin-bottom: 20px;">Dear <span style="font-weight: bold;">{{ $user->firstname }}</span>,
+            <h1 style="font-size: 24px; margin-bottom: 20px;">Order {{ $transaction->order_id }} summary</h1>
+            <p style="margin-bottom: 20px;">Dear <span
+                    style="font-weight: bold;">{{ $transaction->user->firstname }}</span>,
             </p>
             <p style="margin-bottom: 20px;">
                 Terima kasih telah memesan makanan di <span style="font-weight: bold;">{{ env('APP_NAME') }}</span>.
@@ -15,11 +16,11 @@
                     @php
                         $discount = 0;
                     @endphp
-                    @foreach ($detailOrders as $item)
+                    @foreach ($transaction->detailOrders as $item)
                         <tr style="border-bottom: 1px solid; color: #c4c3c3;">
                             <td style="padding: 5px; color: black;"><img
-                                    src="https://img.freepik.com/free-photo/chicken-wings-barbecue-sweetly-sour-sauce-picnic-summer-menu-tasty-food-top-view-flat-lay_2829-6471.jpg?w=2000"
-                                    alt="{{ $item['product'] }}" width="50px" height="50px"></td>
+                                    src="{{ $item->foodlist->foodimages[0]->image_url }}" alt="{{ $item['product'] }}"
+                                    width="50px" height="50px"></td>
                             <td style="padding: 5px; color: black;">{{ $item['product'] }} <span
                                     style="margin-left: 10px">{{ $item['quantity'] }}</span></td>
                             <td style="padding: 5px; color: black;">
@@ -33,7 +34,7 @@
                 <tbody>
                     <tr>
                         <td colspan="2" align="right" style="padding: 5px;">Subtotal:</td>
-                        <td style="padding: 5px;">Rp{{ (int) $order->amount }}</td>
+                        <td style="padding: 5px;">Rp{{ (int) $transaction->amount }}</td>
                     </tr>
                     <tr>
                         <td colspan="2" align="right" style="padding: 5px;">Discount:</td>
@@ -47,17 +48,17 @@
                     <tr id="total" style="color: black; font-weight: bold;">
                         <td colspan="2" align="right" style="padding: 5px;">Total:</td>
                         <td style="padding: 5px;" id="total-price">
-                            Rp{{ (int) $order->gross_amount }}</td>
+                            Rp{{ (int) $transaction->gross_amount }}</td>
                     </tr>
                     <tr>
                         <td colspan="2" align="right" style="padding: 5px;">Metode Pembayaran:</td>
-                        <td style="padding: 5px; text-transform: uppercase;">{{ $order->bank }}</td>
+                        <td style="padding: 5px; text-transform: uppercase;">{{ $transaction->bank }}</td>
                     </tr>
                     <tr>
                         <td colspan="2" align="right" style="padding: 5px;"><span
-                                style="text-transform: uppercase;">{{ $order->bank }} </span>Virtual Account:
+                                style="text-transform: uppercase;">{{ $transaction->bank }} </span>Virtual Account:
                         </td>
-                        <td style="padding: 5px;">{{ $order->va_number }}</td>
+                        <td style="padding: 5px;">{{ $transaction->va_number }}</td>
                     </tr>
                 </tbody>
             </table>

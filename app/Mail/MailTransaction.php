@@ -18,9 +18,12 @@ class MailTransaction extends Mailable
      *
      * @return void
      */
-    public function __construct()
+
+    protected $transaction;
+
+    public function __construct($transaction)
     {
-        //
+        $this->transaction = $transaction;
     }
 
     /**
@@ -31,7 +34,7 @@ class MailTransaction extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Mail Transaction',
+            subject: \Str::upper($this->transaction->transaction_message),
         );
     }
 
@@ -44,6 +47,9 @@ class MailTransaction extends Mailable
     {
         return new Content(
             view: 'templates.transaction',
+            with: [
+                'transaction' => $this->transaction,
+            ]
         );
     }
 

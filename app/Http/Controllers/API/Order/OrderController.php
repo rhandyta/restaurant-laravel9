@@ -74,7 +74,7 @@ class OrderController extends Controller
 
 
             $order = Order::create($createOrder);
-            Mail::to($auth->email)->send(new MailOrderTransaction($auth, $order, $detailOrders));
+            // Mail::to($auth->email)->send(new MailOrderTransaction($auth, $order, $detailOrders));
             DB::commit();
             return response()->json(
                 [

@@ -19,15 +19,11 @@ class MailOrderTransaction extends Mailable
      * @return void
      */
 
-    protected $order;
-    protected $user;
-    protected $detailOrders;
+    protected $transaction;
 
-    public function __construct($user, $order, $detailOrders)
+    public function __construct($transaction)
     {
-        $this->user = $user;
-        $this->order = $order;
-        $this->detailOrders = $detailOrders;
+        $this->transaction = $transaction;
     }
 
     /**
@@ -38,7 +34,7 @@ class MailOrderTransaction extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Mail Order Transaction',
+            subject: \Str::upper($this->transaction->transaction_message),
         );
     }
 
@@ -52,9 +48,7 @@ class MailOrderTransaction extends Mailable
         return new Content(
             view: 'templates.order',
             with: [
-                'order' => $this->order,
-                'user' => $this->user,
-                'detailOrders' => $this->detailOrders
+                'transaction' => $this->transaction,
             ]
         );
     }
