@@ -2,8 +2,6 @@
 
 namespace App\Services\Midtrans;
 
-use Midtrans\Snap;
-
 class CreateSnapTokenService extends Midtrans
 {
 

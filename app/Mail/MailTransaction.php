@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class MailOrderTransaction extends Mailable
+class MailTransaction extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -18,16 +18,9 @@ class MailOrderTransaction extends Mailable
      *
      * @return void
      */
-
-    protected $order;
-    protected $user;
-    protected $detailOrders;
-
-    public function __construct($user, $order, $detailOrders)
+    public function __construct()
     {
-        $this->user = $user;
-        $this->order = $order;
-        $this->detailOrders = $detailOrders;
+        //
     }
 
     /**
@@ -38,7 +31,7 @@ class MailOrderTransaction extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Mail Order Transaction',
+            subject: 'Mail Transaction',
         );
     }
 
@@ -50,12 +43,7 @@ class MailOrderTransaction extends Mailable
     public function content()
     {
         return new Content(
-            view: 'templates.order',
-            with: [
-                'order' => $this->order,
-                'user' => $this->user,
-                'detailOrders' => $this->detailOrders
-            ]
+            view: 'templates.transaction',
         );
     }
 
