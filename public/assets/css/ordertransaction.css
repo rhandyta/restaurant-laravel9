@@ -1,0 +1,86 @@
+*,
+html,
+body {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+body,
+body * {
+    font-family: "Inter", Tahoma, sans-serif;
+    color: #212529;
+}
+
+#container {
+    border: 1px black;
+    width: 100%;
+    height: fit-content;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+}
+
+#container #section {
+    margin: 1rem 0;
+    background-color: #f0f0f0;
+    padding: 20px;
+    width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    border: 1px solid;
+}
+
+h1 {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+span {
+    color: black;
+    font-weight: bold;
+}
+
+#discount {
+    color: red;
+}
+
+#total-price {
+    color: black;
+    font-weight: bold;
+}
+
+#container #section > p {
+    text-align: justify;
+}
+
+#table,
+tr,
+td {
+    /*   border: 1px solid; */
+    border-collapse: collapse;
+    text-align: right;
+    padding: 3px;
+}
+
+thead tr {
+    border-bottom: 1px solid;
+    color: #c4c3c3;
+}
+
+#total {
+    border-top: 1px solid;
+    color: #c4c3c3;
+}
+
+.info {
+    display: flex;
+    flex-direction: wrap;
+    gap: 1rem;
+}
+
+.info div p {
+    text-align: justify;
+}

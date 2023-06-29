@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\Order;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\Order\OrderRequest;
+use App\Mail\MailOrderTransaction;
 use App\Models\DetailOrder;
 use App\Models\Order;
 use App\Services\Midtrans\CreateSnapTokenService;
@@ -12,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -43,7 +45,7 @@ class OrderController extends Controller
             $transaction = [
                 'transaction_details' => [
                     'order_id' => $orderId,
-                    'gross_amount' => $grossAmount,
+                    'gross_amount' => $grossAmount + ($grossAmount * 0.11),
                 ],
                 "payment_type" => $request->input('payment_type'),
                 'bank_transfer' => ['bank' => $request->input('bank')],
@@ -53,12 +55,11 @@ class OrderController extends Controller
             $midtrans = new CreateSnapTokenService($transaction);
             $response = $midtrans->getSnapToken();
 
-
-            $order = [
+            $createOrder = [
                 'order_id' => $orderId,
                 'user_id' => $auth->id,
                 "transaction_id" => $response->transaction_id,
-                "gross_amount" => $grossAmount,
+                "gross_amount" => $transaction['transaction_details']['gross_amount'],
                 "amount" => $amount,
                 "payment_type" => $request->input("payment_type"),
                 "transaction_status" => $response->transaction_status,
@@ -72,16 +73,17 @@ class OrderController extends Controller
             ];
 
 
-            $order = Order::create($order);
+            $order = Order::create($createOrder);
+            Mail::to($auth->email)->send(new MailOrderTransaction($auth, $order, $detailOrders));
             DB::commit();
             return response()->json(
                 [
                     'user' => $auth,
-                    'data' => ['order' => $order, 'detail_order' => $detailOrders],
-                    'status_code' => 201,
+                    'data' => ['order' => $order, 'detail_order' => $detailOrders, 'user' => $auth],
+                    'status_code' => Response::HTTP_CREATED,
                     'messages' => $order["transaction_message"]
                 ],
-                201
+                Response::HTTP_CREATED
             );
         } catch (Exception $e) {
             return response()->json([
