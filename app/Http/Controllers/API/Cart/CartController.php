@@ -16,9 +16,9 @@ class CartController extends Controller
         try {
             $auth = Auth::user();
             $carts = Cart::query()
-                ->with(['user' => function ($query) {
-                    $query->select('id', 'email');
-                }, 'product'])
+                ->with(['product' => function ($query) {
+                    $query->with('foodimages');
+                }])
                 ->where('user_id', '=', $auth->id)
                 ->get();
             return response()->json([
@@ -71,13 +71,14 @@ class CartController extends Controller
         try {
             $auth = Auth::user();
             $carts = $request->input('id');
-            Cart::where('user_id', '=', $auth->id)
-                ->delete(collect($carts));
-
+            Cart::query()
+            ->where('user_id', '=', $auth->id)
+            ->whereIn('id', $carts)
+            ->delete();
             return response()->json([
-                'status_code' => Response::HTTP_NO_CONTENT,
+                'status_code' => Response::HTTP_OK,
                 'messages' => 'Data has been deleted'
-            ]);
+            ], Response::HTTP_OK);
         } catch (\Exception $e) {
             return response()->json([
                 'status_code' => $e->getCode(),
