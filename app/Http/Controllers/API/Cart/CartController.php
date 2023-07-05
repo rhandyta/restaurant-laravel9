@@ -60,9 +60,9 @@ class CartController extends Controller
         } catch (\Exception $e) {
             dd($e->getMessage());
             return response()->json([
-                'status_code' => $e->getCode(),
-                'messages' => Response::HTTP_BAD_REQUEST
-            ], $e->getCode());
+                'status_code' => Response::HTTP_BAD_REQUEST,
+                'messages' => $e->getMessage()
+            ], Response::HTTP_BAD_REQUEST);
         }
     }
 
@@ -72,9 +72,9 @@ class CartController extends Controller
             $auth = Auth::user();
             $carts = $request->input('id');
             Cart::query()
-            ->where('user_id', '=', $auth->id)
-            ->whereIn('id', $carts)
-            ->delete();
+                ->where('user_id', '=', $auth->id)
+                ->whereIn('id', $carts)
+                ->delete();
             return response()->json([
                 'status_code' => Response::HTTP_OK,
                 'messages' => 'Data has been deleted'
@@ -84,6 +84,43 @@ class CartController extends Controller
                 'status_code' => $e->getCode(),
                 'messages' => Response::HTTP_BAD_REQUEST
             ], $e->getCode());
+        }
+    }
+
+    public function increment($id)
+    {
+        try {
+            $auth = Auth::user();
+            $cart = Cart::where('user_id', '=', $auth->id)->findOrFail($id);
+            $cart->increment('quantity', 1);
+            return response()->json([
+                'status_code' => Response::HTTP_OK,
+                'messages' => "Increment data successfully"
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status_code' => Response::HTTP_BAD_REQUEST,
+                'messages' => $e->getMessage()
+            ], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+
+    public function decrement($id)
+    {
+        try {
+            $auth = Auth::user();
+            $cart =  Cart::where('user_id', '=', $auth->id)->findOrFail($id);
+            $cart->decrement('quantity', 1);
+            return response()->json([
+                'status_code' => Response::HTTP_OK,
+                'messages' => "Decrement data successfully"
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status_code' => Response::HTTP_BAD_REQUEST,
+                'messages' => $e->getMessage()
+            ], Response::HTTP_BAD_REQUEST);
         }
     }
 }
