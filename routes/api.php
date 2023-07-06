@@ -6,6 +6,7 @@ use App\Http\Controllers\API\Food\ProductController;
 use App\Http\Controllers\API\Cart\CartController;
 use App\Http\Controllers\API\Order\OrderController;
 use App\Http\Controllers\API\Order\PaymentNotificationHandler;
+use App\Http\Controllers\API\Utils\UtilsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -37,6 +38,13 @@ Route::group(['prefix' => 'cart', 'middleware' => 'auth:sanctum'], function () {
     Route::post('destroy', [CartController::class, 'destroy']);
     Route::post('/{id}/increment', [CartController::class, 'increment']);
     Route::post('/{id}/decrement', [CartController::class, 'decrement']);
+});
+
+// Utils
+Route::group(['prefix' => 'utils', 'middleware' => 'auth:sanctum'], function () {
+    Route::get('tables', [UtilsController::class, 'getTables']);
+    Route::get('bank-transfer', [UtilsController::class, 'getBankTransfer']);
+    Route::get('e-wallet', [UtilsController::class, 'getEwallet']);
 });
 
 // Checkout

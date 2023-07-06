@@ -12,6 +12,10 @@ class TableCategory extends Model
 
     protected $table = 'table_categories';
     protected $fillable = ['category', 'status'];
+    protected $hidden = [
+        'created_at',
+        'updated_at'
+    ];
 
 
     public function category(): Attribute
