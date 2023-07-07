@@ -42,7 +42,8 @@ Route::group(['prefix' => 'cart', 'middleware' => 'auth:sanctum'], function () {
 
 // Utils
 Route::group(['prefix' => 'utils', 'middleware' => 'auth:sanctum'], function () {
-    Route::get('tables', [UtilsController::class, 'getTables']);
+    Route::get('tables', [UtilsController::class, 'getTableCategories']);
+    Route::get('tables?table={id}', [UtilsController::class, 'getTableCategories']);
     Route::get('bank-transfer', [UtilsController::class, 'getBankTransfer']);
     Route::get('e-wallet', [UtilsController::class, 'getEwallet']);
 });
