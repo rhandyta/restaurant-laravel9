@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\Utils;
 use App\Http\Controllers\Controller;
 use App\Models\InformationTable;
 use App\Models\TableCategory;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class UtilsController extends Controller
@@ -40,9 +41,10 @@ class UtilsController extends Controller
         }
     }
 
-    public function getTables($id)
+    public function getTables(Request $request)
     {
         try {
+            $id = $request->query('id');
             $tables = InformationTable::query()
                 ->where('category_table_id', '=', $id)
                 ->where('available', '=', 'available')
