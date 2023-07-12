@@ -1,4 +1,4 @@
-const BASE_URL = "http://restaurant.test";
+const BASE_URL = "http://localhost:8000";
 const pathname = window.location.pathname;
 const SEGMENT_URL = `${BASE_URL}${pathname}`;
 const csrfToken = document

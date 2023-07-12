@@ -2,46 +2,41 @@
 
     <ul class="menu">
         @forelse (request()->attributes->get('menus') as $labelMenu)
-            <li class="sidebar-title">{{ $labelMenu->label_title }}</li>
-            @forelse ($labelMenu->menus as $menu)
-                @if ($menu->submenus->count() < 1)
-                    <li class="sidebar-item {{ request()->segment(2) == substr($menu->path, 1) ? 'active' : null }}">
-                        <a href="{{ '/' . auth()->user()->roles . $menu->path }}" class='sidebar-link'>
-                            <i class="bi {{ $menu->icon }}"></i>
-                            <span>{{ $menu->label_menu }}</span>
-                        </a>
+        <li class="sidebar-title">{{ $labelMenu->label_title }}</li>
+        @forelse ($labelMenu->menus as $menu)
+        @if ($menu->submenus->count() < 1) <li class="sidebar-item {{ request()->segment(2) == substr($menu->path, 1) ? 'active' : null }}">
+            <a href="{{ '/' . auth()->user()->roles . $menu->path }}" class='sidebar-link'>
+                <i class="bi {{ $menu->icon }}"></i>
+                <span>{{ $menu->label_menu }}</span>
+            </a>
+            </li>
+            @endif
+            @if ($menu->submenus->count() > 0)
+            <li class="sidebar-item has-sub {{ request()->segment(2) == substr($menu->path, 1) ? 'active' : null }}">
+                <a href="{{ '/' . auth()->user()->roles . $menu->path }}" class='sidebar-link'>
+                    <i class="bi {{ $menu->icon }}"></i>
+                    <span>{{ $menu->label_menu }}</span>
+                </a>
+                <ul class="submenu" style="display: {{ request()->segment(2) == substr($menu->path, 1) ? 'block' : 'none' }};">
+                    @forelse ($menu->submenus as $submenu)
+                    <li class="submenu-item {{ request()->segment(3) == substr($submenu->path, 1) ? 'active' : null }}">
+                        <a href="{{ '/' . auth()->user()->roles . $menu->path . $submenu->path }}">{{ $submenu->label_submenu }}</a>
                     </li>
-                @endif
-                @if ($menu->submenus->count() > 0)
-                    <li
-                        class="sidebar-item has-sub {{ request()->segment(2) == substr($menu->path, 1) ? 'active' : null }}">
-                        <a href="{{ '/' . auth()->user()->roles . $menu->path }}" class='sidebar-link'>
-                            <i class="bi {{ $menu->icon }}"></i>
-                            <span>{{ $menu->label_menu }}</span>
-                        </a>
-                        <ul class="submenu"
-                            style="display: {{ request()->segment(2) == substr($menu->path, 1) ? 'block' : 'none' }};">
-                            @forelse ($menu->submenus as $submenu)
-                                <li
-                                    class="submenu-item {{ request()->segment(3) == substr($submenu->path, 1) ? 'active' : null }}">
-                                    <a
-                                        href="{{ '/' . auth()->user()->roles . $menu->path . $submenu->path }}">{{ $submenu->label_submenu }}</a>
-                                </li>
-                            @empty
-                                {{-- submenus --}}
-                            @endforelse
-                        </ul>
-                    </li>
-                @endif
+                    @empty
+                    {{-- submenus --}}
+                    @endforelse
+                </ul>
+            </li>
+            @endif
 
             @empty
-                {{-- menus --}}
+            {{-- menus --}}
             @endforelse
-        @empty
+            @empty
             {{-- labelmenus --}}
-        @endforelse
+            @endforelse
 
-        {{-- <li class="sidebar-title">Forms &amp; Tables</li>
+            {{-- <li class="sidebar-title">Forms &amp; Tables</li>
       
       <li
           class="sidebar-item  ">

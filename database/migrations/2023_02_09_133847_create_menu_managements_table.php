@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('role')->nullable();
             $table->string('path');
             $table->string('icon');
+            $table->tinyInteger('important');
             $table->timestamps();
         });
     }

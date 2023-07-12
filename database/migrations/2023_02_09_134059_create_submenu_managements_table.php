@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('label_submenu');
             $table->string('path');
             $table->string('role')->nullable();
+            $table->tinyInteger('important');
             $table->timestamps();
         });
     }

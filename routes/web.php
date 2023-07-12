@@ -45,11 +45,9 @@ Route::group(['middleware' => ['isManager', 'isMenu'], 'prefix' => 'manager'], f
     Route::post('menu-managements/submenu', [MenuManagementController::class, 'handleSubMenu'])->name('menumanagement.submenu');
 
     Route::resource('tables/categories-tables', TableCategoryController::class, ['except' => ['edit', 'create']]);
-
     Route::resource('tables/information-tables', InformationTableController::class, ['except' => ['edit', 'create']]);
 
     Route::resource('food-managements/food-categories', FoodCategoryController::class, ['except' => 'edit', 'create']);
-
     Route::resource('food-managements/food', FoodListController::class, ['except' => ['create', 'edit', 'update']]);
     Route::post('food-managements/food/{id}', [FoodListController::class, 'update'])->name('food.update');
 
@@ -66,11 +64,9 @@ Route::group(['middleware' => ['isCashier', 'isMenu'], 'prefix' => 'cashier'], f
     Route::get('/', [CashierDashboard::class, 'index'])->name('cashier.index');
 
     Route::resource('tables/categories-tables', TableCategoryController::class, ['except' => ['edit', 'create']]);
-
     Route::resource('tables/information-tables', InformationTableController::class, ['except' => ['edit', 'create']]);
 
     Route::resource('food-managements/food-categories', FoodCategoryController::class, ['except' => 'edit', 'create']);
-
     Route::resource('food-managements/food', FoodListController::class, ['except' => ['create', 'edit', 'update']]);
     Route::post('food-managements/food/{id}', [FoodListController::class, 'update'])->name('food.update');
 

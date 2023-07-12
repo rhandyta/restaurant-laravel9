@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('label_title');
             $table->string('role');
+            $table->tinyInteger('important');
             $table->timestamps();
         });
     }
