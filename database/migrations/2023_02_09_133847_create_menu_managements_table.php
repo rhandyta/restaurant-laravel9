@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('label_menu');
             $table->string('role')->nullable();
             $table->string('path');
-            $table->string('icon');
+            $table->string('icon')->nullable();
             $table->tinyInteger('important');
             $table->timestamps();
         });

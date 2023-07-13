@@ -21,6 +21,12 @@ class CartController extends Controller
                 }])
                 ->where('user_id', '=', $auth->id)
                 ->get();
+
+            $carts->transform(function ($cart) {
+                $cart['unit_price'] = (int)$cart->product->price;
+                return $cart;
+            });
+
             return response()->json([
                 'status_code' => Response::HTTP_OK,
                 'messages' => 'Data successfully fetch',

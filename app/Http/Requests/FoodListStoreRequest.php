@@ -31,7 +31,7 @@ class FoodListStoreRequest extends FormRequest
             'food_description' => 'required|string|min:3',
             'price' => 'required|numeric',
             'images' => 'required|array',
-            'images.*' => 'image|mimes:png,jpg,jpeg|max:2048'
+            'images.*' => 'image|mimes:png,jpg,jpeg|max:4096'
         ];
     }
 

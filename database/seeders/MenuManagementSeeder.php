@@ -32,11 +32,19 @@ class MenuManagementSeeder extends Seeder
             ],
             [
                 'labelmenu_id' => 3,
+                'label_menu' => "Menu Managements",
+                'role' => "manager",
+                'path' => "/menu-managements",
+                'icon' => "fa-solid fa-list-check",
+                'important' => 1
+            ],
+            [
+                'labelmenu_id' => 3,
                 'label_menu' => "Tables",
                 'role' => "both",
                 'path' => "/tables",
                 'icon' => "fa-solid fa-list-check",
-                'important' => 1
+                'important' => 2
             ],
             [
                 'labelmenu_id' => 3,
@@ -44,14 +52,14 @@ class MenuManagementSeeder extends Seeder
                 'role' => "both",
                 'path' => "/food-managements",
                 'icon' => "fa-solid fa-list-check",
-                'important' => 2
+                'important' => 3
             ], [
                 'labelmenu_id' => 3,
                 'label_menu' => "Accounts",
                 'role' => "manager",
                 'path' => "/accounts",
                 'icon' => "fa-solid fa-list-check",
-                'important' => 3
+                'important' => 4
             ], [
                 'labelmenu_id' => 4,
                 'label_menu' => "Sign Out",
