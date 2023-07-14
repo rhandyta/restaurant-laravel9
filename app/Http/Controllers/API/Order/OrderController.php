@@ -25,7 +25,7 @@ class OrderController extends Controller
      */
     public function __invoke(Request $request)
     {
-        // try {
+        try {
             DB::beginTransaction();
             $auth = Auth::user();
             $orderId = "OR" . date('dmy')  . \Str::random(6);
@@ -76,7 +76,7 @@ class OrderController extends Controller
 
 
             $order = Order::create($createOrder);
-            // Mail::to($auth->email)->send(new MailOrderTransaction($auth, $order, $detailOrders));
+            Mail::to($auth->email)->send(new MailOrderTransaction($auth, $order, $detailOrders));
             DB::commit();
             return response()->json(
                 [
@@ -87,11 +87,11 @@ class OrderController extends Controller
                 ],
                 Response::HTTP_CREATED
             );
-        // } catch (Exception $e) {
-        //     return response()->json([
-        //             'messages' => $e->getMessage(),
-        //             'status_code' => Response::HTTP_BAD_REQUEST
-        //     ], Response::HTTP_BAD_REQUEST);
-        // }
+        } catch (Exception $e) {
+            return response()->json([
+                    'messages' => $e->getMessage(),
+                    'status_code' => Response::HTTP_BAD_REQUEST
+            ], Response::HTTP_BAD_REQUEST);
+        }
     }
 }
