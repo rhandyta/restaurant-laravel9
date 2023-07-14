@@ -20,10 +20,12 @@ class MailOrderTransaction extends Mailable
      */
 
     protected $transaction;
+    protected $auth;
 
-    public function __construct($transaction)
+    public function __construct($transaction, $auth)
     {
         $this->transaction = $transaction;
+        $this->auth = $auth;
     }
 
     /**
@@ -49,6 +51,7 @@ class MailOrderTransaction extends Mailable
             view: 'templates.order',
             with: [
                 'transaction' => $this->transaction,
+                'auth' => $this->auth
             ]
         );
     }

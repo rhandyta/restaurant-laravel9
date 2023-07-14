@@ -4,7 +4,7 @@
         <section id="section">
             <h1 style="font-size: 24px; margin-bottom: 20px;">Order {{ $transaction->order_id }} summary</h1>
             <p style="margin-bottom: 20px;">Dear <span
-                    style="font-weight: bold;">{{ $transaction->user->firstname }}</span>,
+                    style="font-weight: bold;">{{ $auth->firstname }}</span>,
             </p>
             <p style="margin-bottom: 20px;">
                 Terima kasih telah memesan makanan di <span style="font-weight: bold;">{{ env('APP_NAME') }}</span>.

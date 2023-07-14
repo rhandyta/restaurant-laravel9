@@ -53,28 +53,28 @@ class CallbackService extends Midtrans
           'transaction_message' => "Waiting for the customer to finish the transaction order: " . $order_id . " using " . $type,
           'transaction_code' => $notif->status_code,
         ]);
-        Mail::to($transactionUpdate->user->email)->send(new MailOrderTransaction($transactionUpdate));
+        Mail::to($transactionUpdate->user->email)->send(new MailTransaction($transactionUpdate));
       } else if ($transaction == 'deny') {
         $transactionUpdate->update([
           'transaction_status' => $notif->transaction_status,
           'transaction_message' => "Payment using " . $type . " for transaction order: " . $order_id . " is denied.",
           'transaction_code' => $notif->status_code,
         ]);
-        Mail::to($transactionUpdate->user->email)->send(new MailOrderTransaction($transactionUpdate));
+        Mail::to($transactionUpdate->user->email)->send(new MailTransaction($transactionUpdate));
       } else if ($transaction == 'expire') {
         $transactionUpdate->update([
           'transaction_status' => $notif->transaction_status,
           'transaction_message' => "Payment using " . $type . " for transaction order: " . $order_id . " is expired.",
           'transaction_code' => $notif->status_code,
         ]);
-        Mail::to($transactionUpdate->user->email)->send(new MailOrderTransaction($transactionUpdate));
+        Mail::to($transactionUpdate->user->email)->send(new MailTransaction($transactionUpdate));
       } else if ($transaction == 'cancel') {
         $transactionUpdate->update([
           'transaction_status' => $notif->transaction_status,
           'transaction_message' => "Payment using " . $type . " for transaction order: " . $order_id . " is canceled.",
           'transaction_code' => $notif->status_code,
         ]);
-        Mail::to($transactionUpdate->user->email)->send(new MailOrderTransaction($transactionUpdate));
+        Mail::to($transactionUpdate->user->email)->send(new MailTransaction($transactionUpdate));
       }
       DB::commit();
     } catch (\Exception $e) {
