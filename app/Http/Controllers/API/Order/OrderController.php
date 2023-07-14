@@ -53,7 +53,7 @@ class OrderController extends Controller
                 'bank_transfer' => ['bank' => $request->input('bank')],
                 // 'item_details' => $detailOrders
             ];
-            // return $transaction["transaction_details"]["gross_amount"];
+            
             $midtrans = new CreateSnapTokenService($transaction);
             $response = $midtrans->getSnapToken();
             $createOrder = [
