@@ -25,23 +25,25 @@ class OrderController extends Controller
      */
     public function __invoke(Request $request)
     {
-        DB::beginTransaction();
-        try {
+        // try {
+            DB::beginTransaction();
             $auth = Auth::user();
             $orderId = "OR" . date('dmy')  . \Str::random(6);
 
             $detailOrders = $request->input('detail_orders');
             $grossAmount = 0;
             $amount = 0;
+         
             foreach ($detailOrders as $detail) {
                 $detail['order_id'] = $orderId;
                 $detail["subtotal"] = $detail['quantity'] * $detail['unit_price'];
-                $detail["total_price"] = $detail['subtotal'] - $detail['discount'];
+                // $detail["total_price"] = $detail['subtotal'] - $detail['discount'];
+                $detail["total_price"] = $detail['subtotal'] - 0;
                 $grossAmount = $grossAmount + $detail['total_price'];
                 $amount = $amount + $detail['subtotal'];
+                $detail['product'] = $detail['food_name'];
                 DetailOrder::create($detail);
             }
-
             $transaction = [
                 'transaction_details' => [
                     'order_id' => $orderId,
@@ -51,15 +53,14 @@ class OrderController extends Controller
                 'bank_transfer' => ['bank' => $request->input('bank')],
                 // 'item_details' => $detailOrders
             ];
-
+            // return $transaction["transaction_details"]["gross_amount"];
             $midtrans = new CreateSnapTokenService($transaction);
             $response = $midtrans->getSnapToken();
-
             $createOrder = [
                 'order_id' => $orderId,
                 'user_id' => $auth->id,
                 "transaction_id" => $response->transaction_id,
-                "gross_amount" => $transaction['transaction_details']['gross_amount'],
+                "gross_amount" => $response->gross_amount,
                 "amount" => $amount,
                 "payment_type" => $request->input("payment_type"),
                 "transaction_status" => $response->transaction_status,
@@ -69,7 +70,8 @@ class OrderController extends Controller
                 "bank" => $request->input("bank"),
                 "va_number" => $response->va_numbers[0]->va_number,
                 "notes" => $request->input('notes'),
-                "discount" => $request->input('discount')
+                "discount" => $request->input('discount') ? $request->input('discount') : null,
+                'information_table' => $request->input('tables') . ' ' . $request->input('table')
             ];
 
 
@@ -85,13 +87,11 @@ class OrderController extends Controller
                 ],
                 Response::HTTP_CREATED
             );
-        } catch (Exception $e) {
-            return response()->json([
-                'data' => [
-                    'messages' => $e->getMessage(),
-                    'status_code' => Response::HTTP_BAD_REQUEST
-                ]
-            ], Response::HTTP_BAD_REQUEST);
-        }
+        // } catch (Exception $e) {
+        //     return response()->json([
+        //             'messages' => $e->getMessage(),
+        //             'status_code' => Response::HTTP_BAD_REQUEST
+        //     ], Response::HTTP_BAD_REQUEST);
+        // }
     }
 }

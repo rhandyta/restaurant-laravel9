@@ -24,6 +24,7 @@ class CartController extends Controller
 
             $carts->transform(function ($cart) {
                 $cart['unit_price'] = (int)$cart->product->price;
+                $cart["food_name"] = $cart->product->food_name;
                 return $cart;
             });
 
