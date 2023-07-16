@@ -6,6 +6,7 @@ use App\Http\Controllers\API\Food\ProductController;
 use App\Http\Controllers\API\Cart\CartController;
 use App\Http\Controllers\API\Order\OrderController;
 use App\Http\Controllers\API\Order\PaymentNotificationHandler;
+use App\Http\Controllers\API\Transaction\TransactionController;
 use App\Http\Controllers\API\Utils\UtilsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -55,6 +56,11 @@ Route::group(['prefix' => 'order', 'middleware' => 'auth:sanctum'], function () 
 
 // Webhook
 Route::post('payment-notification-handler', PaymentNotificationHandler::class);
+
+// Transaction
+Route::group(['middleware' => 'auth:sanctum', 'prefix' => 'transaction'], function () {
+    Route::get('/', [TransactionController::class, 'index']);
+});
 
 // LandingPage
 Route::get('top-selling', [ProductController::class, 'topSelling']);
