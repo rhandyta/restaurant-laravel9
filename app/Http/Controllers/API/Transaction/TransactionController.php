@@ -37,7 +37,7 @@ class TransactionController extends Controller
                     $query->with(['foodimages']);
                 }]);
             }])
-            ->get();
+            ->first();
 
         return response()->json([
             'status_code' => 200,
