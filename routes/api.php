@@ -60,6 +60,7 @@ Route::post('payment-notification-handler', PaymentNotificationHandler::class);
 // Transaction
 Route::group(['middleware' => 'auth:sanctum', 'prefix' => 'transaction'], function () {
     Route::get('/', [TransactionController::class, 'index']);
+    Route::get('/search', [TransactionController::class, 'detailTransaction']);
 });
 
 // LandingPage

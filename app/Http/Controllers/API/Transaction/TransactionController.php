@@ -19,12 +19,30 @@ class TransactionController extends Controller
 
         return response()->json([
             'status_code' => 200,
-            'data' => $transaction
+            'data' => $transaction,
+            'messages' => "Transaction sucessfully fetch"
         ], 200);
     }
 
     public function detailTransaction(Request $request)
     {
-        // 
+        $auth = Auth::user();
+        $query = $request->query('query');
+
+        $transactionDetail = Order::query()
+            ->where('user_id', '=', $auth->id)
+            ->where('transaction_id', '=', $query)
+            ->with(['detailorders' => function ($query) {
+                $query->with(['foodlist' => function ($query) {
+                    $query->with(['foodimages']);
+                }]);
+            }])
+            ->get();
+
+        return response()->json([
+            'status_code' => 200,
+            'data' => $transactionDetail,
+            'messages' => "Transaction sucessfully fetch"
+        ], 200);
     }
 }
