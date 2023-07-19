@@ -32,7 +32,7 @@ class TransactionController extends Controller
         $transactionDetail = Order::query()
             ->where('user_id', '=', $auth->id)
             ->where('transaction_id', '=', $query)
-            ->with(['detailorders' => function ($query) {
+            ->with(['user', 'detailorders' => function ($query) {
                 $query->with(['foodlist' => function ($query) {
                     $query->with(['foodimages']);
                 }]);
