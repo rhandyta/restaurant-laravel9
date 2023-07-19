@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\Order;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\Order\OrderRequest;
+use App\Jobs\MailOrderJob;
 use App\Mail\MailOrderTransaction;
 use App\Models\DetailOrder;
 use App\Models\Order;
@@ -33,7 +34,7 @@ class OrderController extends Controller
             $detailOrders = $request->input('detail_orders');
             $grossAmount = 0;
             $amount = 0;
-         
+
             foreach ($detailOrders as $detail) {
                 $detail['order_id'] = $orderId;
                 $detail["subtotal"] = $detail['quantity'] * $detail['unit_price'];
@@ -53,7 +54,7 @@ class OrderController extends Controller
                 'bank_transfer' => ['bank' => $request->input('bank')],
                 // 'item_details' => $detailOrders
             ];
-            
+
             $midtrans = new CreateSnapTokenService($transaction);
             $response = $midtrans->getSnapToken();
             $createOrder = [
@@ -73,10 +74,7 @@ class OrderController extends Controller
                 "discount" => $request->input('discount') ? $request->input('discount') : null,
                 'information_table' => $request->input('tables') . ' ' . $request->input('table')
             ];
-
-
             $order = Order::create($createOrder);
-            Mail::to($auth->email)->send(new MailOrderTransaction($order, $auth));
             DB::commit();
             return response()->json(
                 [
@@ -89,8 +87,8 @@ class OrderController extends Controller
             );
         } catch (Exception $e) {
             return response()->json([
-                    'messages' => $e->getMessage(),
-                    'status_code' => Response::HTTP_BAD_REQUEST
+                'messages' => $e->getMessage(),
+                'status_code' => Response::HTTP_BAD_REQUEST
             ], Response::HTTP_BAD_REQUEST);
         }
     }

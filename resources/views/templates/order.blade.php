@@ -1,10 +1,8 @@
 <body>
-    <div id="container"
-        style="max-width: 600px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; color: #333;">
+    <div id="container" style="max-width: 600px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; color: #333;">
         <section id="section">
             <h1 style="font-size: 24px; margin-bottom: 20px;">Order {{ $transaction->order_id }} summary</h1>
-            <p style="margin-bottom: 20px;">Dear <span
-                    style="font-weight: bold;">{{ $auth->firstname }}</span>,
+            <p style="margin-bottom: 20px;">Dear <span style="font-weight: bold;">{{ $transaction->user->firstname }}</span>,
             </p>
             <p style="margin-bottom: 20px;">
                 Terima kasih telah memesan makanan di <span style="font-weight: bold;">{{ env('APP_NAME') }}</span>.
@@ -14,21 +12,18 @@
             <table id="table" style="width: 100%; border-collapse: collapse;">
                 <thead>
                     @php
-                        $discount = 0;
+                    $discount = 0;
                     @endphp
                     @foreach ($transaction->detailOrders as $item)
-                        <tr style="border-bottom: 1px solid; color: #c4c3c3;">
-                            <td style="padding: 5px; color: black;"><img
-                                    src="{{ $item->foodlist->foodimages[0]->image_url }}" alt="{{ $item['product'] }}"
-                                    width="50px" height="50px"></td>
-                            <td style="padding: 5px; color: black;">{{ $item['product'] }} <span
-                                    style="margin-left: 10px">{{ $item['quantity'] }}</span></td>
-                            <td style="padding: 5px; color: black;">
-                                Rp{{ $item['unit_price'] * $item['quantity'] }}</td>
-                            @php
-                                $discount = $discount + $item['discount'];
-                            @endphp
-                        </tr>
+                    <tr style="border-bottom: 1px solid; color: #c4c3c3;">
+                        <td style="padding: 5px; color: black;"><img src="{{ $item->foodlist->foodimages[0]->image_url }}" alt="{{ $item['product'] }}" width="50px" height="50px"></td>
+                        <td style="padding: 5px; color: black;">{{ $item['product'] }} <span style="margin-left: 10px">{{ $item['quantity'] }}</span></td>
+                        <td style="padding: 5px; color: black;">
+                            Rp{{ $item['unit_price'] * $item['quantity'] }}</td>
+                        @php
+                        $discount = $discount + $item['discount'];
+                        @endphp
+                    </tr>
                     @endforeach
                 </thead>
                 <tbody>
@@ -55,8 +50,7 @@
                         <td style="padding: 5px; text-transform: uppercase;">{{ $transaction->bank }}</td>
                     </tr>
                     <tr>
-                        <td colspan="2" align="right" style="padding: 5px;"><span
-                                style="text-transform: uppercase;">{{ $transaction->bank }} </span>Virtual Account:
+                        <td colspan="2" align="right" style="padding: 5px;"><span style="text-transform: uppercase;">{{ $transaction->bank }} </span>Virtual Account:
                         </td>
                         <td style="padding: 5px;">{{ $transaction->va_number }}</td>
                     </tr>
@@ -66,12 +60,10 @@
             <div class="info" style="margin-top: 20px;">
                 <div style="margin-bottom: 10px;">
                     <p style="margin-bottom: 10px;">Jika Anda memiliki pertanyaan atau perlu bantuan lebih lanjut,
-                        jangan ragu untuk menghubungi tim layanan pelanggan kami di <span style="font-weight: bold;"><a
-                                href="tel:+62815343433">+62815343433</a></span> atau melalui email ini.</p>
+                        jangan ragu untuk menghubungi tim layanan pelanggan kami di <span style="font-weight: bold;"><a href="tel:+62815343433">+62815343433</a></span> atau melalui email ini.</p>
                 </div>
                 <div>
-                    <p style="margin-bottom: 0;">Terima kasih atas kepercayaan Anda pada <span
-                            style="font-weight: bold;">{{ env('APP_NAME') }}</span>. Kami berharap Anda menikmati
+                    <p style="margin-bottom: 0;">Terima kasih atas kepercayaan Anda pada <span style="font-weight: bold;">{{ env('APP_NAME') }}</span>. Kami berharap Anda menikmati
                         hidangan
                         yang Anda pesan.</p>
                     <p style="margin-top: 0; font-style: italic;">Salam hangat, regards</p>

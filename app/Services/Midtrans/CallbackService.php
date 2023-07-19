@@ -2,8 +2,8 @@
 
 namespace App\Services\Midtrans;
 
+use App\Jobs\MailOrderJob;
 use App\Mail\MailOrderTransaction;
-use App\Mail\MailTransaction;
 use App\Models\Order;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -22,14 +22,10 @@ class CallbackService extends Midtrans
 
   public function webHook()
   {
-    DB::beginTransaction();
     try {
+      DB::beginTransaction();
       $notif = new \Midtrans\Notification();
-      $transaction = $notif->transaction_status;
-      $type = $notif->payment_type;
-      $order_id = $notif->order_id;
-
-      $transaction = $notif->transaction_status;
+      $transaction_status = $notif->transaction_status;
       $type = $notif->payment_type;
       $order_id = $notif->order_id;
       $transactionUpdate = Order::query()
@@ -40,47 +36,44 @@ class CallbackService extends Midtrans
         }])
         ->where('order_id', '=', $order_id)->first();
 
-      if ($transaction == 'settlement') {
+      if ($transaction_status == 'settlement') {
         $transactionUpdate->update([
           'transaction_status' => $notif->transaction_status,
-          'transaction_message' => "Transaction order: " . $order_id . " successfully transferred using " . $type,
+          'transaction_message' => "Transaction order: " . $order_id . " successfully transferred using " . $transactionUpdate->bank,
           'transaction_code' => $notif->status_code,
         ]);
-        Mail::to($transactionUpdate->user->email)->send(new MailTransaction($transactionUpdate));
-      } else if ($transaction == 'pending') {
+        MailOrderJob::dispatchIf($transactionUpdate, $transactionUpdate, $transactionUpdate->user, $transaction_status)->delay(now()->addMinutes(1));
+      } else if ($transaction_status == 'pending') {
         $transactionUpdate->update([
           'transaction_status' => $notif->transaction_status,
-          'transaction_message' => "Waiting for the customer to finish the transaction order: " . $order_id . " using " . $type,
+          'transaction_message' => "Waiting for the customer to finish the transaction order: " . $order_id . " using " . $transactionUpdate->bank,
           'transaction_code' => $notif->status_code,
         ]);
-        Mail::to($transactionUpdate->user->email)->send(new MailTransaction($transactionUpdate));
-      } else if ($transaction == 'deny') {
+        MailOrderJob::dispatchIf($transactionUpdate, $transactionUpdate, $transactionUpdate->user, $transaction_status)->delay(now()->addMinutes(1));
+      } else if ($transaction_status == 'deny') {
         $transactionUpdate->update([
           'transaction_status' => $notif->transaction_status,
-          'transaction_message' => "Payment using " . $type . " for transaction order: " . $order_id . " is denied.",
+          'transaction_message' => "Payment using " . $transactionUpdate->bank . " for transaction order: " . $order_id . " is denied.",
           'transaction_code' => $notif->status_code,
         ]);
-        Mail::to($transactionUpdate->user->email)->send(new MailTransaction($transactionUpdate));
-      } else if ($transaction == 'expire') {
+        MailOrderJob::dispatchIf($transactionUpdate, $transactionUpdate, $transactionUpdate->user, $transaction_status)->delay(now()->addMinutes(1));
+      } else if ($transaction_status == 'expire') {
         $transactionUpdate->update([
           'transaction_status' => $notif->transaction_status,
-          'transaction_message' => "Payment using " . $type . " for transaction order: " . $order_id . " is expired.",
+          'transaction_message' => "Payment using " . $transactionUpdate->bank . " for transaction order: " . $order_id . " is expired.",
           'transaction_code' => $notif->status_code,
         ]);
-        Mail::to($transactionUpdate->user->email)->send(new MailTransaction($transactionUpdate));
-      } else if ($transaction == 'cancel') {
+        MailOrderJob::dispatchIf($transactionUpdate, $transactionUpdate, $transactionUpdate->user, $transaction_status)->delay(now()->addMinutes(1));
+      } else if ($transaction_status == 'cancel') {
         $transactionUpdate->update([
           'transaction_status' => $notif->transaction_status,
-          'transaction_message' => "Payment using " . $type . " for transaction order: " . $order_id . " is canceled.",
+          'transaction_message' => "Payment using " . $transactionUpdate->bank . " for transaction order: " . $order_id . " is canceled.",
           'transaction_code' => $notif->status_code,
         ]);
-        Mail::to($transactionUpdate->user->email)->send(new MailTransaction($transactionUpdate));
+        MailOrderJob::dispatchIf($transactionUpdate, $transactionUpdate, $transactionUpdate->user, $transaction_status)->delay(now()->addMinutes(1));
       }
       DB::commit();
     } catch (\Exception $e) {
-
-      // Penanganan kesalahan
-      // Misalnya, mengirim email ke administrator untuk memberi tahu bahwa ada kesalahan dalam pemrosesan pembayaran
       Mail::to('sendingemail117@gmail.com')->send(new MailOrderTransaction($order_id, $e->getMessage()));
       DB::rollBack();
     }
