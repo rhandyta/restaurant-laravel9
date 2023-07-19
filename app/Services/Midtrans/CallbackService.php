@@ -42,35 +42,35 @@ class CallbackService extends Midtrans
           'transaction_message' => "Transaction order: " . $order_id . " successfully transferred using " . $transactionUpdate->bank,
           'transaction_code' => $notif->status_code,
         ]);
-        MailOrderJob::dispatchIf($transactionUpdate, $transactionUpdate, $transactionUpdate->user, $transaction_status)->delay(now()->addMinutes(1));
+        MailOrderJob::dispatchIf($transactionUpdate, $transactionUpdate, $transactionUpdate->user, $transaction_status)->delay(now()->addSeconds(20));
       } else if ($transaction_status == 'pending') {
         $transactionUpdate->update([
           'transaction_status' => $notif->transaction_status,
           'transaction_message' => "Waiting for the customer to finish the transaction order: " . $order_id . " using " . $transactionUpdate->bank,
           'transaction_code' => $notif->status_code,
         ]);
-        MailOrderJob::dispatchIf($transactionUpdate, $transactionUpdate, $transactionUpdate->user, $transaction_status)->delay(now()->addMinutes(1));
+        MailOrderJob::dispatchIf($transactionUpdate, $transactionUpdate, $transactionUpdate->user, $transaction_status)->delay(now()->addSeconds(20));
       } else if ($transaction_status == 'deny') {
         $transactionUpdate->update([
           'transaction_status' => $notif->transaction_status,
           'transaction_message' => "Payment using " . $transactionUpdate->bank . " for transaction order: " . $order_id . " is denied.",
           'transaction_code' => $notif->status_code,
         ]);
-        MailOrderJob::dispatchIf($transactionUpdate, $transactionUpdate, $transactionUpdate->user, $transaction_status)->delay(now()->addMinutes(1));
+        MailOrderJob::dispatchIf($transactionUpdate, $transactionUpdate, $transactionUpdate->user, $transaction_status)->delay(now()->addSeconds(20));
       } else if ($transaction_status == 'expire') {
         $transactionUpdate->update([
           'transaction_status' => $notif->transaction_status,
           'transaction_message' => "Payment using " . $transactionUpdate->bank . " for transaction order: " . $order_id . " is expired.",
           'transaction_code' => $notif->status_code,
         ]);
-        MailOrderJob::dispatchIf($transactionUpdate, $transactionUpdate, $transactionUpdate->user, $transaction_status)->delay(now()->addMinutes(1));
+        MailOrderJob::dispatchIf($transactionUpdate, $transactionUpdate, $transactionUpdate->user, $transaction_status)->delay(now()->addSeconds(20));
       } else if ($transaction_status == 'cancel') {
         $transactionUpdate->update([
           'transaction_status' => $notif->transaction_status,
           'transaction_message' => "Payment using " . $transactionUpdate->bank . " for transaction order: " . $order_id . " is canceled.",
           'transaction_code' => $notif->status_code,
         ]);
-        MailOrderJob::dispatchIf($transactionUpdate, $transactionUpdate, $transactionUpdate->user, $transaction_status)->delay(now()->addMinutes(1));
+        MailOrderJob::dispatchIf($transactionUpdate, $transactionUpdate, $transactionUpdate->user, $transaction_status)->delay(now()->addSeconds(20));
       }
       DB::commit();
     } catch (\Exception $e) {
