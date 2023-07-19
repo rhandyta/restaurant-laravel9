@@ -26,70 +26,89 @@ class OrderController extends Controller
      */
     public function __invoke(Request $request)
     {
-        try {
-            DB::beginTransaction();
-            $auth = Auth::user();
-            $orderId = "OR" . date('dmy')  . \Str::random(6);
+        // try {
+        DB::beginTransaction();
+        $auth = Auth::user();
+        $orderId = "OR" . date('dmy')  . \Str::random(6);
 
-            $detailOrders = $request->input('detail_orders');
-            $grossAmount = 0;
-            $amount = 0;
+        $detailOrders = $request->input('detail_orders');
+        $grossAmount = 0;
+        $amount = 0;
+        $details = [];
+        foreach ($detailOrders as $detail) {
+            $detail['price'] = $detail['unit_price'] + ($detail['unit_price'] * 0.11);
+            $detail['quantity'] = $detail['quantity'];
+            $detail['name'] = $detail['food_name'];
+            $detail['id'] = $detail['id'];
 
-            foreach ($detailOrders as $detail) {
-                $detail['order_id'] = $orderId;
-                $detail["subtotal"] = $detail['quantity'] * $detail['unit_price'];
-                // $detail["total_price"] = $detail['subtotal'] - $detail['discount'];
-                $detail["total_price"] = $detail['subtotal'] - 0;
-                $grossAmount = $grossAmount + $detail['total_price'];
-                $amount = $amount + $detail['subtotal'];
-                $detail['product'] = $detail['food_name'];
-                DetailOrder::create($detail);
-            }
-            $transaction = [
-                'transaction_details' => [
-                    'order_id' => $orderId,
-                    'gross_amount' => $grossAmount + ($grossAmount * 0.11),
-                ],
-                "payment_type" => $request->input('payment_type'),
-                'bank_transfer' => ['bank' => $request->input('bank')],
-                // 'item_details' => $detailOrders
-            ];
-
-            $midtrans = new CreateSnapTokenService($transaction);
-            $response = $midtrans->getSnapToken();
-            $createOrder = [
-                'order_id' => $orderId,
-                'user_id' => $auth->id,
-                "transaction_id" => $response->transaction_id,
-                "gross_amount" => $response->gross_amount,
-                "amount" => $amount,
-                "payment_type" => $request->input("payment_type"),
-                "transaction_status" => $response->transaction_status,
-                "transaction_code" => $response->status_code,
-                "transaction_message" => $response->status_message,
-                "signature_key" => hash('sha512', $orderId . $response->status_code . $response->gross_amount . config('midtrans.server_key')),
-                "bank" => $request->input("bank"),
-                "va_number" => $response->va_numbers[0]->va_number,
-                "notes" => $request->input('notes'),
-                "discount" => $request->input('discount') ? $request->input('discount') : null,
-                'information_table' => $request->input('tables') . ' ' . $request->input('table')
-            ];
-            $order = Order::create($createOrder);
-            DB::commit();
-            return response()->json(
-                [
-                    'user' => $auth,
-                    'data' => ['order' => $order, 'detail_order' => $detailOrders, 'user' => $auth],
-                    'status_code' => Response::HTTP_CREATED,
-                    'messages' => $order["transaction_message"]
-                ],
-                Response::HTTP_CREATED
-            );
-        } catch (Exception $e) {
-            return response()->json([
-                'messages' => $e->getMessage(),
-                'status_code' => Response::HTTP_BAD_REQUEST
-            ], Response::HTTP_BAD_REQUEST);
+            $detail['order_id'] = $orderId;
+            $detail["subtotal"] = $detail['quantity'] * $detail['unit_price'];
+            // $detail["total_price"] = $detail['subtotal'] - $detail['discount'];
+            $detail["total_price"] = $detail['subtotal'] - 0;
+            $grossAmount = $grossAmount + $detail['total_price'];
+            $amount = $amount + $detail['subtotal'];
+            $detail['product'] = $detail['food_name'];
+            DetailOrder::create($detail);
+            array_push($details, $detail);
         }
+        $transaction = [
+            'transaction_details' => [
+                'order_id' => $orderId,
+                'gross_amount' => $grossAmount + ($grossAmount * 0.11),
+            ],
+            "payment_type" => $request->input('payment_type'),
+            'bank_transfer' => ['bank' => $request->input('bank')],
+            'item_details' => $details,
+            'customer_details' => [
+                "first_name" => $auth->firstname,
+                "last_name" => $auth->lastname,
+                "email" => $auth->email,
+                "phone" => $auth->telephone,
+                "billing_address" => [
+                    "first_name" => $auth->firstname,
+                    "last_name" => $auth->lastname,
+                    "email" => $auth->email,
+                    "phone" => $auth->telephone,
+                    "country_code" => "IDN"
+                ]
+            ]
+        ];
+
+        $midtrans = new CreateSnapTokenService($transaction);
+        $response = $midtrans->getSnapToken();
+        $createOrder = [
+            'order_id' => $orderId,
+            'user_id' => $auth->id,
+            "transaction_id" => $response->transaction_id,
+            "gross_amount" => $response->gross_amount,
+            "amount" => $amount,
+            "payment_type" => $request->input("payment_type"),
+            "transaction_status" => $response->transaction_status,
+            "transaction_code" => $response->status_code,
+            "transaction_message" => $response->status_message,
+            "signature_key" => hash('sha512', $orderId . $response->status_code . $response->gross_amount . config('midtrans.server_key')),
+            "bank" => $request->input("bank"),
+            "va_number" => $response->va_numbers[0]->va_number,
+            "notes" => $request->input('notes'),
+            "discount" => $request->input('discount') ? $request->input('discount') : null,
+            'information_table' => $request->input('tables') . ' ' . $request->input('table')
+        ];
+        $order = Order::create($createOrder);
+        DB::commit();
+        return response()->json(
+            [
+                'user' => $auth,
+                'data' => ['order' => $order, 'detail_order' => $detailOrders, 'user' => $auth],
+                'status_code' => Response::HTTP_CREATED,
+                'messages' => $order["transaction_message"]
+            ],
+            Response::HTTP_CREATED
+        );
+        // } catch (Exception $e) {
+        //     return response()->json([
+        //         'messages' => $e->getMessage(),
+        //         'status_code' => Response::HTTP_BAD_REQUEST
+        //     ], Response::HTTP_BAD_REQUEST);
+        // }
     }
 }
