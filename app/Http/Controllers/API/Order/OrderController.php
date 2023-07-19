@@ -97,7 +97,6 @@ class OrderController extends Controller
         DB::commit();
         return response()->json(
             [
-                'user' => $auth,
                 'data' => ['order' => $order, 'detail_order' => $detailOrders, 'user' => $auth],
                 'status_code' => Response::HTTP_CREATED,
                 'messages' => $order["transaction_message"]
