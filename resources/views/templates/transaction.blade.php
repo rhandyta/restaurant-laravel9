@@ -64,7 +64,11 @@
                     </tr>
                     <tr>
                         <td colspan="2" align="right" style="padding: 5px;">Metode Pembayaran:</td>
-                        <td style="padding: 5px; text-transform: uppercase;">{{ $transaction->bank }}</td>
+                        @if($transaction->payment_type == 'bank_transfer')
+                        <td style="padding: 5px; text-transform: uppercase; font-weight: bold;">{{ $transaction->bank }}</td>
+                        @else 
+                        <td style="padding: 5px; text-transform: uppercase; font-weight: bold;">{{ $transaction->payment_type }}</td>
+                        @endif
                     </tr>
                 </tbody>
             </table>

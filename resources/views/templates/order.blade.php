@@ -47,13 +47,19 @@
                     </tr>
                     <tr>
                         <td colspan="2" align="right" style="padding: 5px;">Metode Pembayaran:</td>
-                        <td style="padding: 5px; text-transform: uppercase;">{{ $transaction->bank }}</td>
+                       @if($transaction->payment_type == 'bank_transfer')
+                       <td style="padding: 5px; text-transform: uppercase; font-weight: bold;">{{ $transaction->bank }}</td>
+                       @else 
+                       <td style="padding: 5px; text-transform: uppercase; font-weight: bold;">{{ $transaction->payment_type }}</td>
+                       @endif
                     </tr>
+                    @if ($transaction->payment_type == 'bank_transfer')
                     <tr>
                         <td colspan="2" align="right" style="padding: 5px;"><span style="text-transform: uppercase;">{{ $transaction->bank }} </span>Virtual Account:
                         </td>
                         <td style="padding: 5px;">{{ $transaction->va_number }}</td>
                     </tr>
+                    @endif
                 </tbody>
             </table>
             <hr style="border-bottom: 1px solid; color: #c4c3c3;">
