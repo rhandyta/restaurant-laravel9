@@ -16,10 +16,6 @@ class UtilsController extends Controller
         // 
     }
 
-    public function getEwallet()
-    {
-        // 
-    }
 
     public function getTableCategories()
     {

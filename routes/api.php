@@ -46,7 +46,6 @@ Route::group(['prefix' => 'utils', 'middleware' => 'auth:sanctum'], function () 
     Route::get('tables', [UtilsController::class, 'getTableCategories']);
     Route::get('table', [UtilsController::class, 'getTables']);
     Route::get('bank-transfer', [UtilsController::class, 'getBankTransfer']);
-    Route::get('e-wallet', [UtilsController::class, 'getEwallet']);
 });
 
 // Checkout
