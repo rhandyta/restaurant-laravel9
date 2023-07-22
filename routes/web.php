@@ -7,6 +7,7 @@ use App\Http\Controllers\FoodListController;
 use App\Http\Controllers\InformationTableController;
 use App\Http\Controllers\Manager\DashboardController as ManagerDashboard;
 use App\Http\Controllers\Manager\MenuManagementController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\TableCategoryController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -38,18 +39,23 @@ Route::group(['prefix' => 'auth'], function () {
 Route::group(['middleware' => ['isManager', 'isMenu'], 'prefix' => 'manager'], function () {
     Route::get('/', [ManagerDashboard::class, 'index'])->name('manager.index');
 
-
+    // Menu Management
     Route::get('menu-managements', [MenuManagementController::class, 'index'])->name('menumanagement.index');
     Route::post('menu-managements/label', [MenuManagementController::class, 'handleLabelMenu'])->name('menumanagement.labelMenu');
     Route::post('menu-managements/menu', [MenuManagementController::class, 'handleMenu'])->name('menumanagement.menu');
     Route::post('menu-managements/submenu', [MenuManagementController::class, 'handleSubMenu'])->name('menumanagement.submenu');
 
+    // Table Management
     Route::resource('tables/categories-tables', TableCategoryController::class, ['except' => ['edit', 'create']]);
     Route::resource('tables/information-tables', InformationTableController::class, ['except' => ['edit', 'create']]);
 
+    // Food Management
     Route::resource('food-managements/food-categories', FoodCategoryController::class, ['except' => 'edit', 'create']);
     Route::resource('food-managements/food', FoodListController::class, ['except' => ['create', 'edit', 'update']]);
     Route::post('food-managements/food/{id}', [FoodListController::class, 'update'])->name('food.update');
+
+    // Orders & Transaction Management
+    Route::get('orders', [OrderController::class, 'index']);
 
     Route::get('logout', function () {
         Auth::logout();
@@ -63,12 +69,18 @@ Route::group(['middleware' => ['isManager', 'isMenu'], 'prefix' => 'manager'], f
 Route::group(['middleware' => ['isCashier', 'isMenu'], 'prefix' => 'cashier'], function () {
     Route::get('/', [CashierDashboard::class, 'index'])->name('cashier.index');
 
+    // Table Management
     Route::resource('tables/categories-tables', TableCategoryController::class, ['except' => ['edit', 'create']]);
     Route::resource('tables/information-tables', InformationTableController::class, ['except' => ['edit', 'create']]);
 
+
+    // Food Management
     Route::resource('food-managements/food-categories', FoodCategoryController::class, ['except' => 'edit', 'create']);
     Route::resource('food-managements/food', FoodListController::class, ['except' => ['create', 'edit', 'update']]);
     Route::post('food-managements/food/{id}', [FoodListController::class, 'update'])->name('food.update');
+
+    // Orders & Transaction Management
+    Route::get('orders', [OrderController::class, 'index']);
 
     Route::get('logout', function () {
         Auth::logout();

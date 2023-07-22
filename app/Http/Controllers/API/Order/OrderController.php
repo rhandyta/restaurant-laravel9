@@ -5,12 +5,12 @@ namespace App\Http\Controllers\API\Order;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\Order\OrderRequest;
 use App\Jobs\MailOrderJob;
+use App\Models\Cart;
 use App\Models\DetailOrder;
 use App\Models\Order;
 use App\Models\TableCategory;
 use App\Services\Midtrans\CreateSnapTokenService;
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -133,7 +133,7 @@ class OrderController extends Controller
             }
 
 
-
+            Cart::where('user_id', '=', $auth->id)->delete();
             DB::commit();
             return response()->json(
                 [
