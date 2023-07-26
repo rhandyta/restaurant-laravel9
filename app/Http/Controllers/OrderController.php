@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use Illuminate\Http\Request;
 
+
 class OrderController extends Controller
 {
     public function index(Request $request)
@@ -12,19 +13,17 @@ class OrderController extends Controller
 
         $orderId = $request->input('order_id');
         $transactionId = $request->input('transaction_id');
-        $userName = $request->input('username');
-        $sort_by = $request->input('sort_by') ? $request->input('sort_by') : 'created_at';
-        $sort_by_option = $request->input('sort_by_option') ? $request->input('sort_by_option') : 'desc';
-        $limit = $request->input('limit');
+        $search = $request->input('search');
+        $limit = $request->input('limit') ? $request->input('limit') : 15;
 
         $orders = Order::query()
-            ->with(['detailorders', 'user'])
-            ->when($userName, function ($query) use ($userName) {
-                $query->whereHas('user', function ($builder) use ($userName) {
-                    $builder->where('email', 'LIKE', '%' . $userName . '%')
-                        ->orWhere('firstname', "LIKE", '%' . $userName . '%')
-                        ->orWhere('middlename', 'LIKE', '%' . $userName . '%')
-                        ->orWhere('lastname', 'LIKE', '%' . $userName . '%');
+            ->with(['user'])
+            ->when($search, function ($query) use ($search) {
+                $query->whereHas('user', function ($builder) use ($search) {
+                    $builder->where('email', 'LIKE', '%' . $search . '%')
+                        ->orWhere('firstname', "LIKE", '%' . $search . '%')
+                        ->orWhere('middlename', 'LIKE', '%' . $search . '%')
+                        ->orWhere('lastname', 'LIKE', '%' . $search . '%');
                 });
             })
             ->when($transactionId, function ($query) use ($transactionId) {
@@ -33,28 +32,19 @@ class OrderController extends Controller
             ->when($orderId, function ($query) use ($orderId) {
                 $query->where('order_id', '=', $orderId);
             })
-            ->when($sort_by, function ($query, $sort_by) use ($sort_by_option) {
-                $query->orderBy($sort_by, $sort_by_option);
-            })
+            ->orderBy('created_at', 'desc')
             ->paginate($limit);
 
 
         $orders->appends([
             'order_id' => $orderId,
             'transaction_id' => $transactionId,
-            'firstname' => $userName,
-            'middlename' => $userName,
-            'lastname' => $userName,
-            'sort_by' => $sort_by,
-            'sort_by_option' => $sort_by_option,
+            'firstname' => $search,
+            'middlename' => $search,
+            'lastname' => $search,
             'limit' => $limit
         ]);
 
-
-        return response()->json([
-            'status_code' => 200,
-            'messages' => 'Success fetch orders',
-            'data' => $orders
-        ]);
+        return view('orders.index', compact('orders'));
     }
 }

@@ -55,7 +55,7 @@ Route::group(['middleware' => ['isManager', 'isMenu'], 'prefix' => 'manager'], f
     Route::post('food-managements/food/{id}', [FoodListController::class, 'update'])->name('food.update');
 
     // Orders & Transaction Management
-    Route::get('orders', [OrderController::class, 'index']);
+    Route::get('orders', [OrderController::class, 'index'])->name('orders-manager.index');
 
     Route::get('logout', function () {
         Auth::logout();

@@ -21,3 +21,7 @@ const errorToast = (message, duration = 3000) => {
         backgroundColor: "#eb4f34",
     }).showToast();
 };
+
+const convertRupiah = (value) => {
+    return value.toLocaleString("id-ID");
+};
