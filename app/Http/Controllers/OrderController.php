@@ -47,4 +47,25 @@ class OrderController extends Controller
 
         return view('orders.index', compact('orders'));
     }
+
+
+    public function store()
+    {
+        //
+    }
+
+    public function show($id)
+    {
+        //
+    }
+
+    public function update()
+    {
+        //
+    }
+
+    public function destroy()
+    {
+        //
+    }
 }
