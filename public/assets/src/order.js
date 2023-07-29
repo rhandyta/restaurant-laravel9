@@ -2,32 +2,85 @@ const addModal = document.querySelector("#order");
 const gross_amount = document.querySelectorAll(".gross_amount");
 const searchForm = document.querySelector("#search");
 const page = document.querySelector("#page");
+const tBodyAdd = document.querySelector("#tbody_table_order_add");
+const formOrder = document.querySelector("#formorder");
 const queryString = window.location.search;
 const params = new URLSearchParams(queryString);
 const queries = Object.fromEntries(params.entries());
+let rowNumber = 1;
 
 const __onSubmitSearchHandle = async (limit, search) => {
     window.location.replace(`${SEGMENT_URL}?limit=${limit}&search=${search}`);
 };
 
-const __getProduct = async () => {
-    try {
-        const request = await fetch(`${API_URL}/products`, {
-            method: "GET",
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-            },
-        });
-        const response = await request.json();
-        if (response.status_code != 200) {
-            throw Error("something went wrong");
+const __addShowModal = () => {
+    const addRow = document.querySelector("#add_row");
+    const deleteRow = document.querySelector("#delete_row");
+    addRow.addEventListener("click", __addRow);
+    deleteRow.addEventListener("click", __deleteRow);
+    return () => {
+        addRow.removeEventListener("click", __addRow);
+        deleteRow.removeEventListener("click", __deleteRow);
+    };
+};
+
+const __addRow = () => {
+    let newRow = rowNumber - 1;
+    let sourceElement = document.querySelector(`#product${newRow}`);
+    const createElementTr = document.createElement("tr");
+    createElementTr.setAttribute("id", `product${rowNumber}`);
+    // Membuat elemen select baru dengan mengkloning dari elemen sebelumnya
+    let newSelect = sourceElement.querySelector("select").cloneNode(true);
+    // Mendapatkan nilai yang sudah dipilih pada select sebelumnya
+    let selectedValue = sourceElement.querySelector("select").value;
+    // Menghapus opsi yang sudah dipilih dari elemen select baru
+    for (const option of newSelect.options) {
+        if (option.value === selectedValue) {
+            option.remove();
         }
-        return response.data;
-    } catch (error) {
-        errorToast(error);
+    }
+    // Menambahkan elemen select baru ke dalam elemen <td>
+    let newTd = document.createElement("td");
+    newTd.classList.add("col-12", "col-md-9");
+    newTd.appendChild(newSelect);
+    // Menambahkan elemen <td> ke dalam elemen <tr>
+    createElementTr.appendChild(newTd);
+    // Membuat elemen input quantity baru
+    let newQuantityInput = document.createElement("input");
+    newQuantityInput.setAttribute("type", "number");
+    newQuantityInput.setAttribute("class", "form-control");
+    newQuantityInput.setAttribute("name", "quantities[]");
+    newQuantityInput.setAttribute("placeholder", "5");
+    newQuantityInput.value = ""; // Mengatur nilai default quantity menjadi kosong
+    // Membuat elemen <td> dengan input quantity baru dan menambahkannya ke dalam elemen <tr>
+    let newTdQuantity = document.createElement("td");
+    newTdQuantity.classList.add("col-auto");
+    newTdQuantity.appendChild(newQuantityInput);
+    createElementTr.appendChild(newTdQuantity);
+    // Mengklon elemen <td> lainnya dan menambahkannya ke dalam elemen <tr>
+    for (let i = 2; i < sourceElement.children.length; i++) {
+        let td = sourceElement.children[i].cloneNode(true);
+        createElementTr.appendChild(td);
+    }
+    // Menambahkan elemen <tr> ke dalam <tbody>
+    tBodyAdd.appendChild(createElementTr);
+    rowNumber++;
+};
+
+const __deleteRow = () => {
+    if (rowNumber > 1) {
+        tBodyAdd.removeChild(tBodyAdd.lastElementChild);
+        rowNumber--;
     }
 };
+
+async function __storeSubmitHandler(event) {
+    event.preventDefault();
+    const data = new FormData(formOrder);
+    for (const [name, value] of data.entries()) {
+        console.log(`${name}: ${value}`);
+    }
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     let limit = 15;
@@ -58,29 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
         __onSubmitSearchHandle(page.value, this.search.value);
     });
 
-    addModal.addEventListener("shown.bs.modal", async function (event) {
-        const tBodyAdd = document.querySelector("#tbody_table_order_add");
-        const addRow = document.querySelector("#add_row");
-        const deleteRow = document.querySelector("#delete_row");
-        let rowNumber = 1;
+    addModal.addEventListener("shown.bs.modal", __addShowModal);
 
-        addRow.addEventListener("click", function (event) {
-            let newRow = rowNumber - 1;
-            let sourceElement = document.querySelector(`#product${newRow}`);
-            const createElementTr = document.createElement("tr");
-            createElementTr.setAttribute("id", `product${rowNumber}`);
-            for (const child of sourceElement.children) {
-                createElementTr.appendChild(child.cloneNode(true));
-            }
-            tBodyAdd.appendChild(createElementTr);
-            rowNumber++;
-        });
-
-        deleteRow.addEventListener("click", function (event) {
-            if (rowNumber > 1) {
-                tBodyAdd.removeChild(tBodyAdd.lastElementChild);
-                rowNumber--;
-            }
-        });
-    });
+    formOrder.addEventListener("submit", __storeSubmitHandler);
 });

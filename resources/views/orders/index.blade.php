@@ -132,6 +132,11 @@
                                                 <td class="col-12 col-md-9">
                                                     <select class="form-select" name="products[]">
                                                         <option value="">--choose product--</option>
+                                                        @foreach ($products as $product)
+                                                            <option value="{{ $product->id }}">{{ $product->food_name }}
+                                                                - <span id="rupiah">{{ $product->price }}</span>
+                                                            </option>
+                                                        @endforeach
                                                     </select>
                                                 </td>
                                                 <td class="col-auto">

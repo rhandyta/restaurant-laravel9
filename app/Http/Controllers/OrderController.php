@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FoodList;
 use App\Models\Order;
 use Illuminate\Http\Request;
 
@@ -34,7 +35,7 @@ class OrderController extends Controller
             })
             ->orderBy('created_at', 'desc')
             ->paginate($limit);
-
+        $products = FoodList::select('id', 'food_name', 'price')->get();
 
         $orders->appends([
             'order_id' => $orderId,
@@ -45,7 +46,7 @@ class OrderController extends Controller
             'limit' => $limit
         ]);
 
-        return view('orders.index', compact('orders'));
+        return view('orders.index', compact('orders', 'products'));
     }
 
 
