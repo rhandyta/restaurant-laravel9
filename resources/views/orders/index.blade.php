@@ -93,7 +93,7 @@
                     </tr>
                 @empty
                     <tr class="text-center">
-                        <td colspan="6">No records data</td>
+                        <td colspan="10">No records data</td>
                     </tr>
                 @endforelse
             </tbody>
@@ -115,33 +115,51 @@
                     <form id="formorder" autocomplete="off" method="POST">
                         <div class="form-body">
                             <div class="row">
+                                <div class="col-12">
+                                    <table class="table table-sm table-hover" id="table_order_add">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    Product
+                                                </th>
+                                                <th>
+                                                    Quantity
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbody_table_order_add">
+                                            <tr id="product0">
+                                                <td class="col-12 col-md-9">
+                                                    <select class="form-select" name="products[]">
+                                                        <option value="">--choose product--</option>
+                                                    </select>
+                                                </td>
+                                                <td class="col-auto">
+                                                    <input type="number" class="form-control" name="quantities[]"
+                                                        placeholder="5">
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="d-flex justify-content-end align-items-center gap-2">
+                                        <button type="button" class="btn btn-primary btn-sm" id="add_row">Add
+                                            Row</button>
+                                        <button type="button" class="btn btn-danger btn-sm" id="delete_row">Delete
+                                            Row</button>
+                                    </div>
+                                </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">
-                                        <label for="order_category_id">Order Category</label>
-                                        <select name="food_category_id" id="food_category_id" class="form-select">
-
+                                        <label for="foods">Foods</label>
+                                        <select id="foods" class="form-select" name="foods" multiple>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">
                                         <label for="food_name">Food Name</label>
-                                        <input type="text" id="food_name" class="form-control" placeholder="Last Name"
-                                            name="food_name">
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-12">
-                                    <div class="form-group">
-                                        <label for="price">Price</label>
-                                        <input type="number" min="0" id="price" class="form-control"
-                                            name="price">
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-12">
-                                    <div class="form-group">
-                                        <label for="images">Images</label>
-                                        <input type="file" name="images[]" id="images" multiple
-                                            class="form-control inputFile">
+                                        <input type="text" id="food_name" class="form-control"
+                                            placeholder="Last Name" name="food_name">
                                     </div>
                                 </div>
                                 <div class="col-md-12">

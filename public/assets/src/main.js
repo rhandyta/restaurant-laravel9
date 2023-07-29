@@ -1,4 +1,5 @@
-const BASE_URL = "http://restaurant.test";
+const BASE_URL = "https://restaurant.test";
+const API_URL = "https://restaurant.test/api";
 const pathname = window.location.pathname;
 const SEGMENT_URL = `${BASE_URL}${pathname}`;
 const csrfToken = document
