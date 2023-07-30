@@ -49,8 +49,10 @@ const __addRow = () => {
     let newQuantityInput = document.createElement("input");
     newQuantityInput.setAttribute("type", "number");
     newQuantityInput.setAttribute("class", "form-control");
+    newQuantityInput.setAttribute("min", "1");
     newQuantityInput.setAttribute("name", "quantities[]");
     newQuantityInput.setAttribute("placeholder", "5");
+    newQuantityInput.setAttribute("required", true);
     newQuantityInput.value = ""; // Mengatur nilai default quantity menjadi kosong
     // Membuat elemen <td> dengan input quantity baru dan menambahkannya ke dalam elemen <tr>
     let newTdQuantity = document.createElement("td");
@@ -62,6 +64,9 @@ const __addRow = () => {
         let td = sourceElement.children[i].cloneNode(true);
         createElementTr.appendChild(td);
     }
+    NiceSelect.bind(createElementTr.firstElementChild.firstElementChild, {
+        searchable: true,
+    });
     // Menambahkan elemen <tr> ke dalam <tbody>
     tBodyAdd.appendChild(createElementTr);
     rowNumber++;
@@ -77,12 +82,24 @@ const __deleteRow = () => {
 async function __storeSubmitHandler(event) {
     event.preventDefault();
     const data = new FormData(formOrder);
-    for (const [name, value] of data.entries()) {
-        console.log(`${name}: ${value}`);
-    }
+    const request = await fetch(`${BASE_URL}/manager/orders`, {
+        method: "POST",
+        headers: {
+            "X-CSRF-TOKEN": csrfToken,
+        },
+        body: data,
+    });
+    const response = await request.json();
+    console.log(response);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    const select = document.querySelectorAll("[name='products[]']");
+    select.forEach((item) =>
+        NiceSelect.bind(item, {
+            searchable: true,
+        })
+    );
     let limit = 15;
     let search = "";
     gross_amount.forEach((amount) => {
@@ -114,4 +131,8 @@ document.addEventListener("DOMContentLoaded", () => {
     addModal.addEventListener("shown.bs.modal", __addShowModal);
 
     formOrder.addEventListener("submit", __storeSubmitHandler);
+
+    return () => {
+        addModal.removeEventListener("shown.bs.modal", __addShowModal);
+    };
 });

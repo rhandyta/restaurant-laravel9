@@ -50,9 +50,11 @@ class OrderController extends Controller
     }
 
 
-    public function store()
+    public function store(Request $request)
     {
-        //
+        return response()->json([
+            'data' => $request->all()
+        ]);
     }
 
     public function show($id)
