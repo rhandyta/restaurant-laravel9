@@ -81,13 +81,55 @@ const __deleteRow = () => {
 
 async function __storeSubmitHandler(event) {
     event.preventDefault();
-    const data = new FormData(formOrder);
+    const productsOrder = Array.from(
+        formOrder.querySelectorAll('[name="products[]"]')
+    ).map((item) => item.value);
+    const quantities = Array.from(
+        formOrder.querySelectorAll('[name="quantities[]"]')
+    ).map((item) => item.value);
+    const payment_type = formOrder.querySelector('[name="payment_type"]').value;
+    const bank = formOrder.querySelector('[name="bank"]').value;
+    const tables = formOrder.querySelector('[name="tables"]').value;
+    const table = formOrder.querySelector('[name="table"]').value;
+    const notes = formOrder.querySelector('[name="notes"]').value;
+    const email = formOrder.querySelector('[name="email"]').value;
+    const firstname = formOrder.querySelector('[name="firstname"]').value;
+    const phone = formOrder.querySelector('[name="phone"]').value;
+
+    const filteringProducts = products.filter((item, index) => {
+        for (let i = 0; i < productsOrder.length; i++) {
+            if (productsOrder[i] == item.id) {
+                return item;
+            }
+        }
+    });
+
+    const detail_orders = productsOrder.map((product, index) => ({
+        id: index,
+        product_id: product,
+        quantity: quantities[index],
+        food_name: filteringProducts[index].food_name,
+        unit_price: filteringProducts[index].price,
+    }));
+
+    const data = {
+        payment_type,
+        bank,
+        tables,
+        table,
+        notes,
+        email,
+        firstname,
+        detail_orders,
+    };
     const request = await fetch(`${BASE_URL}/manager/orders`, {
         method: "POST",
         headers: {
             "X-CSRF-TOKEN": csrfToken,
+            Accept: "application/json",
+            "Content-Type": "application/json",
         },
-        body: data,
+        body: JSON.stringify(data),
     });
     const response = await request.json();
     console.log(response);

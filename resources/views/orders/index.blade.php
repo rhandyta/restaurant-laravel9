@@ -176,9 +176,9 @@
                                     <div class="form-group">
                                         <label for="tables">Category Tables</label>
                                         <select id="tables" class="form-select" name="tables">
-                                            <option>Single Table</option>
-                                            <option>Double Table</option>
-                                            <option>Family Table</option>
+                                            <option value="1">Single Table</option>
+                                            <option value="2">Double Table</option>
+                                            <option value="3">Family Table</option>
                                         </select>
                                     </div>
                                 </div>
@@ -190,6 +190,24 @@
                                             <option>2</option>
                                             <option>3</option>
                                         </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="email">Email</label>
+                                        <input type="email" name="email" id="email" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="firstname">Name</label>
+                                        <input type="firstname" name="firstname" id="firstname" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="phone">Phone Number</label>
+                                        <input type="phone" name="phone" id="phone" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -332,5 +350,8 @@
 
 @section('javascript')
     <script src="{{ asset('assets/extensions/select2/js/nice-select2.js') }}"></script>
+    <script>
+        const products = {!! json_encode($products) !!}
+    </script>
     <script src="{{ asset('assets/src/order.js') }}"></script>
 @endsection
