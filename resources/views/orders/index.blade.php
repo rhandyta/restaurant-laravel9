@@ -44,7 +44,7 @@
             <tbody>
                 @forelse ($orders as $order)
                     <tr>
-                        <td>{{ $order->order_id }}</td>
+                        <td class="fw-bold">{{ $order->order_id }}</td>
                         <td>
                             @if ($order->transaction_status == 'pending')
                                 <span class="badge text-bg-primary">
@@ -79,8 +79,8 @@
                         <td class="gross_amount">{{ $order->gross_amount }}</td>
                         <td style="white-space: nowrap;">{{ $order->created_at }}</td>
                         <td style="text-transform: uppercase;">
-                            {{ $order->payment_type == 'bank_transfer' ? $order->bank : $order->payment_type }}</td>
-                        <td>{{ $order->payment_type == 'bank_transfer' ? $order->va_number : '-' }}</td>
+                            {{ $order->payment_type == 'bank_transfer' ? 'Bank Transfer' : $order->payment_type }}</td>
+                        <td class="text-uppercase">{{ $order->payment_type == 'bank_transfer' ? $order->bank : '-' }}</td>
                         <td>{{ $order->payment_type == 'bank_transfer' ? $order->va_number : '-' }}</td>
                         <td>
                             <div class="d-flex gap-1">
