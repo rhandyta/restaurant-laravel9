@@ -14,9 +14,11 @@
           letter-spacing: 1.5rem;">
                 LUNAS</div>
             <h1 style="font-size: 24px; margin-bottom: 20px;">Order {{ $transaction->order_id }} summary</h1>
-            <p style="margin-bottom: 20px;">Dear <span
-                    style="font-weight: bold;">{{ $transaction->user->firstname }}</span>,
+            <p style="margin-bottom: 20px;">Dear <span style="font-weight: bold;">Customer</span>,
             </p>
+            {{-- <p style="margin-bottom: 20px;">Dear <span
+                    style="font-weight: bold;">{{ $transaction->user->firstname }}</span>,
+            </p> --}}
             <p style="margin-bottom: 20px;">
                 Terima kasih telah membayar pesan makanan di <span
                     style="font-weight: bold;">{{ env('APP_NAME') }}</span>.
@@ -64,10 +66,12 @@
                     </tr>
                     <tr>
                         <td colspan="2" align="right" style="padding: 5px;">Metode Pembayaran:</td>
-                        @if($transaction->payment_type == 'bank_transfer')
-                        <td style="padding: 5px; text-transform: uppercase; font-weight: bold;">{{ $transaction->bank }}</td>
-                        @else 
-                        <td style="padding: 5px; text-transform: uppercase; font-weight: bold;">{{ $transaction->payment_type }}</td>
+                        @if ($transaction->payment_type == 'bank_transfer')
+                            <td style="padding: 5px; text-transform: uppercase; font-weight: bold;">
+                                {{ $transaction->bank }}</td>
+                        @else
+                            <td style="padding: 5px; text-transform: uppercase; font-weight: bold;">
+                                {{ $transaction->payment_type }}</td>
                         @endif
                     </tr>
                 </tbody>

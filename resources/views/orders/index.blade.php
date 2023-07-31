@@ -157,8 +157,8 @@
                                     <div class="form-group">
                                         <label for="payment_type">Payment Type</label>
                                         <select id="payment_type" class="form-select" name="payment_type">
-                                            <option>Cash</option>
-                                            <option>Bank Transfer</option>
+                                            <option value="cash">Cash</option>
+                                            <option value="bank_transfer">Bank Transfer</option>
                                         </select>
                                     </div>
                                 </div>
@@ -166,9 +166,9 @@
                                     <div class="form-group">
                                         <label for="bank">Bank</label>
                                         <select id="bank" class="form-select" name="bank">
-                                            <option>BCA</option>
-                                            <option>BRI</option>
-                                            <option>BTN</option>
+                                            <option value="bca">BCA</option>
+                                            <option value="bri">BRI</option>
+                                            <option value="btn">BTN</option>
                                         </select>
                                     </div>
                                 </div>

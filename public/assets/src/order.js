@@ -120,6 +120,7 @@ async function __storeSubmitHandler(event) {
         notes,
         email,
         firstname,
+        phone,
         detail_orders,
     };
     const request = await fetch(`${BASE_URL}/manager/orders`, {
