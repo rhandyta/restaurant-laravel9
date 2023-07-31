@@ -81,7 +81,8 @@ Route::group(['middleware' => ['isCashier', 'isMenu'], 'prefix' => 'cashier'], f
     Route::post('food-managements/food/{id}', [FoodListController::class, 'update'])->name('food.update');
 
     // Orders & Transaction Management
-    Route::get('orders', [OrderController::class, 'index']);
+    Route::get('orders', [OrderController::class, 'index'])->name('orders-cashier.index');;
+    Route::post('orders', [OrderController::class, 'store'])->name('orders-cashier.store');
 
     Route::get('logout', function () {
         Auth::logout();
