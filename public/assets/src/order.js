@@ -13,19 +13,25 @@ const addSubtotal = document.querySelector("#add_subtotal");
 const addDiscount = document.querySelector("#add_discount");
 const addTax = document.querySelector("#add_tax");
 const addTotal = document.querySelector("#add_total");
+
 let rowNumber = 1;
 let subtotal = 0;
 let discount = 0;
 let tax = 0.11;
 let total = 0;
 
+// query search
 const __onSubmitSearchHandle = async (limit, search) => {
     window.location.replace(`${SEGMENT_URL}?limit=${limit}&search=${search}`);
 };
 
+// dom ketika modal add dibuka
 const __addShowModal = () => {
     const addRow = document.querySelector("#add_row");
     const deleteRow = document.querySelector("#delete_row");
+
+    const tables = document.querySelector("#tables_add");
+    const payment_type = document.querySelector("#payment_type");
 
     const productElements = document.querySelector("[name='products[]']");
     const quantities = document.querySelector("[name='quantities[]']");
@@ -36,6 +42,9 @@ const __addShowModal = () => {
     total = subtotal - discount + subtotal * tax;
     addTotal.innerHTML = total;
 
+    payment_type.addEventListener("change", __changePaymentTypeHandler);
+    tables.addEventListener("change", __changeTablesHandler);
+
     addRow.addEventListener("click", __addRow);
     deleteRow.addEventListener("click", __deleteRow);
 
@@ -45,12 +54,14 @@ const __addShowModal = () => {
     return () => {
         addRow.removeEventListener("click", __addRow);
         deleteRow.removeEventListener("click", __deleteRow);
-
+        payment_type.removeEventListener("change", __changePaymentTypeHandler);
+        tables.removeEventListener("change", __changeTablesHandler);
         productElements.removeEventListener("change", __changeProducts);
         quantities.removeEventListener("change", __changeProducts);
     };
 };
 
+// add row
 const __addRow = () => {
     let newRow = rowNumber - 1;
     let sourceElement = document.querySelector(`#product${newRow}`);
@@ -117,6 +128,7 @@ const __addRow = () => {
     };
 };
 
+// delete row
 const __deleteRow = () => {
     if (rowNumber > 1) {
         tBodyAdd.removeChild(tBodyAdd.lastElementChild);
@@ -125,78 +137,129 @@ const __deleteRow = () => {
     }
 };
 
-async function __storeSubmitHandler(event) {
-    event.preventDefault();
-    const productsOrder = Array.from(
-        formOrder.querySelectorAll('[name="products[]"]')
-    ).map((item) => item.value);
-    const quantities = Array.from(
-        formOrder.querySelectorAll('[name="quantities[]"]')
-    ).map((item) => item.value);
-    const payment_type = formOrder.querySelector('[name="payment_type"]').value;
-    const bank = formOrder.querySelector('[name="bank"]').value;
-    const tables = formOrder.querySelector('[name="tables"]').value;
-    const table = formOrder.querySelector('[name="table"]').value;
-    const notes = formOrder.querySelector('[name="notes"]').value;
-    const email = formOrder.querySelector('[name="email"]').value;
-    const firstname = formOrder.querySelector('[name="firstname"]').value;
-    const phone = formOrder.querySelector('[name="phone"]').value;
-
-    const filteringProducts = products.filter((item, index) => {
-        for (let i = 0; i < productsOrder.length; i++) {
-            if (productsOrder[i] == item.id) {
-                return item;
-            }
-        }
-    });
-
-    const detail_orders = productsOrder.map((product, index) => ({
-        id: index,
-        product_id: product,
-        quantity: quantities[index],
-        food_name: filteringProducts[index].food_name,
-        unit_price: filteringProducts[index].price,
-    }));
-
-    const data = {
-        payment_type,
-        bank,
-        tables,
-        table,
-        notes,
-        email,
-        firstname,
-        phone,
-        detail_orders,
-    };
-    const request = await fetch(`${BASE_URL}/manager/orders`, {
-        method: "POST",
-        headers: {
-            "X-CSRF-TOKEN": csrfToken,
-            Accept: "application/json",
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-    });
-    const response = await request.json();
-    console.log(response);
+// manipulasi payment
+function __changePaymentTypeHandler() {
+    if (this.value == "bank_transfer") {
+        document.querySelector("#bank_add").classList.remove("d-none");
+    } else {
+        document.querySelector("#bank_add").classList.add("d-none");
+    }
 }
 
+// manipulasi data table berdasarkan category table
+function __changeTablesHandler() {
+    let table = getAllTables.filter((item) => item.id == this.value);
+    document.querySelector("#table_add").innerHTML = "";
+
+    if (table.length > 0) {
+        let option = table[0].informationtables.map((item) => {
+            return `<option value="${item.no}">${item.no}</option>`;
+        });
+
+        // Membuat elemen DOM dari string HTML
+        let fragment = document
+            .createRange()
+            .createContextualFragment(option.join(""));
+
+        // Menambahkan elemen DOM sebagai anak ke elemen dengan ID "table_add"
+        document.querySelector("#table_add").appendChild(fragment);
+        document.querySelector("#tableshidden").classList.remove("d-none");
+    }
+    return;
+}
+
+// submit order
+async function __storeSubmitHandler(event) {
+    try {
+        event.preventDefault();
+        const productsOrder = Array.from(
+            formOrder.querySelectorAll('[name="products[]"]')
+        ).map((item) => item.value);
+        const quantities = Array.from(
+            formOrder.querySelectorAll('[name="quantities[]"]')
+        ).map((item) => item.value);
+        const payment_type = formOrder.querySelector(
+            '[name="payment_type"]'
+        ).value;
+        const bank = formOrder.querySelector('[name="bank"]').value;
+        const tables = formOrder.querySelector('[name="tables"]').value;
+        const table = formOrder.querySelector('[name="table"]').value;
+        const notes = formOrder.querySelector('[name="notes"]').value;
+        const email = formOrder.querySelector('[name="email"]').value;
+        const firstname = formOrder.querySelector('[name="firstname"]').value;
+        const phone = formOrder.querySelector('[name="phone"]').value;
+
+        const filteringProducts = products.filter((item) => {
+            for (let i = 0; i < productsOrder.length; i++) {
+                if (productsOrder[i] == item.id) {
+                    return item;
+                }
+            }
+        });
+
+        const detail_orders = productsOrder.map((product, index) => ({
+            id: index,
+            product_id: product,
+            quantity: quantities[index],
+            food_name: filteringProducts[index].food_name,
+            unit_price: filteringProducts[index].price,
+        }));
+
+        const data = {
+            payment_type,
+            bank,
+            tables,
+            table,
+            notes,
+            email,
+            firstname,
+            phone,
+            detail_orders,
+        };
+        const request = await fetch(`${BASE_URL}/manager/orders`, {
+            method: "POST",
+            headers: {
+                "X-CSRF-TOKEN": csrfToken,
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        });
+        const response = await request.json();
+        if (response.status_code !== 201) {
+            throw Error("something went wrong");
+        }
+        successToast(response.messages, 1000);
+        return setTimeout(() => window.location.reload(), 1000);
+    } catch (error) {
+        return errorToast(error, 1000);
+    }
+}
+
+// untuk menghitung subtotal dan total berdasarkan product yang diorder
 function __changeProducts() {
+    // init selector element
     const productElements = document.querySelectorAll("[name='products[]']");
     const quantitiesElements = document.querySelectorAll(
         "[name='quantities[]']"
     );
+    // siapkan wadah
     let idProducts = [];
     let idQuantities = [];
     let tempData = [];
+
+    // mengulang element product yang dipilih
     productElements.forEach((item) => {
         idProducts.push(item.value);
     });
+    // mengulang element quantitas yang diorder pada
     quantitiesElements.forEach((item) => {
         idQuantities.push(item.value);
     });
+    // data product yang di pilih lebih 1 dari makanya dihapus
     idProducts.splice(-1, 1);
+
+    // mengambil data mentah products yang dipassing dari index blade untuk dicocokan dan mengambil harga dan nama product
     let orderProductList = products.filter((item, index) => {
         for (let i = 0; i < idProducts.length; i++) {
             if (item.id == idProducts[i]) {
@@ -204,6 +267,8 @@ function __changeProducts() {
             }
         }
     });
+
+    // membuat object product id dan quantity yang dipilih
     for (let j = 0; j < idProducts.length; j++) {
         tempData.push({
             product_id: idProducts[j],
@@ -211,6 +276,7 @@ function __changeProducts() {
         });
     }
 
+    // menggabung kan data yang diambil dari data data mentah yang sudah dilakukan filter dengan product yang di pilih
     let data = tempData.map((item) => {
         for (let p = 0; p < orderProductList.length; p++) {
             if (item.product_id == orderProductList[p].id) {
@@ -223,6 +289,8 @@ function __changeProducts() {
             }
         }
     });
+
+    // hitung sub total dan total lalu melakukan dom
     subtotal = 0;
     discount = 0;
     total = 0;
@@ -236,20 +304,17 @@ function __changeProducts() {
 
     return;
 }
-function __changeQuantities() {
-    let data = __changeProducts();
-
-    data = [{ ...data }];
-    console.log(data);
-}
-
+// ketika halaman sudah diload
 document.addEventListener("DOMContentLoaded", () => {
+    // mengubah option select menggunakan library nice
     const select = document.querySelectorAll("[name='products[]']");
     select.forEach((item) =>
         NiceSelect.bind(item, {
             searchable: true,
         })
     );
+
+    // query params page dan dom amount menjadi format rupiah
     let limit = 15;
     let search = "";
     gross_amount.forEach((amount) => {

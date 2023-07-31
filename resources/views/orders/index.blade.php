@@ -156,13 +156,13 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="payment_type">Payment Type</label>
-                                        <select id="payment_type" class="form-select" name="payment_type">
+                                        <select id="payment_type" class="form-select" name="payment_type" required>
                                             <option value="cash">Cash</option>
                                             <option value="bank_transfer">Bank Transfer</option>
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 d-none" id="bank_add">
                                     <div class="form-group">
                                         <label for="bank">Bank</label>
                                         <select id="bank" class="form-select" name="bank">
@@ -174,28 +174,27 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="tables">Category Tables</label>
-                                        <select id="tables" class="form-select" name="tables">
+                                        <label for="tables_add">Category Tables</label>
+                                        <select id="tables_add" class="form-select" name="tables" required>
+                                            <option>--choose tables--</option>
                                             @foreach ($tables as $item)
                                                 <option value="{{ $item->id }}">{{ $item->category }}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 d-none" id="tableshidden">
                                     <div class="form-group">
-                                        <label for="table">Table</label>
-                                        {{-- <select id="table" class="form-select" name="table">
-                                            @foreach ($table as $item)
-                                                <option value="{{ $item->no }}">{{ $item->no }}</option>
-                                            @endforeach
-                                        </select> --}}
+                                        <label for="table_add">Table</label>
+                                        <select id="table_add" class="form-select" name="table">
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="email">Email</label>
-                                        <input type="email" name="email" id="email" class="form-control">
+                                        <input type="email" name="email" id="email" class="form-control"
+                                            required>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -352,6 +351,7 @@
     <script src="{{ asset('assets/extensions/select2/js/nice-select2.js') }}"></script>
     <script>
         const products = {!! json_encode($products) !!}
+        const getAllTables = {!! json_encode($tables) !!}
     </script>
     <script src="{{ asset('assets/src/order.js') }}"></script>
 @endsection
