@@ -2,12 +2,22 @@ const addModal = document.querySelector("#order");
 const gross_amount = document.querySelectorAll(".gross_amount");
 const searchForm = document.querySelector("#search");
 const page = document.querySelector("#page");
-const tBodyAdd = document.querySelector("#tbody_table_order_add");
-const formOrder = document.querySelector("#formorder");
+
 const queryString = window.location.search;
 const params = new URLSearchParams(queryString);
 const queries = Object.fromEntries(params.entries());
+
+const tBodyAdd = document.querySelector("#tbody_table_order_add");
+const formOrder = document.querySelector("#formorder");
+const addSubtotal = document.querySelector("#add_subtotal");
+const addDiscount = document.querySelector("#add_discount");
+const addTax = document.querySelector("#add_tax");
+const addTotal = document.querySelector("#add_total");
 let rowNumber = 1;
+let subtotal = 0;
+let discount = 0;
+let tax = 0.11;
+let total = 0;
 
 const __onSubmitSearchHandle = async (limit, search) => {
     window.location.replace(`${SEGMENT_URL}?limit=${limit}&search=${search}`);
@@ -16,11 +26,28 @@ const __onSubmitSearchHandle = async (limit, search) => {
 const __addShowModal = () => {
     const addRow = document.querySelector("#add_row");
     const deleteRow = document.querySelector("#delete_row");
+
+    const productElements = document.querySelector("[name='products[]']");
+    const quantities = document.querySelector("[name='quantities[]']");
+
+    addSubtotal.innerHTML = subtotal;
+    addDiscount.innerHTML = discount;
+    addTax.innerHTML = tax && "11%";
+    total = subtotal - discount + subtotal * tax;
+    addTotal.innerHTML = total;
+
     addRow.addEventListener("click", __addRow);
     deleteRow.addEventListener("click", __deleteRow);
+
+    productElements.addEventListener("change", __changeProducts);
+    quantities.addEventListener("change", __changeProducts);
+
     return () => {
         addRow.removeEventListener("click", __addRow);
         deleteRow.removeEventListener("click", __deleteRow);
+
+        productElements.removeEventListener("change", __changeProducts);
+        quantities.removeEventListener("change", __changeProducts);
     };
 };
 
@@ -69,13 +96,32 @@ const __addRow = () => {
     });
     // Menambahkan elemen <tr> ke dalam <tbody>
     tBodyAdd.appendChild(createElementTr);
+    const productElements = document.querySelectorAll("[name='products[]']");
+    const quantities = document.querySelectorAll("[name='quantities[]']");
+    productElements.forEach((item) => {
+        item.addEventListener("change", __changeProducts);
+    });
+    quantities.forEach((item) => {
+        item.addEventListener("change", __changeProducts);
+    });
+
     rowNumber++;
+
+    return () => {
+        products.forEach((item) => {
+            item.removeEventListener("change", __changeProducts);
+        });
+        quantities.forEach((item) => {
+            item.removeEventListener("change", __changeProducts);
+        });
+    };
 };
 
 const __deleteRow = () => {
     if (rowNumber > 1) {
         tBodyAdd.removeChild(tBodyAdd.lastElementChild);
         rowNumber--;
+        __changeProducts();
     }
 };
 
@@ -134,6 +180,67 @@ async function __storeSubmitHandler(event) {
     });
     const response = await request.json();
     console.log(response);
+}
+
+function __changeProducts() {
+    const productElements = document.querySelectorAll("[name='products[]']");
+    const quantitiesElements = document.querySelectorAll(
+        "[name='quantities[]']"
+    );
+    let idProducts = [];
+    let idQuantities = [];
+    let tempData = [];
+    productElements.forEach((item) => {
+        idProducts.push(item.value);
+    });
+    quantitiesElements.forEach((item) => {
+        idQuantities.push(item.value);
+    });
+    idProducts.splice(-1, 1);
+    let orderProductList = products.filter((item, index) => {
+        for (let i = 0; i < idProducts.length; i++) {
+            if (item.id == idProducts[i]) {
+                return item;
+            }
+        }
+    });
+    for (let j = 0; j < idProducts.length; j++) {
+        tempData.push({
+            product_id: idProducts[j],
+            quantity: idQuantities[j],
+        });
+    }
+
+    let data = tempData.map((item) => {
+        for (let p = 0; p < orderProductList.length; p++) {
+            if (item.product_id == orderProductList[p].id) {
+                return {
+                    id: Number(item.product_id),
+                    food_name: orderProductList[p].food_name,
+                    price: Number(orderProductList[p].price),
+                    quantity: Number(item.quantity),
+                };
+            }
+        }
+    });
+    subtotal = 0;
+    discount = 0;
+    total = 0;
+    for (const item of data) {
+        subtotal += item.price * item.quantity;
+    }
+
+    total = subtotal - subtotal * discount + subtotal * tax;
+    addSubtotal.innerHTML = `Rp${convertRupiah(subtotal)}`;
+    addTotal.innerHTML = `Rp${convertRupiah(total)}`;
+
+    return;
+}
+function __changeQuantities() {
+    let data = __changeProducts();
+
+    data = [{ ...data }];
+    console.log(data);
 }
 
 document.addEventListener("DOMContentLoaded", () => {

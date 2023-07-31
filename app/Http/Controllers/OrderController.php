@@ -44,6 +44,12 @@ class OrderController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate($limit);
         $products = FoodList::select('id', 'food_name', 'price')->get();
+        $tables = TableCategory::with(['informationtables' => function ($q) {
+            $q->where('available', '=', 'available');
+        }])
+            ->where('status', '=', 'active')
+            ->select('category', 'status', 'id')
+            ->get();
 
         $orders->appends([
             'order_id' => $orderId,
@@ -54,7 +60,7 @@ class OrderController extends Controller
             'limit' => $limit
         ]);
 
-        return view('orders.index', compact('orders', 'products'));
+        return view('orders.index', compact('orders', 'products', 'tables'));
     }
 
 

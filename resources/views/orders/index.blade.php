@@ -176,20 +176,20 @@
                                     <div class="form-group">
                                         <label for="tables">Category Tables</label>
                                         <select id="tables" class="form-select" name="tables">
-                                            <option value="1">Single Table</option>
-                                            <option value="2">Double Table</option>
-                                            <option value="3">Family Table</option>
+                                            @foreach ($tables as $item)
+                                                <option value="{{ $item->id }}">{{ $item->category }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="table">Table</label>
-                                        <select id="table" class="form-select" name="table">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                        </select>
+                                        {{-- <select id="table" class="form-select" name="table">
+                                            @foreach ($table as $item)
+                                                <option value="{{ $item->no }}">{{ $item->no }}</option>
+                                            @endforeach
+                                        </select> --}}
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -229,10 +229,10 @@
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td>Rp.2000.00</td>
-                                                    <td>-Rp.1000.00</td>
-                                                    <td>Rp.500.00</td>
-                                                    <td>Rp.1500.00</td>
+                                                    <td id="add_subtotal">Rp0</td>
+                                                    <td id="add_discount">-Rp0</td>
+                                                    <td id="add_tax">Rp0</td>
+                                                    <td id="add_total">Rp0</td>
                                                 </tr>
                                             </tbody>
                                         </table>
