@@ -218,7 +218,7 @@ async function __storeSubmitHandler(event) {
             phone,
             detail_orders,
         };
-        const request = await fetch(`${BASE_URL}/manager/orders`, {
+        const request = await fetch(`${SEGMENT_URL}`, {
             method: "POST",
             headers: {
                 "X-CSRF-TOKEN": csrfToken,

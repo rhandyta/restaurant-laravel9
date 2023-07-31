@@ -59,8 +59,6 @@ class OrderController extends Controller
             return redirect()->route('orders-cashier.index', ['search' => $search, 'limit' => $limit, 'page' => $page]);
         }
 
-
-
         return view('orders.index', compact('orders', 'products', 'tables'));
     }
 
