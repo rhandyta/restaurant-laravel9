@@ -54,9 +54,7 @@ class OrderController extends Controller
         $orders->appends([
             'order_id' => $orderId,
             'transaction_id' => $transactionId,
-            'firstname' => $search,
-            'middlename' => $search,
-            'lastname' => $search,
+            'search' => $search,
             'limit' => $limit
         ]);
 

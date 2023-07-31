@@ -21,8 +21,10 @@ let tax = 0.11;
 let total = 0;
 
 // query search
-const __onSubmitSearchHandle = async (limit, search) => {
-    window.location.replace(`${SEGMENT_URL}?limit=${limit}&search=${search}`);
+const __onSubmitSearchHandle = async (limit, search, page) => {
+    window.location.replace(
+        `${SEGMENT_URL}?limit=${limit}&search=${search}&page=${page}`
+    );
 };
 
 // dom ketika modal add dibuka
@@ -314,16 +316,20 @@ document.addEventListener("DOMContentLoaded", () => {
         })
     );
 
-    // query params page dan dom amount menjadi format rupiah
-    let limit = 15;
-    let search = "";
+    // dom amount menjadi format rupiah
     gross_amount.forEach((amount) => {
         amount.innerHTML = `<span class="fw-bold">Rp${convertRupiah(
             Number(amount.innerHTML)
         )}</span>`;
     });
+    // query params page
+    let limit = 15;
+    let search = "";
+    let pages = 1;
+
     page.value = queries.limit ? queries.limit : limit;
     searchForm.search.value = queries.search ? queries.search : "";
+    pages = queries.page ? queries.page : pages;
 
     if (params.has("limit")) {
         page.value = params.get("limit");
@@ -331,16 +337,19 @@ document.addEventListener("DOMContentLoaded", () => {
     if (params.has("search")) {
         search = queries.search;
     }
+    if (params.has("page")) {
+        pages = queries.page;
+    }
     page.addEventListener("change", function (event) {
         limit = event.target.value;
         window.location.replace(
-            `${SEGMENT_URL}?limit=${limit}&search=${search}`
+            `${SEGMENT_URL}?limit=${limit}&search=${search}&page=${pages}`
         );
     });
 
     searchForm.addEventListener("submit", function (event) {
         event.preventDefault();
-        __onSubmitSearchHandle(page.value, this.search.value);
+        __onSubmitSearchHandle(page.value, this.search.value, pages);
     });
 
     addModal.addEventListener("shown.bs.modal", __addShowModal);
