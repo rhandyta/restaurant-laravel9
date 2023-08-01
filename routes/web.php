@@ -83,6 +83,7 @@ Route::group(['middleware' => ['isCashier', 'isMenu'], 'prefix' => 'cashier'], f
     // Orders & Transaction Management
     Route::get('orders', [OrderController::class, 'index'])->name('orders-cashier.index');;
     Route::post('orders', [OrderController::class, 'store'])->name('orders-cashier.store');
+    Route::get('orders/{order:order_id}/show', [OrderController::class, 'show'])->name('orders-cashier.show');
 
     Route::get('logout', function () {
         Auth::logout();

@@ -193,9 +193,10 @@ class OrderController extends Controller
         }
     }
 
-    public function show($id)
+    public function show(Order $order)
     {
-        //
+        $order->load('detailorders');
+        return view('orders.show', compact('order'));
     }
 
     public function update()

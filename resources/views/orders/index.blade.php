@@ -29,7 +29,7 @@
         <table class="table table-hover" id="table1" style="font-size: 0.95rem;">
             <thead>
                 <tr>
-                    <th>Order ID</th>
+                    <th>Order Ref</th>
                     <th>Transaction Status</th>
                     <th>Information Table</th>
                     <th>Notes</th>
@@ -44,7 +44,9 @@
             <tbody>
                 @forelse ($orders as $order)
                     <tr>
-                        <td class="fw-bold">{{ $order->order_id }}</td>
+                        <td class="fw-bold">
+                            <a href="/{{ request()->path() }}/{{ $order->order_id }}/show">{{ $order->order_id }}</a>
+                        </td>
                         <td>
                             @if ($order->transaction_status == 'pending')
                                 <span class="badge text-bg-primary">
