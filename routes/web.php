@@ -56,7 +56,7 @@ Route::group(['middleware' => ['isManager', 'isMenu'], 'prefix' => 'manager'], f
 
     // Orders & Transaction Management
     Route::get('orders', [OrderController::class, 'index'])->name('orders-manager.index');
-    Route::post('orders', [OrderController::class, 'store'])->name('orders-manager.store');
+    Route::get('orders/{order:order_id}/show', [OrderController::class, 'show'])->name('orders-cashier.show');
 
     Route::get('logout', function () {
         Auth::logout();

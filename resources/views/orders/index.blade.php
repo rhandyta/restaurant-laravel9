@@ -4,9 +4,13 @@
 
     <!-- table bordered -->
     <div class="d-flex justify-content-between flex-wrap">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#order" id="addorder">
-            Add Order
-        </button>
+        @if (Auth::user()->roles != 'manager')
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#order" id="addorder">
+                Add Order
+            </button>
+        @else
+            <div></div>
+        @endif
         <div class="d-flex align-items-center gap-1">
             <label for="page" class="text-nowrap me-2">entries per page</label>
             <select class="form-select" aria-label="entries per page" id="page">
@@ -32,13 +36,13 @@
                     <th>Order Ref</th>
                     <th>Transaction Status</th>
                     <th>Information Table</th>
-                    <th>Notes</th>
                     <th>Gross Amount</th>
                     <th>Order Date</th>
                     <th>Payment Method</th>
                     <th>Bank</th>
-                    <th>Virtual Account</th>
-                    <th>Action</th>
+                    @if (Auth::user()->roles != 'manager')
+                        <th>Action</th>
+                    @endif
                 </tr>
             </thead>
             <tbody>
@@ -75,23 +79,21 @@
                             @endif
                         </td>
                         <td class="text-nowrap">{{ $order->information_table }}</td>
-                        <td>
-                            <p style="width: 200px"> {{ $order->notes }} </p>
-                        </td>
                         <td class="gross_amount">{{ $order->gross_amount }}</td>
                         <td style="white-space: nowrap;">{{ $order->created_at }}</td>
                         <td style="text-transform: uppercase;">
                             {{ $order->payment_type == 'bank_transfer' ? 'Bank Transfer' : $order->payment_type }}</td>
                         <td class="text-uppercase">{{ $order->payment_type == 'bank_transfer' ? $order->bank : '-' }}</td>
-                        <td>{{ $order->payment_type == 'bank_transfer' ? $order->va_number : '-' }}</td>
-                        <td>
-                            <div class="d-flex gap-1">
-                                <button class="btn btn-success btn-sm btn-edit" data-id="{{ $order->id }}"
-                                    data-bs-toggle="modal" data-bs-target="#editorder">Edit</button>
-                                <button class="btn btn-danger btn-sm btn-delete"
-                                    data-id="{{ $order->id }}">Delete</button>
-                            </div>
-                        </td>
+                        @if (Auth::user()->roles != 'manager')
+                            <td>
+                                <div class="d-flex gap-1">
+                                    <button class="btn btn-success btn-sm btn-edit" data-id="{{ $order->id }}"
+                                        data-bs-toggle="modal" data-bs-target="#editorder">Edit</button>
+                                    <button class="btn btn-danger btn-sm btn-delete"
+                                        data-id="{{ $order->id }}">Delete</button>
+                                </div>
+                            </td>
+                        @endif
                     </tr>
                 @empty
                     <tr class="text-center">
