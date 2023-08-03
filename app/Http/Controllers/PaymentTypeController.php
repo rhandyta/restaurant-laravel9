@@ -78,8 +78,19 @@ class PaymentTypeController extends Controller
             ], $e->getCode());
         }
     }
-    public function destroy()
+    public function destroy($id)
     {
-        //
+        try {
+            PaymentType::findOrFail($id)->delete();
+            return response()->json([
+                'status_code' => 200,
+                'message' => 'Data has been deleted'
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status_code' => $e->getCode(),
+                'messages' => $e->getMessage()
+            ], $e->getCode());
+        }
     }
 }
