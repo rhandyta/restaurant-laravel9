@@ -80,7 +80,7 @@
                         </td>
                         <td class="text-nowrap">{{ $order->information_table }}</td>
                         <td class="gross_amount">{{ $order->gross_amount }}</td>
-                        <td style="white-space: nowrap;">{{ $order->created_at }}</td>
+                        <td style="white-space: nowrap;">{{ $order->created_at->format('d F Y H:i') }}</td>
                         <td style="text-transform: uppercase;">
                             {{ $order->payment_type == 'bank_transfer' ? 'Bank Transfer' : $order->payment_type }}</td>
                         <td class="text-uppercase">{{ $order->payment_type == 'bank_transfer' ? $order->bank : '-' }}</td>
@@ -89,8 +89,6 @@
                                 <div class="d-flex gap-1">
                                     <button class="btn btn-success btn-sm btn-edit" data-id="{{ $order->id }}"
                                         data-bs-toggle="modal" data-bs-target="#editorder">Edit</button>
-                                    <button class="btn btn-danger btn-sm btn-delete"
-                                        data-id="{{ $order->id }}">Delete</button>
                                 </div>
                             </td>
                         @endif
@@ -210,7 +208,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="phone">Phone Number</label>
-                                        <input type="phone" name="phone" id="phone" class="form-control">
+                                        <input type="text" name="phone" id="phone" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -276,52 +274,129 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="formeditorder" autocomplete="off">
+                     <form id="formeditorder" autocomplete="off">
                         <div class="form-body">
                             <div class="row">
-
-                                <div class="col-md-6 col-12">
+                                <div class="col-12">
+                                    <table class="table table-sm table-hover" id="table_order_edit">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    Product
+                                                </th>
+                                                <th>
+                                                    Quantity
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbody_table_order_add">
+                                            <tr id="product_edit_0">
+                                                <td class="col-12 col-md-9">
+                                                    <select name="products[]" required>
+                                                        <option data-display="Select">--choose product--</option>
+                                                        @foreach ($products as $product)
+                                                            <option value="{{ $product->id }}">{{ $product->food_name }}
+                                                                - <span id="rupiah">{{ $product->price }}</span>
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </td>
+                                                <td class="col-auto">
+                                                    <input type="number" class="form-control" name="quantities[]"
+                                                        placeholder="5" min="1" required>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="d-flex justify-content-end align-items-center gap-2">
+                                        <button type="button" class="btn btn-primary btn-sm" id="add_row_edit">Add
+                                            Row</button>
+                                        <button type="button" class="btn btn-danger btn-sm" id="delete_row_edit">Delete
+                                            Row</button>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="products">Products</label>
-                                        <select class="" name="products[]" required>
-                                            @foreach ($products as $product)
-                                                <option value="{{ $product->id }}">{{ $product->food_name }}
-                                                    - <span id="rupiah">{{ $product->price }}</span>
-                                                </option>
+                                        <label for="payment_type_edit">Payment Type</label>
+                                        <select id="payment_type_edit" class="form-select" name="payment_type" required>
+                                            <option value="cash">Cash</option>
+                                            <option value="bank_transfer">Bank Transfer</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 d-none" id="bank_edit">
+                                    <div class="form-group">
+                                        <label for="bank_edit">Bank</label>
+                                        <select id="bank_edit" class="form-select" name="bank">
+                                            <option value="bca">BCA</option>
+                                            <option value="bri">BRI</option>
+                                            <option value="btn">BTN</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="tables_edit">Category Tables</label>
+                                        <select id="tables_edit" class="form-select" name="tables" required>
+                                            <option>--choose tables--</option>
+                                            @foreach ($tables as $item)
+                                                <option value="{{ $item->id }}">{{ $item->category }}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
-                                <input type="hidden" name="id">
-                                <div class="col-md-6 col-12">
+                                <div class="col-md-6 d-none" id="tableshidden">
                                     <div class="form-group">
-                                        <label for="food_name">Food Name</label>
-                                        <input type="text" id="food_name" class="form-control"
-                                            placeholder="Last Name" name="food_name">
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-12">
-                                    <div class="form-group">
-                                        <label for="price">Price</label>
-                                        <input type="number" min="0" id="price" class="form-control"
-                                            name="price">
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-12">
-                                    <div class="card w-full h-20">
-                                        <div class="card-body" id="imagepreview" style="padding: 0">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="images">Images</label>
-                                        <input type="file" name="images[]" id="images" multiple
-                                            class="form-control inputFile">
+                                        <label for="table_edit">Table</label>
+                                        <select id="table_edit" class="form-select" name="table">
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="food_description">Food Description</label>
-                                        <textarea name="food_description" id="food_description" rows="5" class="form-control"></textarea>
+                                        <label for="email">Email</label>
+                                        <input type="email" name="email" id="email" class="form-control"
+                                            required>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="firstname_edit">Name</label>
+                                        <input type="firstname" name="firstname" id="firstname_edit" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="phone_edit">Phone Number</label>
+                                        <input type="text" name="phone" id="phone_edit" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="notes_edit">Note</label>
+                                        <textarea name="notes" id="notes_edit" rows="5" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="table-responsive" style="text-align: right;">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Sub total</th>
+                                                    <th>Discount</th>
+                                                    <th>Tax</th>
+                                                    <th>Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td id="edit_subtotal">Rp0</td>
+                                                    <td id="edit_discount">-Rp0</td>
+                                                    <td id="edit_tax">Rp0</td>
+                                                    <td id="edit_total">Rp0</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -332,10 +407,14 @@
                                 <i class="bx bx-x d-block d-sm-none"></i>
                                 <span class="d-none d-sm-block">Close</span>
                             </button>
-                            <button type="submit" class="btn btn-primary ml-1" data-bs-dismiss="modal">
+                            <button type="submit" class="btn btn-primary ml-1">
                                 <i class="bx bx-check d-block d-sm-none"></i>
-                                <span class="d-none d-sm-block">Edit Food</span>
+                                <span class="d-none d-sm-block">Add Order</span>
                             </button>
+                            {{-- <button type="submit" class="btn btn-primary ml-1" data-bs-dismiss="modal">
+                                <i class="bx bx-check d-block d-sm-none"></i>
+                                <span class="d-none d-sm-block">Add Order</span>
+                            </button> --}}
                         </div>
                     </form>
                 </div>

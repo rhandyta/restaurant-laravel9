@@ -5,7 +5,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="mb-2">
-                    <a href="{{ route('orders-cashier.index') }}"><button class="btn btn-info btn-sm icon">
+                    <a href="{{ url()->previous() }}"><button class="btn btn-info btn-sm icon">
                             <i class="bi bi-arrow-return-left"></i>
                         </button></a>
                     <button class="btn btn-success btn-sm icon">
@@ -57,11 +57,11 @@
                                     </tr>
                                     <tr>
                                         <td>Order Create</td>
-                                        <td>{{ $order->created_at }}</td>
+                                        <td>{{ $order->created_at->format('d F Y H:i') }}</td>
                                     </tr>
                                     <tr>
                                         <td>Order Confirmed</td>
-                                        <td>{{ $order->updated_at }}</td>
+                                        <td>{{ $order->updated_at->format('d F Y H:i') }}</td>
                                     </tr>
                                 </tbody>
                             </table>

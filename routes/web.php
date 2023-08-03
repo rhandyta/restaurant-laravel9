@@ -8,6 +8,7 @@ use App\Http\Controllers\InformationTableController;
 use App\Http\Controllers\Manager\DashboardController as ManagerDashboard;
 use App\Http\Controllers\Manager\MenuManagementController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentTypeController;
 use App\Http\Controllers\TableCategoryController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -54,7 +55,7 @@ Route::group(['middleware' => ['isManager', 'isMenu'], 'prefix' => 'manager'], f
     Route::resource('food-managements/food', FoodListController::class, ['except' => ['create', 'edit', 'update']]);
     Route::post('food-managements/food/{id}', [FoodListController::class, 'update'])->name('food.update');
 
-    // Orders & Transaction Management
+    // Orders
     Route::get('orders', [OrderController::class, 'index'])->name('orders-manager.index');
     Route::get('orders/{order:order_id}/show', [OrderController::class, 'show'])->name('orders-cashier.show');
 
@@ -70,17 +71,19 @@ Route::group(['middleware' => ['isManager', 'isMenu'], 'prefix' => 'manager'], f
 Route::group(['middleware' => ['isCashier', 'isMenu'], 'prefix' => 'cashier'], function () {
     Route::get('/', [CashierDashboard::class, 'index'])->name('cashier.index');
 
+    // Payment Type
+    Route::resource('payment/types', PaymentTypeController::class, ['except' => ['edit', 'create']]);
+
     // Table Management
     Route::resource('tables/categories-tables', TableCategoryController::class, ['except' => ['edit', 'create']]);
     Route::resource('tables/information-tables', InformationTableController::class, ['except' => ['edit', 'create']]);
-
 
     // Food Management
     Route::resource('food-managements/food-categories', FoodCategoryController::class, ['except' => 'edit', 'create']);
     Route::resource('food-managements/food', FoodListController::class, ['except' => ['create', 'edit', 'update']]);
     Route::post('food-managements/food/{id}', [FoodListController::class, 'update'])->name('food.update');
 
-    // Orders & Transaction Management
+    // Orders
     Route::get('orders', [OrderController::class, 'index'])->name('orders-cashier.index');;
     Route::post('orders', [OrderController::class, 'store'])->name('orders-cashier.store');
     Route::get('orders/{order:order_id}/show', [OrderController::class, 'show'])->name('orders-cashier.show');
