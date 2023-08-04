@@ -14,6 +14,14 @@ class PaymentType extends Model
 
     public function paymentType() : Attribute
     {
-        return Attribute::make(set: fn (string $value) => strtolower($value));
+        return Attribute::make(
+            get: fn (string $value) => \Str::replace('_', ' ', $value),
+            set: fn (string $value) => strtolower($value)
+        );
+    }
+
+    public function banks()
+    {
+        return $this->hasMany(Bank::class, 'payment_type_id', 'id');
     }
 }

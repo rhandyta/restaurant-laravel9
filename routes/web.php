@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\BankController;
 use App\Http\Controllers\Cashier\DashbordController as CashierDashboard;
 use App\Http\Controllers\FoodCategoryController;
 use App\Http\Controllers\FoodListController;
@@ -73,6 +74,7 @@ Route::group(['middleware' => ['isCashier', 'isMenu'], 'prefix' => 'cashier'], f
 
     // Payment Type
     Route::resource('payment/types', PaymentTypeController::class, ['except' => ['edit', 'create']]);
+    Route::resource('payment/bank', BankController::class, ['except' => ['edit', 'create']]);
 
     // Table Management
     Route::resource('tables/categories-tables', TableCategoryController::class, ['except' => ['edit', 'create']]);
