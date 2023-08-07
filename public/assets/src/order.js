@@ -13,6 +13,8 @@ const addSubtotal = document.querySelector("#add_subtotal");
 const addDiscount = document.querySelector("#add_discount");
 const addTax = document.querySelector("#add_tax");
 const addTotal = document.querySelector("#add_total");
+const btnEdit = document.querySelectorAll('.btn-edit');
+const formeditorder = document.querySelector('#formeditorder');
 
 let rowNumber = 1;
 let subtotal = 0;
@@ -141,12 +143,26 @@ const __deleteRow = () => {
 
 // manipulasi payment
 function __changePaymentTypeHandler() {
-    if (this.value == "bank_transfer") {
-        document.querySelector("#bank_add").classList.remove("d-none");
+    const bank_add = document.querySelector("#bank_add")
+    const bank = document.querySelector('#bank')
+    if (this.value == "cash") {
+        bank_add.classList.add("d-none");
     } else {
-        document.querySelector("#bank_add").classList.add("d-none");
+        bank.innerHTML = '';
+        let via = paymentTypes.filter((item) => item.payment_type.replace(' ', '_') == this.value)
+        if(via.length > 0) {
+           let option =  via[0].banks.map((item) => {
+                return `<option value="${item.name}">${item.name}</option>`
+           })
+           let fragment = document
+           .createRange()
+           .createContextualFragment(option.join(""));
+           bank.appendChild(fragment)
+           bank_add.classList.remove("d-none");
+        }
     }
 }
+
 
 // manipulasi data table berdasarkan category table
 function __changeTablesHandler() {
@@ -245,6 +261,7 @@ function __changeProducts() {
     const quantitiesElements = document.querySelectorAll(
         "[name='quantities[]']"
     );
+
     // siapkan wadah
     let idProducts = [];
     let idQuantities = [];
@@ -258,8 +275,8 @@ function __changeProducts() {
     quantitiesElements.forEach((item) => {
         idQuantities.push(item.value);
     });
-    // data product yang di pilih lebih 1 dari makanya dihapus
-    idProducts.splice(-1, 1);
+    // data product yang di pilih lebih 1 dari makanya dihapus (bug)
+    // idProducts.splice(-1, 1);
 
     // mengambil data mentah products yang dipassing dari index blade untuk dicocokan dan mengambil harga dan nama product
     let orderProductList = products.filter((item, index) => {
@@ -299,13 +316,49 @@ function __changeProducts() {
     for (const item of data) {
         subtotal += item.price * item.quantity;
     }
-
     total = subtotal - subtotal * discount + subtotal * tax;
     addSubtotal.innerHTML = `Rp${convertRupiah(subtotal)}`;
     addTotal.innerHTML = `Rp${convertRupiah(total)}`;
 
     return;
 }
+
+function __editTransactionStatus() {
+    formeditorder.id.value = this.getAttribute('data-id')
+}
+
+async function __updateTransactionStatus(event){
+    event.preventDefault()
+    try {
+        const formData = new FormData(formeditorder)
+        formData.append('_method', 'PATCH');
+        if(this.transaction_status.checked) {
+            formData.append('transaction_status', "settlement")
+        } else {
+            formData.append('transaction_status', "")
+        }
+        const request = await fetch(`${SEGMENT_URL}/${this.id.value}/update`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: formData
+        });
+        const response = await request.json();
+        if(response.status_code == 400) throw new Error(response.messages)
+        if(response.status_code != 200) throw new Error('something went wrong')
+
+        successToast(response.messages)
+        return setTimeout(() => {
+            window.location.reload();
+        }, 1000);
+    } catch(e) {
+        return errorToast(e)
+    }
+}
+
+
+
 // ketika halaman sudah diload
 document.addEventListener("DOMContentLoaded", () => {
     // mengubah option select menggunakan library nice
@@ -356,7 +409,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     formOrder.addEventListener("submit", __storeSubmitHandler);
 
+    btnEdit.forEach((item) => {
+        item.addEventListener('click', __editTransactionStatus)
+    })
+    formeditorder.addEventListener('submit', __updateTransactionStatus)
+
     return () => {
         addModal.removeEventListener("shown.bs.modal", __addShowModal);
+
+        btnEdit.forEach((item) => {
+            item.removeEventListener('click', __editTransactionStatus)
+        })
+        formeditorder.removeEventListener('submit', __updateTransactionStatus)
+
     };
 });

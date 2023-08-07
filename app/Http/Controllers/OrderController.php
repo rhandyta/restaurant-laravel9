@@ -6,6 +6,7 @@ use App\Jobs\MailOrderJob;
 use App\Models\DetailOrder;
 use App\Models\FoodList;
 use App\Models\Order;
+use App\Models\PaymentType;
 use App\Models\TableCategory;
 use App\Services\Midtrans\CreateSnapTokenService;
 use Exception;
@@ -45,6 +46,12 @@ class OrderController extends Controller
             ->where('status', '=', 'active')
             ->select('category', 'status', 'id')
             ->get();
+        $paymenttypes = PaymentType::query()
+                    ->with(['banks' => function ($q) {
+                        $q->where('status', '=', 'available');
+                    }])
+                    ->where('status', '=', 'available')
+                    ->get();
 
         $orders->appends([
             'search' => $search,
@@ -59,7 +66,7 @@ class OrderController extends Controller
             return redirect()->route('orders-cashier.index', ['search' => $search, 'limit' => $limit, 'page' => $page]);
         }
 
-        return view('orders.index', compact('orders', 'products', 'tables'));
+        return view('orders.index', compact('orders', 'products', 'tables', 'paymenttypes'));
     }
 
 
@@ -199,9 +206,28 @@ class OrderController extends Controller
         return view('orders.show', compact('order'));
     }
 
-    public function update()
+    public function update(Request $request, Order $order)
     {
-        //
+        try {
+            if($request->filled('transaction_status')){
+                $order->update([
+                    'transaction_status' => $request->input('transaction_status')
+                ]);
+                return response()->json([
+                    'status_code' => Response::HTTP_OK,
+                    'messages' => 'transaction has been updated'
+                ], Response::HTTP_OK);
+            }
+            return response()->json([
+                'status_code' => Response::HTTP_BAD_REQUEST,
+                'messages' => 'transaction status is not updated'
+            ], Response::HTTP_BAD_REQUEST);
+        } catch(\Exception $e) {
+            return response()->json([
+                'status_code' => $e->getCode(),
+                'messages' => $e->getMessage()
+            ], $e->getCode());
+        }
     }
 
     public function destroy()
