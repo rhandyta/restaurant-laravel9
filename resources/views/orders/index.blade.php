@@ -312,6 +312,7 @@
 @endsection
 
 @section('javascript')
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <script src="{{ asset('assets/extensions/select2/js/nice-select2.js') }}"></script>
     <script>
         const products = {!! json_encode($products) !!}

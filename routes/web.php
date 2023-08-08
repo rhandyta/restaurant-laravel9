@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\JasTip;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\Cashier\DashbordController as CashierDashboard;
@@ -98,3 +99,4 @@ Route::group(['middleware' => ['isCashier', 'isMenu'], 'prefix' => 'cashier'], f
 });
 
 // Cashier end
+

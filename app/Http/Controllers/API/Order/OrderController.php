@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\Order;
 
+use App\Events\OrderEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\Order\OrderRequest;
 use App\Jobs\MailOrderJob;
@@ -97,6 +98,7 @@ class OrderController extends Controller
                     'information_table' => $tables->category . ' ' . '-' . ' ' . $request->input('table')
                 ];
                 $order = Order::create($createOrder);
+                OrderEvent::dispatch($order);
             } else {
                 $createOrder = new stdClass;
                 $createOrder->order_id = $orderId;
@@ -130,6 +132,7 @@ class OrderController extends Controller
                     "discount" => $request->input('discount') ? $request->input('discount') : null,
                     'information_table' => $tables->category . ' ' . '-' . ' ' .  $request->input('table'),
                 ]);
+               broadcast(new OrderEvent($order))->toOthers();
             }
 
 

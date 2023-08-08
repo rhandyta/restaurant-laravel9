@@ -13,8 +13,8 @@ const addSubtotal = document.querySelector("#add_subtotal");
 const addDiscount = document.querySelector("#add_discount");
 const addTax = document.querySelector("#add_tax");
 const addTotal = document.querySelector("#add_total");
-const btnEdit = document.querySelectorAll('.btn-edit');
-const formeditorder = document.querySelector('#formeditorder');
+const btnEdit = document.querySelectorAll(".btn-edit");
+const formeditorder = document.querySelector("#formeditorder");
 
 let rowNumber = 1;
 let subtotal = 0;
@@ -22,6 +22,18 @@ let discount = 0;
 let tax = 0.11;
 let total = 0;
 
+// Pusher
+var pusher = new Pusher(PUSHER_KEY, {
+    cluster: PUSHER_CLUSTER,
+});
+
+var channel = pusher.subscribe("order");
+channel.bind("order-event", function (data) {
+    alert(JSON.stringify(data));
+});
+
+Pusher.logToConsole = true;
+console.log(pusher)
 // query search
 const __onSubmitSearchHandle = async (limit, search, page) => {
     window.location.replace(
@@ -143,26 +155,27 @@ const __deleteRow = () => {
 
 // manipulasi payment
 function __changePaymentTypeHandler() {
-    const bank_add = document.querySelector("#bank_add")
-    const bank = document.querySelector('#bank')
+    const bank_add = document.querySelector("#bank_add");
+    const bank = document.querySelector("#bank");
     if (this.value == "cash") {
         bank_add.classList.add("d-none");
     } else {
-        bank.innerHTML = '';
-        let via = paymentTypes.filter((item) => item.payment_type.replace(' ', '_') == this.value)
-        if(via.length > 0) {
-           let option =  via[0].banks.map((item) => {
-                return `<option value="${item.name}">${item.name}</option>`
-           })
-           let fragment = document
-           .createRange()
-           .createContextualFragment(option.join(""));
-           bank.appendChild(fragment)
-           bank_add.classList.remove("d-none");
+        bank.innerHTML = "";
+        let via = paymentTypes.filter(
+            (item) => item.payment_type.replace(" ", "_") == this.value
+        );
+        if (via.length > 0) {
+            let option = via[0].banks.map((item) => {
+                return `<option value="${item.name}">${item.name}</option>`;
+            });
+            let fragment = document
+                .createRange()
+                .createContextualFragment(option.join(""));
+            bank.appendChild(fragment);
+            bank_add.classList.remove("d-none");
         }
     }
 }
-
 
 // manipulasi data table berdasarkan category table
 function __changeTablesHandler() {
@@ -324,40 +337,39 @@ function __changeProducts() {
 }
 
 function __editTransactionStatus() {
-    formeditorder.id.value = this.getAttribute('data-id')
+    formeditorder.id.value = this.getAttribute("data-id");
 }
 
-async function __updateTransactionStatus(event){
-    event.preventDefault()
+async function __updateTransactionStatus(event) {
+    event.preventDefault();
     try {
-        const formData = new FormData(formeditorder)
-        formData.append('_method', 'PATCH');
-        if(this.transaction_status.checked) {
-            formData.append('transaction_status', "settlement")
+        const formData = new FormData(formeditorder);
+        formData.append("_method", "PATCH");
+        if (this.transaction_status.checked) {
+            formData.append("transaction_status", "settlement");
         } else {
-            formData.append('transaction_status', "")
+            formData.append("transaction_status", "");
         }
         const request = await fetch(`${SEGMENT_URL}/${this.id.value}/update`, {
-            method: 'POST',
+            method: "POST",
             headers: {
-                'X-CSRF-TOKEN': csrfToken
+                "X-CSRF-TOKEN": csrfToken,
             },
-            body: formData
+            body: formData,
         });
         const response = await request.json();
-        if(response.status_code == 400) throw new Error(response.messages)
-        if(response.status_code != 200) throw new Error('something went wrong')
+        if (response.status_code == 400) throw new Error(response.messages);
+        if (response.status_code != 200)
+            throw new Error("something went wrong");
 
-        successToast(response.messages)
+        successToast(response.messages);
         return setTimeout(() => {
             window.location.reload();
         }, 1000);
-    } catch(e) {
-        return errorToast(e)
+    } catch (e) {
+        return errorToast(e);
     }
 }
-
-
 
 // ketika halaman sudah diload
 document.addEventListener("DOMContentLoaded", () => {
@@ -410,17 +422,16 @@ document.addEventListener("DOMContentLoaded", () => {
     formOrder.addEventListener("submit", __storeSubmitHandler);
 
     btnEdit.forEach((item) => {
-        item.addEventListener('click', __editTransactionStatus)
-    })
-    formeditorder.addEventListener('submit', __updateTransactionStatus)
+        item.addEventListener("click", __editTransactionStatus);
+    });
+    formeditorder.addEventListener("submit", __updateTransactionStatus);
 
     return () => {
         addModal.removeEventListener("shown.bs.modal", __addShowModal);
 
         btnEdit.forEach((item) => {
-            item.removeEventListener('click', __editTransactionStatus)
-        })
-        formeditorder.removeEventListener('submit', __updateTransactionStatus)
-
+            item.removeEventListener("click", __editTransactionStatus);
+        });
+        formeditorder.removeEventListener("submit", __updateTransactionStatus);
     };
 });
