@@ -1,6 +1,5 @@
 <?php
 
-use App\Events\JasTip;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\Cashier\DashbordController as CashierDashboard;
@@ -73,7 +72,7 @@ Route::group(['middleware' => ['isManager', 'isMenu'], 'prefix' => 'manager'], f
 Route::group(['middleware' => ['isCashier', 'isMenu'], 'prefix' => 'cashier'], function () {
     Route::get('/', [CashierDashboard::class, 'index'])->name('cashier.index');
 
-    // Payment Type
+    // Payment Method
     Route::resource('payment/types', PaymentTypeController::class, ['except' => ['edit', 'create']]);
     Route::resource('payment/bank', BankController::class, ['except' => ['edit', 'create']]);
 

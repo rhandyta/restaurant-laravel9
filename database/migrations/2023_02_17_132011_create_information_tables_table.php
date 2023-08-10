@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('category_table_id')->references('id')->on('table_categories')->cascadeOnUpdate();
             $table->integer('seating_capacity');
+            $table->integet('no');
             $table->enum('available', ['available', 'not available']);
             $table->string('location');
             $table->timestamps();

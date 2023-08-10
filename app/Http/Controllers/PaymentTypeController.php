@@ -40,7 +40,8 @@ class PaymentTypeController extends Controller
         }
     }
 
-    public function show(PaymentType $type) {
+    public function show(PaymentType $type) 
+    {
         try {
             return response()->json([
                 'status_code' => 200,

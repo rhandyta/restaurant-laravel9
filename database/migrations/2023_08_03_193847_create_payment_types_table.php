@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('payment_types', function (Blueprint $table) {
             $table->id();
-            $table->string('via');
+            $table->string('payment_type');
             $table->enum('status', ['available', 'not available']);
             $table->timestamps();
         });

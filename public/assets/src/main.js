@@ -1,5 +1,5 @@
-const BASE_URL = "https://restaurant.test";
-const API_URL = "https://restaurant.test/api";
+const BASE_URL = "http://127.0.0.1:8000";
+const API_URL = "http://127.0.0.1:8000/api";
 const PUSHER_KEY = "594aa5c6ec5db09db4f9";
 const PUSHER_CLUSTER = "ap1";
 const pathname = window.location.pathname;

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('transaction_status')->nullable();
             $table->text('transaction_message')->nullable();
             $table->string('payment_type');
-            $table->string('bank');
+            $table->string('bank')->nullable();
             $table->string('va_number')->nullable();
             $table->string('signature_key')->nullable();
             $table->string('gross_amount');
