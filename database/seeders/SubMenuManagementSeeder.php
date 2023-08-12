@@ -53,11 +53,26 @@ class SubMenuManagementSeeder extends Seeder
                 'label_submenu' => 'Categories Food',
                 'path' => '/food-categories',
                 'important' => 1,
-            ], [
+            ], 
+            [
                 'menu_id' => 5,
                 'role' => 'both',
                 'label_submenu' => 'Foods',
                 'path' => '/food',
+                'important' => 2,
+            ],
+            [
+                'menu_id' => 8,
+                'role' => 'both',
+                'label_submenu' => 'Payment Types',
+                'path' => '/types',
+                'important' => 1,
+            ],
+            [
+                'menu_id' => 8,
+                'role' => 'both',
+                'label_submenu' => 'Banks',
+                'path' => '/bank',
                 'important' => 2,
             ],
 

@@ -60,13 +60,22 @@ class MenuManagementSeeder extends Seeder
                 'path' => "/accounts",
                 'icon' => "fa-solid fa-list-check",
                 'important' => 4
-            ], [
+            ], 
+            [
                 'labelmenu_id' => 4,
                 'label_menu' => "Sign Out",
                 'role' => "both",
                 'path' => "/logout",
                 'icon' => "fa-solid fa-list-check",
                 'important' => 1
+            ],
+            [
+                'labelmenu_id' => 3,
+                'label_menu' => "Payment Method",
+                'role' => "both",
+                'path' => "/payment",
+                'icon' => "fa-solid fa-list-check",
+                'important' => 5
             ],
         ]);
     }

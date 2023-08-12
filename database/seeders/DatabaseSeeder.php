@@ -20,7 +20,8 @@ class DatabaseSeeder extends Seeder
             LabelMenuManagementSeeder::class,
             MenuManagementSeeder::class,
             SubMenuManagementSeeder::class,
-            TablesSeeder::class
+            TablesSeeder::class,
+            PaymentMethodManagementSeeder::class
         ]);
     }
 }
