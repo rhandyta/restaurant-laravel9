@@ -13,6 +13,6 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
-Broadcast::channel('order', function () {
-    return true;
+Broadcast::channel('order.{rolesId}', function ($userRoles, $rolesId) {
+    return $userRoles->id == $rolesId;
 });

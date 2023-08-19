@@ -7,6 +7,7 @@ const queryString = window.location.search;
 const params = new URLSearchParams(queryString);
 const queries = Object.fromEntries(params.entries());
 
+const table = document.querySelector("#table1");
 const tBodyAdd = document.querySelector("#tbody_table_order_add");
 const formOrder = document.querySelector("#formorder");
 const addSubtotal = document.querySelector("#add_subtotal");
@@ -24,16 +25,44 @@ let total = 0;
 
 // Pusher
 var pusher = new Pusher(PUSHER_KEY, {
+    authEndpoint: "/broadcasting/auth",
+    auth: {
+        headers: {
+            "X-CSRF-TOKEN": csrfToken,
+        },
+    },
     cluster: PUSHER_CLUSTER,
 });
+var channel = pusher.subscribe("private-order." + auth.id);
+channel.bind("order-event", function ({ order }) {
+    let newElement = `<tr>
+                        <td class="fw-bold">
+                            <a href="/cashier/orders/${order.order_id}/show">${order.order_id}</a>
+                        </td>
+                        <td><span class="badge text-bg-primary">${order.transaction_status}</span></td>
+                        <td class="text-nowrap">${order.information_table}</td>
+                        <td class="gross_amount"><span class="fw-bold">Rp${convertRupiah(Number(order.gross_amount))}</span></td>
+                        <td style="white-space: nowrap;">${formatTime(order.created_at)}</td>
+                        <td style="text-transform: uppercase;">${order.payment_type}</td>
+                        <td class="text-uppercase">${!order.bank ? '-' : order.bank}</td>
+                        <td>
+                            <button class="btn btn-success btn-sm btn-edit" data-id="${order.order_id}" data-bs-toggle="modal" data-bs-target="#editorder">Edit</button>
+                        </td>
+                    </tr>`;
+    let tbody = table.querySelector('tbody');
+    tbody.insertAdjacentHTML('afterbegin', newElement)
 
-var channel = pusher.subscribe("order");
-channel.bind("order-event", function (data) {
-    alert(JSON.stringify(data));
+    const btnEditReload = document.querySelectorAll(".btn-edit");
+    btnEditReload.forEach((item) => {
+        item.addEventListener("click", __editTransactionStatus);
+    });
+
+    return () => {
+        btnEditReload.forEach((item) => {
+            item.removeEventListener("click", __editTransactionStatus);
+        });
+    }
 });
-
-Pusher.logToConsole = true;
-console.log(pusher)
 // query search
 const __onSubmitSearchHandle = async (limit, search, page) => {
     window.location.replace(

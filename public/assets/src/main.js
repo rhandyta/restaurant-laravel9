@@ -28,3 +28,9 @@ const errorToast = (message, duration = 3000) => {
 const convertRupiah = (value) => {
     return value.toLocaleString("id-ID");
 };
+
+const formatTime = (value) => {
+    const month = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    const date = new Date(value);
+    return `${date.getDate()} ${month[date.getMonth()]} ${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
+}

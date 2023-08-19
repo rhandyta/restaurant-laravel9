@@ -10,6 +10,7 @@ use App\Models\Cart;
 use App\Models\DetailOrder;
 use App\Models\Order;
 use App\Models\TableCategory;
+use App\Models\User;
 use App\Services\Midtrans\CreateSnapTokenService;
 use Exception;
 use Illuminate\Http\Response;
@@ -132,7 +133,10 @@ class OrderController extends Controller
                     "discount" => $request->input('discount') ? $request->input('discount') : null,
                     'information_table' => $tables->category . ' ' . '-' . ' ' .  $request->input('table'),
                 ]);
-               broadcast(new OrderEvent($order))->toOthers();
+                $userRoles = User::whereIn('roles', ['cashier', 'manager'])->get();
+                foreach($userRoles as $user) {
+                    broadcast(new OrderEvent($order, $user));
+                }
             }
 
 

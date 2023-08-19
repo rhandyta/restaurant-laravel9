@@ -2,8 +2,6 @@
 
 namespace App\Events;
 
-use App\Models\Order;
-use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -23,10 +21,13 @@ class OrderEvent implements ShouldBroadcast
      */
 
     public $order;
+    public $userRoles;
+    public $tries = 3;
 
-    public function __construct($order)
+    public function __construct($order, $userRoles)
     {
         $this->order = $order;
+        $this->userRoles = $userRoles;
     }
 
     /**
@@ -36,7 +37,7 @@ class OrderEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return ['order'];
+        return new PrivateChannel('order.'.$this->userRoles->id);
     }
 
     public function broadcastAs()

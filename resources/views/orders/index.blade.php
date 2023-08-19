@@ -83,10 +83,8 @@
                         <td class="text-uppercase">{{ $order->payment_type == 'bank_transfer' ? $order->bank : '-' }}</td>
                         @if (Auth::user()->roles == 'cashier' && $order->transaction_status == 'pending' && $order->payment_type == 'cash')
                             <td>
-                                <div class="d-flex gap-1">
-                                    <button class="btn btn-success btn-sm btn-edit" data-id="{{ $order->order_id }}"
-                                        data-bs-toggle="modal" data-bs-target="#editorder">Edit</button>
-                                </div>
+                                <button class="btn btn-success btn-sm btn-edit" data-id="{{ $order->order_id }}"
+                                    data-bs-toggle="modal" data-bs-target="#editorder">Edit</button>
                             </td>
                         @endif
                     </tr>
@@ -315,9 +313,10 @@
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <script src="{{ asset('assets/extensions/select2/js/nice-select2.js') }}"></script>
     <script>
-        const products = {!! json_encode($products) !!}
-        const getAllTables = {!! json_encode($tables) !!}
-        const paymentTypes = {!! json_encode($paymenttypes) !!}
+        const products = {!! btojson_encode($products) !!}
+        const getAllTables = {!! btojson_encode($tables) !!}
+        const paymentTypes = {!! btojson_encode($paymenttypes) !!}
+        const auth = {!! btoAuth::user() !!}
     </script>
     <script src="{{ asset('assets/src/order.js') }}"></script>
 @endsection
