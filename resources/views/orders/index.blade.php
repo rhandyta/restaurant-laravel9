@@ -44,7 +44,7 @@
             </thead>
             <tbody>
                 @forelse ($orders as $order)
-                    <tr>
+                    <tr data-id="{{ $order->order_id }}">
                         <td class="fw-bold">
                             <a href="/{{ request()->path() }}/{{ $order->order_id }}/show">{{ $order->order_id }}</a>
                         </td>
@@ -81,7 +81,7 @@
                         <td style="text-transform: uppercase;">
                             {{ $order->payment_type == 'bank_transfer' ? 'Bank Transfer' : $order->payment_type }}</td>
                         <td class="text-uppercase">{{ $order->payment_type == 'bank_transfer' ? $order->bank : '-' }}</td>
-                        @if (Auth::user()->roles == 'cashier' && $order->transaction_status == 'pending' && $order->payment_type == 'cash')
+                        @if (Auth::user()->roles == 'cashier' && $order->transaction_status == 'pending')
                             <td>
                                 <button class="btn btn-success btn-sm btn-edit" data-id="{{ $order->order_id }}"
                                     data-bs-toggle="modal" data-bs-target="#editorder">Edit</button>
@@ -313,10 +313,10 @@
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <script src="{{ asset('assets/extensions/select2/js/nice-select2.js') }}"></script>
     <script>
-        const products = {!! btojson_encode($products) !!}
-        const getAllTables = {!! btojson_encode($tables) !!}
-        const paymentTypes = {!! btojson_encode($paymenttypes) !!}
-        const auth = {!! btoAuth::user() !!}
+        const products = {!! $products !!}
+        const getAllTables = {!! $tables !!}
+        const paymentTypes = {!! $paymenttypes !!}
+        const auth = {!! Auth::user() !!}
     </script>
     <script src="{{ asset('assets/src/order.js') }}"></script>
 @endsection

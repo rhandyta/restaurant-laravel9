@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Events\OrderEvent;
+use App\Events\TransactionProcessEvent;
 use App\Listeners\SendOrderNotification;
+use App\Listeners\SendTransactionProcessListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -22,6 +24,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         OrderEvent::class => [
             SendOrderNotification::class
+        ],
+        TransactionProcessEvent::class => [
+            SendTransactionProcessListener::class
         ]
     ];
 

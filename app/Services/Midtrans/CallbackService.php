@@ -5,6 +5,7 @@ namespace App\Services\Midtrans;
 use App\Jobs\MailOrderJob;
 use App\Mail\MailOrderTransaction;
 use App\Models\Order;
+use App\Services\WebSocket\TransactionService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
@@ -72,6 +73,8 @@ class CallbackService extends Midtrans
         ]);
         MailOrderJob::dispatchIf($transactionUpdate, $transactionUpdate, $transactionUpdate->user, $transaction_status)->delay(now()->addSeconds(10));
       }
+      $orderTransactionStatus = new TransactionService($transactionUpdate);
+      $orderTransactionStatus->sendEventOrder();
       DB::commit();
     } catch (\Exception $e) {
       Mail::to('sendingemail117@gmail.com')->send(new MailOrderTransaction($order_id, $e->getMessage()));

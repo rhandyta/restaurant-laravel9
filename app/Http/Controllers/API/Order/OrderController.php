@@ -12,6 +12,7 @@ use App\Models\Order;
 use App\Models\TableCategory;
 use App\Models\User;
 use App\Services\Midtrans\CreateSnapTokenService;
+use App\Services\WebSocket\TransactionService;
 use Exception;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -54,7 +55,6 @@ class OrderController extends Controller
                 DetailOrder::create($detail);
                 array_push($details, $detail);
             }
-
             if ($request->input('payment_type') == 'bank_transfer') {
                 $transaction = [
                     'transaction_details' => [
@@ -99,7 +99,6 @@ class OrderController extends Controller
                     'information_table' => $tables->category . ' ' . '-' . ' ' . $request->input('table')
                 ];
                 $order = Order::create($createOrder);
-                OrderEvent::dispatch($order);
             } else {
                 $createOrder = new stdClass;
                 $createOrder->order_id = $orderId;
@@ -133,10 +132,8 @@ class OrderController extends Controller
                     "discount" => $request->input('discount') ? $request->input('discount') : null,
                     'information_table' => $tables->category . ' ' . '-' . ' ' .  $request->input('table'),
                 ]);
-                $userRoles = User::whereIn('roles', ['cashier', 'manager'])->get();
-                foreach($userRoles as $user) {
-                    broadcast(new OrderEvent($order, $user));
-                }
+                $orderService = new TransactionService($order);
+                $orderService->sendEventOrder();
             }
 
 
