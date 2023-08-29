@@ -1,5 +1,5 @@
-const BASE_URL = "http://kape.test";
-const API_URL = "http://kape.test/api";
+const BASE_URL = "https://kape.test";
+const API_URL = "https://kape.test/api";
 const PUSHER_KEY = "594aa5c6ec5db09db4f9";
 const PUSHER_CLUSTER = "ap1";
 const pathname = window.location.pathname;

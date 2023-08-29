@@ -37,38 +37,47 @@ var pusher = new Pusher(PUSHER_KEY, {
 const __manipulateOrderTransaction = (data) => {
     let newElement = ``;
     if(data.transaction_status == 'pending') {
-        if(auth.roles == 'cashier') {
-            newElement = `<tr data-id="${data.order_id}">
-            <td class="fw-bold">
-                <a href="/cashier/orders/${data.order_id}/show">${data.order_id}</a>
-            </td>
-            <td><span class="badge text-bg-primary">${data.transaction_status}</span></td>
-            <td class="text-nowrap">${data.information_table}</td>
-            <td class="gross_amount"><span class="fw-bold">Rp${convertRupiah(Number(data.gross_amount))}</span></td>
-            <td style="white-space: nowrap;">${formatTime(data.created_at)}</td>
-            <td style="text-transform: uppercase;">${data.payment_type}</td>
-            <td class="text-uppercase">${!data.bank ? '-' : data.bank}</td>
-            <td>
-                <button class="btn btn-success btn-sm btn-edit" data-id="${data.order_id}" data-bs-toggle="modal" data-bs-target="#editorder">Edit</button>
-            </td>
-        </tr>`
-        } else {
-            newElement = `<tr data-id="${data.order_id}">
-            <td class="fw-bold">
-                <a href="/cashier/orders/${data.order_id}/show">${data.order_id}</a>
-            </td>
-            <td><span class="badge text-bg-primary">${data.transaction_status}</span></td>
-            <td class="text-nowrap">${data.information_table}</td>
-            <td class="gross_amount"><span class="fw-bold">Rp${convertRupiah(Number(data.gross_amount))}</span></td>
-            <td style="white-space: nowrap;">${formatTime(data.created_at)}</td>
-            <td style="text-transform: uppercase;">${data.payment_type}</td>
-            <td class="text-uppercase">${!data.bank ? '-' : data.bank}</td>
-        </tr>`;
+        let rowOrder = null;
+        const getAllTr = table.querySelectorAll('tr')
+        getAllTr.forEach(item => {
+            if(item.getAttribute('data-id') == data.order_id) {
+                rowOrder = item
+            }
+        })
+        if(!rowOrder) {
+            if(auth.roles == 'cashier') {
+                newElement = `<tr data-id="${data.order_id}">
+                <td class="fw-bold">
+                    <a href="/cashier/orders/${data.order_id}/show">${data.order_id}</a>
+                </td>
+                <td><span class="badge text-bg-primary">${data.transaction_status}</span></td>
+                <td class="text-nowrap">${data.information_table}</td>
+                <td class="gross_amount"><span class="fw-bold">Rp${convertRupiah(Number(data.gross_amount))}</span></td>
+                <td style="white-space: nowrap;">${formatTime(data.created_at)}</td>
+                <td style="text-transform: uppercase;">${data.payment_type}</td>
+                <td class="text-uppercase">${!data.bank ? '-' : data.bank}</td>
+                <td>
+                    <button class="btn btn-success btn-sm btn-edit" data-id="${data.order_id}" data-bs-toggle="modal" data-bs-target="#editorder">Edit</button>
+                </td>
+            </tr>`
+            } else {
+                newElement = `<tr data-id="${data.order_id}">
+                <td class="fw-bold">
+                    <a href="/cashier/orders/${data.order_id}/show">${data.order_id}</a>
+                </td>
+                <td><span class="badge text-bg-primary">${data.transaction_status}</span></td>
+                <td class="text-nowrap">${data.information_table}</td>
+                <td class="gross_amount"><span class="fw-bold">Rp${convertRupiah(Number(data.gross_amount))}</span></td>
+                <td style="white-space: nowrap;">${formatTime(data.created_at)}</td>
+                <td style="text-transform: uppercase;">${data.payment_type}</td>
+                <td class="text-uppercase">${!data.bank ? '-' : data.bank}</td>
+            </tr>`;
+            }
         }
         return newElement;
     }
 
-    if(data.transaction_status == 'settlement') {
+    if(data.transaction_status == 'settlement' && Number(data.transaction_code) == 200) {
         let rowOrder = null;
         const getAllTr = table.querySelectorAll('tr')
         getAllTr.forEach(item => {
@@ -80,7 +89,31 @@ const __manipulateOrderTransaction = (data) => {
         rowOrder.querySelector('span.badge').classList.remove('text-bg-primary')
         rowOrder.querySelector('span.badge').classList.add('text-bg-success')
         rowOrder.querySelector('span.badge').textContent = 'settlement'
-        rowOrder.querySelector('button[data-id="'+ data.order_id +'"]').closest('td').remove();
+        if(rowOrder.querySelector('button[data-id="'+ data.order_id +'"]')) {
+            rowOrder.querySelector('button[data-id="'+ data.order_id +'"]').closest('td').remove();
+        }
+    } else if (data.transaction_status == 'settlement' && Number(data.transaction_code) == 201) {
+        let rowOrder = null;
+        const getAllTr = table.querySelectorAll('tr')
+        getAllTr.forEach(item => {
+            if(item.getAttribute('data-id') == data.order_id) {
+                rowOrder = item
+            }
+        })
+        if(!rowOrder) {
+            newElement = `<tr data-id="${data.order_id}">
+                            <td class="fw-bold">
+                            <a href="/cashier/orders/${data.order_id}/show">${data.order_id}</a>
+                            </td>
+                            <td><span class="badge text-bg-success">${data.transaction_status}</span></td>
+                            <td class="text-nowrap">${data.information_table}</td>
+                            <td class="gross_amount"><span class="fw-bold">Rp${convertRupiah(Number(data.gross_amount))}</span></td>
+                            <td style="white-space: nowrap;">${formatTime(data.created_at)}</td>
+                            <td style="text-transform: uppercase;">${data.payment_type}</td>
+                            <td class="text-uppercase">${!data.bank ? '-' : data.bank}</td>
+                            </tr>`;
+            return newElement;
+        }
     }
 }
 
@@ -88,9 +121,8 @@ var channel = pusher.subscribe("private-order." + auth.id);
 channel.bind("order-event", function ({ order }) {
     
     const elementOrder =  __manipulateOrderTransaction(order);
-
     let tbody = table.querySelector('tbody');
-    if(order.transaction_status == 'pending') {
+    if(order.transaction_status && elementOrder !== undefined) {
         tbody.insertAdjacentHTML('afterbegin', elementOrder)
     }
 

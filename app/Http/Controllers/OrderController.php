@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\PaymentType;
 use App\Models\TableCategory;
 use App\Services\Midtrans\CreateSnapTokenService;
+use App\Services\WebSocket\TransactionService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -180,6 +181,8 @@ class OrderController extends Controller
                     "discount" => $request->input('discount') ? $request->input('discount') : null,
                     'information_table' => $tables->category . ' ' . '-' . ' ' .  $request->input('table'),
                 ]);
+                $orderService = new TransactionService($order);
+                $orderService->sendEventOrder();
             }
 
 
@@ -211,8 +214,11 @@ class OrderController extends Controller
         try {
             if($request->filled('transaction_status')){
                 $order->update([
-                    'transaction_status' => $request->input('transaction_status')
+                    'transaction_status' => $request->input('transaction_status'),
+                    'transaction_code' => 200
                 ]);
+                $orderService = new TransactionService($order);
+                $orderService->sendEventOrder();
                 return response()->json([
                     'status_code' => Response::HTTP_OK,
                     'messages' => 'transaction has been updated'

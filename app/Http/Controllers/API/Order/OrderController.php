@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\API\Order;
 
-use App\Events\OrderEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\Order\OrderRequest;
 use App\Jobs\MailOrderJob;
@@ -10,7 +9,6 @@ use App\Models\Cart;
 use App\Models\DetailOrder;
 use App\Models\Order;
 use App\Models\TableCategory;
-use App\Models\User;
 use App\Services\Midtrans\CreateSnapTokenService;
 use App\Services\WebSocket\TransactionService;
 use Exception;

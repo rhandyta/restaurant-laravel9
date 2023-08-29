@@ -47,6 +47,10 @@ Route::group(['middleware' => ['isManager', 'isMenu'], 'prefix' => 'manager'], f
     Route::post('menu-managements/menu', [MenuManagementController::class, 'handleMenu'])->name('menumanagement.menu');
     Route::post('menu-managements/submenu', [MenuManagementController::class, 'handleSubMenu'])->name('menumanagement.submenu');
 
+    // Payment Method
+    Route::resource('payment/types', PaymentTypeController::class, ['except' => ['edit', 'create']]);
+    Route::resource('payment/bank', BankController::class, ['except' => ['edit', 'create']]);
+
     // Table Management
     Route::resource('tables/categories-tables', TableCategoryController::class, ['except' => ['edit', 'create']]);
     Route::resource('tables/information-tables', InformationTableController::class, ['except' => ['edit', 'create']]);
