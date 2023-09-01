@@ -27,7 +27,7 @@
                                     </tr>
                                     <tr>
                                         <td>Order Status</td>
-                                        <td>
+                                        <td id="transaction_status">
                                             @if ($order->transaction_status == 'pending')
                                                 <span class="badge text-bg-primary">
                                                     {{ $order->transaction_status }}
@@ -61,7 +61,7 @@
                                     </tr>
                                     <tr>
                                         <td>Order Confirmed</td>
-                                        <td>{{ $order->updated_at->format('d F Y H:i') }}</td>
+                                        <td id="transaction_confirm">{{ $order->updated_at->format('d F Y H:i') }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -152,6 +152,10 @@
 @endsection
 
 @section('javascript')
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <script src="{{ asset('assets/extensions/rater-js/index.js') }}"></script>
+    <script>
+        const auth = {!! Auth::user() !!}
+    </script>
     <script src="{{ asset('assets/src/orderdetail.js') }}"></script>
 @endsection

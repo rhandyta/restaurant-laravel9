@@ -34,6 +34,28 @@ var pusher = new Pusher(PUSHER_KEY, {
     cluster: PUSHER_CLUSTER,
 });
 
+
+var channel = pusher.subscribe("private-order." + auth.id);
+channel.bind("order-event", function ({ order }) {
+    
+    const elementOrder =  __manipulateOrderTransaction(order);
+    let tbody = table.querySelector('tbody');
+    if(order.transaction_status && elementOrder !== undefined) {
+        tbody.insertAdjacentHTML('afterbegin', elementOrder)
+    }
+
+    const btnEditReload = document.querySelectorAll(".btn-edit");
+    btnEditReload.forEach((item) => {
+        item.addEventListener("click", __editTransactionStatus);
+    });
+
+    return () => {
+        btnEditReload.forEach((item) => {
+            item.removeEventListener("click", __editTransactionStatus);
+        });
+    }
+});
+
 const __manipulateOrderTransaction = (data) => {
     let newElement = ``;
     if(data.transaction_status == 'pending') {
@@ -117,26 +139,6 @@ const __manipulateOrderTransaction = (data) => {
     }
 }
 
-var channel = pusher.subscribe("private-order." + auth.id);
-channel.bind("order-event", function ({ order }) {
-    
-    const elementOrder =  __manipulateOrderTransaction(order);
-    let tbody = table.querySelector('tbody');
-    if(order.transaction_status && elementOrder !== undefined) {
-        tbody.insertAdjacentHTML('afterbegin', elementOrder)
-    }
-
-    const btnEditReload = document.querySelectorAll(".btn-edit");
-    btnEditReload.forEach((item) => {
-        item.addEventListener("click", __editTransactionStatus);
-    });
-
-    return () => {
-        btnEditReload.forEach((item) => {
-            item.removeEventListener("click", __editTransactionStatus);
-        });
-    }
-});
 // query search
 const __onSubmitSearchHandle = async (limit, search, page) => {
     window.location.replace(

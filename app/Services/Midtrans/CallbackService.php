@@ -77,7 +77,7 @@ class CallbackService extends Midtrans
       $orderTransactionStatus->sendEventOrder();
       DB::commit();
     } catch (\Exception $e) {
-      Mail::to('sendingemail117@gmail.com')->send(new MailOrderTransaction($order_id, $e->getMessage()));
+      Mail::to(env(MAIL_FROM_ADDRESS))->send(new MailOrderTransaction($order_id, $e->getMessage()));
       DB::rollBack();
     }
   }
