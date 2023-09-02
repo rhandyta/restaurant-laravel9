@@ -30,7 +30,18 @@ const convertRupiah = (value) => {
 };
 
 const formatTime = (value) => {
-    const month = ["January","February","March","April","May","June","July","August","September","October","November","December"];
     const date = new Date(value);
-    return `${date.getDate()} ${month[date.getMonth()]} ${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
+    const dateOptions = { 
+        year: 'numeric', 
+        month: 'long', 
+        day: '2-digit',
+    };
+    const timeOptions = {
+        hour: '2-digit',
+        minute: '2-digit',
+    };
+    const dateString = date.toLocaleDateString('id-ID', dateOptions);
+    const timeString = date.toLocaleTimeString('id-ID', timeOptions);
+    
+    return `${dateString} ${timeString}`;
 }

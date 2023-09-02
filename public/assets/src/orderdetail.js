@@ -47,31 +47,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 transactionConfirm.textContent = formatTime(order.updated_at)
                 break;
             default: 
-                newElement = `<span class="badge text-bg-info transaction_status">
+                newElement = `<span class="badge text-bg-primarygit  transaction_status">
                                     ${order.transaction_status}
                                 </span>`
                 transactionStatus.insertAdjacentHTML('beforeend', newElement)
                 transactionConfirm.textContent = formatTime(order.updated_at)
                 break;
         }
-
-
-        // const elementOrder =  __manipulateOrderTransaction(order);
-        // let tbody = table.querySelector('tbody');
-        // if(order.transaction_status && elementOrder !== undefined) {
-        //     tbody.insertAdjacentHTML('afterbegin', elementOrder)
-        // }
-
-        // const btnEditReload = document.querySelectorAll(".btn-edit");
-        // btnEditReload.forEach((item) => {
-        //     item.addEventListener("click", __editTransactionStatus);
-        // });
-
-        // return () => {
-        //     btnEditReload.forEach((item) => {
-        //         item.removeEventListener("click", __editTransactionStatus);
-        //     });
-        // }
     });
 
     const ratingElement = document.querySelectorAll(".rating");
