@@ -3,7 +3,7 @@
         style="max-width: 600px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; color: #333;">
         <section id="section">
             <h1 style="font-size: 24px; margin-bottom: 20px;">Order {{ $transaction->order_id }} summary</h1>
-            <p style="margin-bottom: 20px;">Dear <span style="font-weight: bold;">Customer</span>,
+            <p style="margin-bottom: 20px;">Dear <span style="font-weight: bold;">{{ $transaction->name }}</span>,
             </p>
             {{-- <p style="margin-bottom: 20px;">Dear <span style="font-weight: bold;">{{ $transaction->user->firstname }}</span>,
             </p> --}}

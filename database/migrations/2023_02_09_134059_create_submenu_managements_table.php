@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('menu_id')->references('id')->on('menu_managements')->cascadeOnUpdate();
             $table->string('label_submenu');
             $table->string('path');
-            $table->string('role')->nullable();
+            $table->string('role')->default('both');
             $table->tinyInteger('important');
             $table->timestamps();
         });

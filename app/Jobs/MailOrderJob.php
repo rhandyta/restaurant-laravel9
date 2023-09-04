@@ -41,19 +41,19 @@ class MailOrderJob implements ShouldQueue
     {
         switch ($this->status_transaction) {
             case 'settlement':
-                Mail::to($this->auth->email)->send(new MailTransaction($this->transaction));
+                Mail::to(isset($this->auth->email) ? $this->auth->email : $this->transaction->email)->send(new MailTransaction($this->transaction));
                 break;
             case 'deny':
-                Mail::to($this->auth->email)->send(new MailOrderTransaction($this->transaction));
+                Mail::to(isset($this->auth->email) ? $this->auth->email : $this->transaction->email)->send(new MailOrderTransaction($this->transaction));
                 break;
             case 'expire':
-                Mail::to($this->auth->email)->send(new MailOrderTransaction($this->transaction));
+                Mail::to(isset($this->auth->email) ? $this->auth->email : $this->transaction->email)->send(new MailOrderTransaction($this->transaction));
                 break;
             case 'cancel':
-                Mail::to($this->auth->email)->send(new MailOrderTransaction($this->transaction));
+                Mail::to(isset($this->auth->email) ? $this->auth->email : $this->transaction->email)->send(new MailOrderTransaction($this->transaction));
                 break;
             default:
-                Mail::to($this->auth->email)->send(new MailOrderTransaction($this->transaction));
+                Mail::to(isset($this->auth->email) ? $this->auth->email : $this->transaction->email)->send(new MailOrderTransaction($this->transaction));
         }
     }
 }

@@ -144,7 +144,10 @@ class OrderController extends Controller
                     "va_number" => $response->va_numbers[0]->va_number,
                     "notes" => $request->input('notes'),
                     "discount" => $request->input('discount') ? $request->input('discount') : null,
-                    'information_table' => $tables->category . ' ' . '-' . ' ' . $request->input('table')
+                    'information_table' => $tables->category . ' ' . '-' . ' ' . $request->input('table'),
+                    'name' => $auth->firstname,
+                    'email' => $auth->email,
+                    'telephone' => $auth->telephone
                 ];
                 $order = Order::create($createOrder);
             } else {
@@ -180,6 +183,9 @@ class OrderController extends Controller
                     "notes" => $request->input('notes'),
                     "discount" => $request->input('discount') ? $request->input('discount') : null,
                     'information_table' => $tables->category . ' ' . '-' . ' ' .  $request->input('table'),
+                    'name' => $auth->firstname,
+                    'email' => $auth->email,
+                    'telephone' => $auth->telephone
                 ]);
                 $orderService = new TransactionService($order);
                 $orderService->sendEventOrder();

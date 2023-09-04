@@ -14,7 +14,7 @@
           letter-spacing: 1.5rem;">
                 LUNAS</div>
             <h1 style="font-size: 24px; margin-bottom: 20px;">Order {{ $transaction->order_id }} summary</h1>
-            <p style="margin-bottom: 20px;">Dear <span style="font-weight: bold;">Customer</span>,
+            <p style="margin-bottom: 20px;">Dear <span style="font-weight: bold;">{{ isset($transaction->name) ? $transaction->name : $transaction->user->firstname }}</span>,
             </p>
             {{-- <p style="margin-bottom: 20px;">Dear <span
                     style="font-weight: bold;">{{ $transaction->user->firstname }}</span>,

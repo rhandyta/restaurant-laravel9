@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('labelmenu_id')->references('id')->on('labelmenu_managements')->cascadeOnUpdate();
             $table->string('label_menu');
-            $table->string('role')->nullable();
+            $table->string('role')->default('both');
             $table->string('path');
             $table->string('icon')->nullable();
             $table->tinyInteger('important');
