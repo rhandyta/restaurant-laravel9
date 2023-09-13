@@ -76,6 +76,9 @@ class CallbackService extends Midtrans
       $orderTransactionStatus = new TransactionService($transactionUpdate);
       $orderTransactionStatus->sendEventOrder();
       DB::commit();
+      return response()->json([
+        'status_code' => 200,
+    ], 200);
     } catch (\Exception $e) {
       Mail::to(env('MAIL_FROM_ADDRESS'))->send(new MailOrderTransaction($order_id, $e->getMessage()));
       DB::rollBack();

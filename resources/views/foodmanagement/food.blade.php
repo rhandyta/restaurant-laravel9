@@ -15,8 +15,8 @@
                     <th>Preview Image</th>
                     <th>Category Food</th>
                     <th>Food Name</th>
-                    <th>Food Description</th>
                     <th>Price</th>
+                    <th>Food Description</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -30,7 +30,7 @@
                         </td>
                         <td>{{ $food->foodcategory->category_name }}</td>
                         <td>{{ $food->food_name }}</td>
-                        <td>{{ number_format($food->price, 2) }}</td>
+                        <td>Rp{{ number_format($food->price, 2, ',') }}</td>
                         <td>
                             {{ $food->food_description }}
                         </td>

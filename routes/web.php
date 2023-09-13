@@ -10,6 +10,7 @@ use App\Http\Controllers\Manager\DashboardController as ManagerDashboard;
 use App\Http\Controllers\Manager\MenuManagementController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentTypeController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TableCategoryController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -94,6 +95,10 @@ Route::group(['middleware' => ['isCashier', 'isMenu'], 'prefix' => 'cashier'], f
     Route::post('orders', [OrderController::class, 'store'])->name('orders-cashier.store');
     Route::get('orders/{order:order_id}/show', [OrderController::class, 'show'])->name('orders-cashier.show');
     Route::patch('orders/{order:order_id}/update', [OrderController::class, 'update'])->name('orders-cashier.update');
+
+    // Reports
+    Route::get('financial-reports', [ReportController::class, 'index'])->name('report.index');
+    Route::post('financial-reports/daily-reports', [ReportController::class, 'dailyReport'])->name('report.daily');
 
     Route::get('logout', function () {
         Auth::logout();

@@ -23,7 +23,6 @@ class PaymentNotificationHandler extends Controller
             $midtrans->webHook();
             return response()->json([
                 'status_code' => 200,
-                'messages' => 'Payment Success'
             ], 200);
         } catch (Exception $e) {
             return response()->json([

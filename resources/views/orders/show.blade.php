@@ -63,6 +63,12 @@
                                         <td>Order Confirmed</td>
                                         <td id="transaction_confirm">{{ $order->updated_at->format('d F Y H:i') }}</td>
                                     </tr>
+                                    <tr>
+                                        <td>Email</td>
+                                        <td>
+                                            <p>{{ $order->email }}</p>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -93,7 +99,19 @@
                                     <tr>
                                         <td>Note</td>
                                         <td>
-                                            <p>{{ $order->notes }}</p>
+                                            <p>{{ $order->notes ? $order->notes : '-' }}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Name</td>
+                                        <td>
+                                            <p>{{ $order->name }}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Telephone</td>
+                                        <td>
+                                            <p>{{ $order->telephone ? $order->telephone : '-' }}</p>
                                         </td>
                                     </tr>
                                 </tbody>

@@ -45,3 +45,19 @@ const formatTime = (value) => {
     
     return `${dateString} ${timeString}`;
 }
+
+const formatDate = (value) => {
+    const d = new Date(value);
+    let day = `${d.getDate()}`;
+    let month = `${d.getMonth() + 1}`;
+    let year = d.getFullYear();
+
+    if(day.length < 2) {
+        day = '0' + day;
+    }
+    if(month.length < 2){
+        month = '0' + month;
+    }
+
+    return [year,month,day].join('-')
+}
