@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 transactionConfirm.textContent = formatTime(order.updated_at)
                 break;
             default: 
-                newElement = `<span class="badge text-bg-primarygit  transaction_status">
+                newElement = `<span class="badge text-bg-primary transaction_status">
                                     ${order.transaction_status}
                                 </span>`
                 transactionStatus.insertAdjacentHTML('beforeend', newElement)

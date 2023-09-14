@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-12 col-sm-8 col-lg-8">
+        <div class="col-12 col-md-8 mb-3">
             <h6>Daily Financial Report</h6>
             <form>
                 <div class="input-group row">
@@ -14,12 +14,19 @@
             </form>
             <canvas id="myChart"></canvas>
         </div>
-        <div class="col-12 col-sm-4 col-lg-4">
+        <div class="col-12 col-md-4 ">
             <h6>Daily Financial Report</h6>
             <div class="card h-auto">
                 <div class="card-body">
                    <div class="table-responsive">
                     <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Items</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
                         <tbody id="body-daily-report">
                             <tr>
                                 <td><span class="badge bg-success">Settlement</span></td>
@@ -60,7 +67,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-8 col-lg-8">
+        <div class="col-12 col-md-8 mb-3">
             <h6>Weekly Financial Report</h6>
             <form>
                 <div class="row">
@@ -85,7 +92,7 @@
             </form>
             <canvas id="myChart1"></canvas>
         </div>
-        <div class="col-12 col-sm-4 col-lg-4">
+        <div class="col-12 col-md-4">
             <h6>Weekly Financial Report</h6>
             <div class="card h-auto">
                 <div class="card-body">
@@ -131,7 +138,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-8 col-lg-8">
+        <div class="col-12 col-md-8 mb-3">
             <h6>Monthly Financial Report</h6>
             <form>
                 <div class="row">
@@ -156,7 +163,7 @@
             </form>
             <canvas id="myChart2"></canvas>
         </div>
-        <div class="col-12 col-sm-4 col-lg-4">
+        <div class="col-12 col-md-4">
             <h6>Monthly Financial Report</h6>
             <div class="card h-auto">
                 <div class="card-body">
