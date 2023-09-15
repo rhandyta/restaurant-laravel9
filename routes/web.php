@@ -99,6 +99,7 @@ Route::group(['middleware' => ['isCashier', 'isMenu'], 'prefix' => 'cashier'], f
     // Reports
     Route::get('financial-reports', [ReportController::class, 'index'])->name('report.index');
     Route::post('financial-reports/daily-reports', [ReportController::class, 'dailyReport'])->name('report.daily');
+    Route::post('financial-reports/weekly-reports', [ReportController::class, 'weeklyReport'])->name('report.weekly');
 
     Route::get('logout', function () {
         Auth::logout();

@@ -85,7 +85,7 @@ const __manipulateOrderTransaction = (data) => {
             } else {
                 newElement = `<tr data-id="${data.order_id}">
                 <td class="fw-bold">
-                    <a href="/cashier/orders/${data.order_id}/show">${data.order_id}</a>
+                    <a href="/manager/orders/${data.order_id}/show">${data.order_id}</a>
                 </td>
                 <td><span class="badge text-bg-primary">${data.transaction_status}</span></td>
                 <td class="text-nowrap">${data.information_table}</td>
@@ -135,6 +135,21 @@ const __manipulateOrderTransaction = (data) => {
                             <td class="text-uppercase">${!data.bank ? '-' : data.bank}</td>
                             </tr>`;
             return newElement;
+        }
+    } else if(data.transaction_status == 'cancel' && Number(data.transaction_code) == 200) {
+        let rowOrder = null;
+        const getAllTr = table.querySelectorAll('tr')
+        getAllTr.forEach(item => {
+            if(item.getAttribute('data-id') == data.order_id) {
+                rowOrder = item
+            }
+        })
+
+        rowOrder.querySelector('span.badge').classList.remove('text-bg-primary')
+        rowOrder.querySelector('span.badge').classList.add('text-bg-danger')
+        rowOrder.querySelector('span.badge').textContent = 'cancel'
+        if(rowOrder.querySelector('button[data-id="'+ data.order_id +'"]')) {
+            rowOrder.querySelector('button[data-id="'+ data.order_id +'"]').closest('td').remove();
         }
     }
 }

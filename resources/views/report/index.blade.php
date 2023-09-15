@@ -98,39 +98,39 @@
                 <div class="card-body">
                    <div class="table-responsive">
                     <table class="table">
-                        <tbody>
+                        <tbody id="body-weekly-report">
                             <tr>
                                 <td><span class="badge bg-success">Settlement</span></td>
-                                <td class="font-semibold">200</td>
-                                <td class="font-bold">Rp3.000.000</td>
+                                <td class="font-semibold weekly">0</td>
+                                <td class="font-bold weekly">Rp0</td>
                             </tr>
                             <tr>
                                 <td><span class="badge bg-primary">Pending</span></td>
-                                <td>10</td>
-                                <td>Rp50.000</td>
+                                <td class="font-semibold weekly">0</td>
+                                <td class="font-bold weekly">Rp0</td>
                             </tr>
                             <tr>
                                 <td><span class="badge bg-danger">Cancel</span></td>
-                                <td>1</td>
-                                <td>Rp10.000</td>
+                                <td class="font-semibold weekly">0</td>
+                                <td class="font-bold weekly">Rp0</td>
                             </tr>
                             <tr>
                                 <td><span class="badge bg-danger">Deny</span></td>
-                                <td>0</td>
-                                <td>Rp0</td>
+                                <td class="font-semibold weekly">0</td>
+                                <td class="font-bold weekly">Rp0</td>
                             </tr>
                             <tr>
                                 <td><span class="badge bg-info">Expire</span></td>
-                                <td>0</td>
-                                <td>Rp0</td>
+                                <td class="font-semibold weekly">0</td>
+                                <td class="font-bold weekly">Rp0</td>
                             </tr>
                             <tr>
                                 <th colspan="2">Total Items</th>
                                 <th>Total</th>
                             </tr>
                             <tr>
-                                <th colspan="2">211</th>
-                                <th>3.060.000</th>
+                                <th colspan="2" id="total_items_count_weekly">0</th>
+                                <th id="total_price_weekly">0</th>
                             </tr>
                         </tbody>
                     </table>
