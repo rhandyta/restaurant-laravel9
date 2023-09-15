@@ -431,32 +431,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   
         if(selectedDate != currentDate && selectedDate.getMonth() < currentDate.getMonth()) {
           inputEndDateWeekly.setAttribute('max', formatDate(nextWeekDate));
-          console.log('first')
         }
   
         if (currentDate.getDate() - selectedDate.getDate() < 7 && selectedDate.getMonth() == lastWeekDate.getMonth() && formatDate(selectedDate) != formatDate(currentDate)) {
           inputEndDateWeekly.setAttribute('max', formatDate(currentDate));
-          console.log('two')
         }
   
         if (formatDate(selectedDate) === formatDate(currentDate)) {
           inputEndDateWeekly.setAttribute('max', this.value);
-          console.log('tri')
         }
-        // if(selectedDate.getMonth() < nextWeekDate.getMonth()) {
-        //   inputEndDateWeekly.setAttribute('max', formatDate(nextWeekDate));
-        //   console.log('first')
-        // }
-  
-        // if (currentDate.getDate() - selectedDate.getDate() < 7 && selectedDate.getMonth() == nextWeekDate.getMonth() && formatDate(selectedDate) != formatDate(currentDate)) {
-        //   inputEndDateWeekly.setAttribute('max', formatDate(currentDate));
-        //   console.log('two')
-        // }
-  
-        // if (formatDate(selectedDate) === formatDate(currentDate)) {
-        //   inputEndDateWeekly.setAttribute('max', this.value);
-        //   console.log('tri')
-        // }
       } 
 
       if(this.getAttribute('id') == 'end-weekly') {
