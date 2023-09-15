@@ -221,7 +221,7 @@ const __manipulateDailyReport = (res, date) => {
         break;
     }
   })
-  
+
   newElement = `<tr>
                   <th colspan="2">Total Items</th>
                   <th>Total</th>

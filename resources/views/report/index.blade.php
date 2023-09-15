@@ -14,7 +14,7 @@
             </form>
             <canvas id="myChart"></canvas>
         </div>
-        <div class="col-12 col-md-4 ">
+        <div class="col-12 col-md-4">
             <h6>Daily Financial Report</h6>
             <div class="card h-auto">
                 <div class="card-body">
