@@ -8,6 +8,9 @@ const inputEndDateWeekly = document.querySelector('#end-weekly');
 const bodyWeeklyReport = document.querySelector('#body-weekly-report');
 
 const monthlyReport = document.querySelector('#myChart2');
+const inputStartDateMonthly = document.querySelector('#start-monthly')
+const inputEndDateMonthly = document.querySelector('#end-monthly');
+const bodyMonthlyReport = document.querySelector('#body-monthly-report');
 
 const table = document.querySelector('.table');
 
@@ -159,6 +162,22 @@ const __fetchDailyReport = async (date) => {
 const __fetchWeeklyReport = async (startDate, endDate) => {
   try {
     const request = await fetch(`${SEGMENT_URL}/weekly-reports`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        startDate,
+        endDate
+      })
+    });
+    const response = await request.json();
+    return response
+  } catch (err) {
+    throw new Error('something went wrong')
+  }
+}
+const __fetchMonthlyReport = async (startDate, endDate) => {
+  try {
+    const request = await fetch(`${SEGMENT_URL}/monthly-reports`, {
       method: "POST",
       headers,
       body: JSON.stringify({
@@ -376,14 +395,120 @@ const __manipulateWeeklyReport = (res, startDate, endDate) => {
   inputEndDateWeekly.value = formatDate(endDate);
 
 }
+
+const __manipulateMonthlyReport = (res, startDate, endDate) => {
+
+  __updateChart(monthlyChart, res.data)
+  
+  bodyMonthlyReport.innerHTML = "";
+
+  Object.keys(res.data).map((item) => {
+    let newElement = "";
+    switch(item) {
+      case 'settlement': 
+        newElement = `
+                        <tr>
+                          <td><span class="badge bg-success">Settlement</span></td>
+                          <td class="font-semibold monthly" data-id="settlement">0</td>
+                          <td class="font-bold monthly">Rp0</td>
+                        </tr>
+                      `
+        bodyMonthlyReport.insertAdjacentHTML('beforeend', newElement);
+        break;
+      case 'pending': 
+        newElement = `
+                        <tr>
+                          <td><span class="badge bg-primary">Pending</span></td>
+                          <td class="font-semibold monthly" data-id="pending">0</td>
+                          <td class="font-bold monthly">Rp0</td>
+                        </tr>
+                      `
+        bodyMonthlyReport.insertAdjacentHTML('beforeend', newElement);
+        break;
+      case 'cancel': 
+        newElement = `
+                        <tr>
+                          <td><span class="badge bg-danger">Cancel</span></td>
+                          <td class="font-semibold monthly" data-id="cancel">0</td>
+                          <td class="font-bold monthly">Rp0</td>
+                        </tr>
+                      `
+        bodyMonthlyReport.insertAdjacentHTML('beforeend', newElement);
+        break;
+      case 'deny': 
+        newElement = `
+                        <tr>
+                          <td><span class="badge bg-danger">Deny</span></td>
+                          <td class="font-semibold monthly" data-id="deny">0</td>
+                          <td class="font-bold monthly">Rp0</td>
+                        </tr>
+                      `
+        bodyMonthlyReport.insertAdjacentHTML('beforeend', newElement);
+        break;
+      case 'expire': 
+        newElement = `
+                        <tr>
+                          <td><span class="badge bg-info">Expire</span></td>
+                          <td class="font-semibold monthly" data-id="expire">0</td>
+                          <td class="font-bold monthly">Rp0</td>
+                        </tr>
+                      `
+        bodyMonthlyReport.insertAdjacentHTML('beforeend', newElement);
+        break;
+      default: 
+        newElement = `
+                        <tr>
+                          <td><span class="badge bg-primary">Hub</span></td>
+                          <td class="font-semibold monthly" data-id="hub">0</td>
+                          <td class="font-bold monthly">Rp0</td>
+                        </tr>
+                      `
+        bodyMonthlyReport.insertAdjacentHTML('beforeend', newElement);
+        break;
+    }
+  })
+
+  newElement = `<tr>
+                  <th colspan="2">Total Items</th>
+                  <th>Total</th>
+                </tr>
+                <tr>
+                  <th colspan="2" id="total_items_count_monthly">0</th>
+                  <th id="total_price_monthly">0</th>
+                </tr>
+                `
+  bodyMonthlyReport.insertAdjacentHTML('beforeend', newElement);
+
+  const count = document.querySelectorAll('.font-semibold.monthly')
+  const sum = document.querySelectorAll('.font-bold.monthly')
+  const totalItems = document.querySelector('#total_items_count_monthly')
+  const totalPrice = document.querySelector('#total_price_monthly')
+  Object.values(res.data).map((item, index) => {
+    if(count.item(index).getAttribute('data-id') == Object.keys(res.data)[index]){
+      count.item(index).textContent = item.total_count
+    }
+  })
+
+  count.forEach((item, index) => item.textContent = Object.values(res.data)[index].total_count)
+  sum.forEach((item, index) => item.textContent = `Rp${convertRupiah(Object.values(res.data)[index].total_sum)}`)
+  totalItems.textContent = res.total_items
+  totalPrice.textContent = `Rp${convertRupiah(res.total_sum)}`
+  
+  inputStartDateMonthly.value = formatDate(startDate);
+  inputEndDateMonthly.value = formatDate(endDate);
+
+}
  
 document.addEventListener('DOMContentLoaded', async () => {
 
   const currentDate = new Date();
   const formattedDate = formatDate(currentDate);
   const lastWeekDate = new Date(currentDate);
+  const lastMonthDate = new Date(currentDate);
   lastWeekDate.setDate(currentDate.getDate() - 7);
+  lastMonthDate.setDate(currentDate.getDate() - 30);
   const lastWeekFormattedDate = formatDate(lastWeekDate);
+  const lastMonthFormattedDate = formatDate(lastMonthDate);
 
   __fetchDailyReport(formatDate(formattedDate)).then((res) => {
 
@@ -401,6 +526,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     inputEndDateWeekly.setAttribute('min', lastWeekFormattedDate)
     inputEndDateWeekly.setAttribute('max', formattedDate)
     __manipulateWeeklyReport(res, lastWeekFormattedDate, formatDate(formattedDate))
+
+  }).catch(err => {
+    console.error('error', err)
+    errorToast(err)
+  })
+
+  __fetchMonthlyReport(lastMonthFormattedDate, formatDate(formattedDate)).then((res) => {
+    
+    inputStartDateMonthly.setAttribute('max', formattedDate)
+    inputEndDateMonthly.setAttribute('min', lastMonthFormattedDate)
+    inputEndDateMonthly.setAttribute('max', formattedDate)
+    __manipulateMonthlyReport(res, lastMonthFormattedDate, formatDate(formattedDate))
 
   }).catch(err => {
     console.error('error', err)
@@ -453,16 +590,56 @@ document.addEventListener('DOMContentLoaded', async () => {
       errorToast(err)
     }
   }
+
+  async function monthlyReportHandler(e) {
+    try {
+      const selectedDate = new Date(this.value);
+      const nextMonthDate = new Date(selectedDate);
+      nextMonthDate.setDate(selectedDate.getDate() + 30);
+      
+      if(this.getAttribute('id') == 'start-monthly'){
+        inputEndDateMonthly.setAttribute('min', formatDate(this.value));
+        inputEndDateMonthly.setAttribute('max', formatDate(nextMonthDate));
+  
+        if(selectedDate != currentDate && selectedDate.getMonth() < currentDate.getMonth()) {
+          inputEndDateMonthly.setAttribute('max', formatDate(nextMonthDate));
+        }
+  
+        if (currentDate.getDate() - selectedDate.getDate() < 30 && selectedDate.getMonth() == lastWeekDate.getMonth() && formatDate(selectedDate) != formatDate(currentDate)) {
+          inputEndDateMonthly.setAttribute('max', formatDate(currentDate));
+        }
+  
+        if (formatDate(selectedDate) === formatDate(currentDate)) {
+          inputEndDateMonthly.setAttribute('max', this.value);
+        }
+      } 
+
+      if(this.getAttribute('id') == 'end-monthly') {
+        const monthly = await __fetchMonthlyReport(inputStartDateMonthly.value, inputEndDateMonthly.value);
+        if(monthly.status_code !== 200) {
+          throw new Error('something went wrong');
+        }
+        __manipulateMonthlyReport(monthly, inputStartDateMonthly.value, inputEndDateMonthly.value)
+      }
+    } catch(err) {
+      errorToast(err)
+    }
+  }
   
   inputDaily.addEventListener('change', dailyReportHandler)
   
   inputStartDateWeekly.addEventListener('change', weeklyReportHandler);
   inputEndDateWeekly.addEventListener('change', weeklyReportHandler);
+
+  inputStartDateMonthly.addEventListener('change', monthlyReportHandler);
+  inputEndDateMonthly.addEventListener('change', monthlyReportHandler);
   
   return () => {
     inputDaily.removeEventListener('change', dailyReportHandler)
     inputStartDateWeekly.removeEventListener('change', weeklyReportHandler);
     inputEndDateWeekly.removeEventListener('change', weeklyReportHandler);
+    inputStartDateMonthly.removeEventListener('change', monthlyReportHandler);
+    inputEndDateMonthly.removeEventListener('change', monthlyReportHandler);
   }
 
 })

@@ -65,6 +65,11 @@ Route::group(['middleware' => ['isManager', 'isMenu'], 'prefix' => 'manager'], f
     Route::get('orders', [OrderController::class, 'index'])->name('orders-manager.index');
     Route::get('orders/{order:order_id}/show', [OrderController::class, 'show'])->name('orders-cashier.show');
 
+    // Reports
+    Route::get('financial-reports', [ReportController::class, 'index'])->name('report.index');
+    Route::post('financial-reports/daily-reports', [ReportController::class, 'dailyReport'])->name('report.daily');
+    Route::post('financial-reports/weekly-reports', [ReportController::class, 'weeklyReport'])->name('report.weekly');
+
     Route::get('logout', function () {
         Auth::logout();
         return redirect()->route('login.index');
@@ -100,6 +105,7 @@ Route::group(['middleware' => ['isCashier', 'isMenu'], 'prefix' => 'cashier'], f
     Route::get('financial-reports', [ReportController::class, 'index'])->name('report.index');
     Route::post('financial-reports/daily-reports', [ReportController::class, 'dailyReport'])->name('report.daily');
     Route::post('financial-reports/weekly-reports', [ReportController::class, 'weeklyReport'])->name('report.weekly');
+    Route::post('financial-reports/monthly-reports', [ReportController::class, 'monthlyReport'])->name('report.monthly');
 
     Route::get('logout', function () {
         Auth::logout();
