@@ -10,6 +10,7 @@ use App\Http\Controllers\Manager\DashboardController as ManagerDashboard;
 use App\Http\Controllers\Manager\MenuManagementController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentTypeController;
+use App\Http\Controllers\ReceiptController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TableCategoryController;
 use Illuminate\Support\Facades\Auth;
@@ -67,8 +68,9 @@ Route::group(['middleware' => ['isManager', 'isMenu'], 'prefix' => 'manager'], f
 
     // Reports
     Route::get('financial-reports', [ReportController::class, 'index'])->name('report.index');
-    Route::post('financial-reports/daily-reports', [ReportController::class, 'dailyReport'])->name('report.daily');
-    Route::post('financial-reports/weekly-reports', [ReportController::class, 'weeklyReport'])->name('report.weekly');
+    Route::post('financial-reports/daily-reports', [ReportController::class, 'dailyReport'])->name('report-manager.daily');
+    Route::post('financial-reports/weekly-reports', [ReportController::class, 'weeklyReport'])->name('report-manager.weekly');
+    Route::post('financial-reports/monthly-reports', [ReportController::class, 'monthlyReport'])->name('report-manager.monthly');
 
     Route::get('logout', function () {
         Auth::logout();
@@ -106,6 +108,9 @@ Route::group(['middleware' => ['isCashier', 'isMenu'], 'prefix' => 'cashier'], f
     Route::post('financial-reports/daily-reports', [ReportController::class, 'dailyReport'])->name('report.daily');
     Route::post('financial-reports/weekly-reports', [ReportController::class, 'weeklyReport'])->name('report.weekly');
     Route::post('financial-reports/monthly-reports', [ReportController::class, 'monthlyReport'])->name('report.monthly');
+
+    // Receipt
+    Route::get('receipt', [ReceiptController::class, 'receipt']);
 
     Route::get('logout', function () {
         Auth::logout();
