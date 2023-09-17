@@ -41,27 +41,32 @@ class ReceiptController extends Controller
             {
             "id": 1,
             "product": "Tanggo",
-            "price": 25000
+            "price": 10000,
+            "quantity": 2
             }, 
             {
             "id": 2,
             "product": "Sprit",
-            "price": 25000
+            "price": 10000,
+            "quantity": 5
             }, 
             {
             "id": 3,
             "product": "Banana",
-            "price": 25000
+            "price": 25000,
+            "quantity": 1
             }, 
             {
             "id": 4,
             "product": "Nasi 1kg",
-            "price": 25000
+            "price": 25000,
+            "quantity": 2
             }, 
             {
             "id": 5,
             "product": "Fortune 2L",
-            "price": 25000
+            "price": 25000,
+            "quantity": 2
             }
           ]';
           $decodeJson = json_decode($data, true);
@@ -75,14 +80,34 @@ class ReceiptController extends Controller
             // Set posisi X
             $this->pdf->SetX($middleX);
             $this->pdf->Cell(25, 4.5, strtoupper($decodeJson[$i]['product']), 0, 0, 'C');
-            $this->pdf->Cell(25, 4.5, '1', 0, 0, 'C');
+            $this->pdf->Cell(25, 4.5, $decodeJson[$i]['quantity'], 0, 0, 'C');
             $this->pdf->Cell(25, 4.5, $decodeJson[$i]['price'], 0, 0, 'C');
-            $this->pdf->Cell(25, 4.5, number_format($decodeJson[$i]['price'], 0, '.'), 0, 0, 'C');
+            $this->pdf->Cell(25, 4.5, number_format($decodeJson[$i]['quantity'] * $decodeJson[$i]['price'], 0, '.'), 0, 0, 'C');
             $this->pdf->Cell(25, 4.5, "", 0, 1, 'C');
-            $total += $decodeJson[$i]['price'];
+            $total += $decodeJson[$i]['quantity'] * $decodeJson[$i]['price'];
             $i++;
         }
-        $this->pdf->Cell(0, 4.5, str_repeat('-', 25), 0, 0, 'C');
+        $this->pdf->Cell(222, 4.5, str_repeat('-', 50), 0, 1, 'C');
+        $this->pdf->Cell(184, 4.5, strtoupper('Harga jual :'), 0, 0, 'C');
+        $this->pdf->Cell(-104, 4.5, number_format($total, 0, '.'), 0, 1, "C");
+        $this->pdf->Cell(222, 4.5, str_repeat('-', 50), 0, 1, 'C');
+        $this->pdf->Cell(184, 4.5, strtoupper('subtotal :'), 0, 0, 'C');
+        $this->pdf->Cell(-104, 4.5, number_format($total, 0, '.'), 0, 1, "C");
+        $this->pdf->Cell(184, 4.5, strtoupper('PPN :'), 0, 0, 'C');
+        $this->pdf->Cell(-104, 4.5, number_format($total * 11 / 100, 0, '.'), 0, 1, "C");
+        $this->pdf->Cell(184, 4.5, strtoupper('total :'), 0, 0, 'C');
+        $this->pdf->Cell(-104, 4.5, number_format($total + ($total * 11 / 100), 0, '.'), 0, 1, "C");
+        $this->pdf->Cell(184, 4.5, strtoupper('tunai :'), 0, 0, 'C');
+        $this->pdf->Cell(-104, 4.5, 0, 0, 1, "C");
+        $this->pdf->Cell(184, 4.5, strtoupper('Kembali :'), 0, 0, 'C');
+        $this->pdf->Cell(-104, 4.5, 0, 0, 1, "C");
+    }
+
+    public function footer()
+    {
+        $lengthtext = $this->pdf->GetStringWidth('RK BILLABONG PERMAI NO.19-21, Kel. Cimanggis') - 15;
+        $this->pdf->Cell(0, 4.5, str_repeat('-', $lengthtext), 0, 1, 'C');
+        $this->pdf->Cell(0, 4.5, 'Terima kasih atas kunjungan Anda!', 0, 0, 'C');
     }
 
 
@@ -92,6 +117,7 @@ class ReceiptController extends Controller
         $this->pdf->SetFont('Helvetica', '', 11);
         $this->header(env('APP_NAME'));
         $this->body();
+        $this->footer();
         $this->pdf->Output();
         exit;
     }
