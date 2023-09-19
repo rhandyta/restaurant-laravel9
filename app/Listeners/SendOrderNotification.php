@@ -27,8 +27,6 @@ class SendOrderNotification
      */
     public function handle(OrderEvent $event)
     {
-        Log::debug('isi dari event', [
-            'event' => $event
-        ]);
+        // 
     }
 }
