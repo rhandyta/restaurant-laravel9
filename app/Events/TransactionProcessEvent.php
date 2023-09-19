@@ -10,7 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class TransactionProcessEvent
+class TransactionProcessEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -20,7 +20,8 @@ class TransactionProcessEvent
      * @return void
      */
 
-    protected $transaction;
+    public $transaction;
+    public $tries = 3;
 
     public function __construct($transaction)
     {
@@ -34,7 +35,7 @@ class TransactionProcessEvent
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('transaction.'.$this->transaction->transaction_id);
+        return new PrivateChannel('transaction.' . $this->transaction->user_id);
     }
 
     public function broadcastAs()

@@ -3,6 +3,7 @@
 namespace App\Services\WebSocket;
 
 use App\Events\OrderEvent;
+use App\Events\TransactionProcessEvent;
 use App\Models\User;
 
 class TransactionService {
@@ -22,6 +23,12 @@ class TransactionService {
         foreach($userRoles as $user) {
             broadcast(new OrderEvent($this->transaction, $user));
         }
+    }
+
+    public function sendConfirmOrderToUser()
+    {
+        $user = User::find($this->transaction->user_id);
+        broadcast(new TransactionProcessEvent($this->transaction, $user));
     }
 
 }

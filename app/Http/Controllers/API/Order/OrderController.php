@@ -115,10 +115,10 @@ class OrderController extends Controller
                 $createOrder->discount = $request->input('discount') ? $request->input('discount') : null;
                 $createOrder->information_table = $tables->category . ' ' . '-' . ' ' .  $request->input('table');
                 $createOrder->user = $auth;
+                $createOrder->name = $auth->firstname;
                 $createOrder->detailOrders = DetailOrder::where('order_id', '=', $orderId)->with(['foodlist' => function ($q) {
                     $q->with('foodimages');
                 }])->get();
-                MailOrderJob::dispatch($createOrder, $auth, $createOrder->transaction_status)->afterCommit()->delay(now()->addSeconds(10));
                 $order = Order::create([
                     'order_id' => $orderId,
                     'user_id' => $auth->id,
@@ -136,6 +136,7 @@ class OrderController extends Controller
                     'email' => $auth->email,
                     'telephone' => $auth->telephone
                 ]);
+                MailOrderJob::dispatch($createOrder, $auth, $createOrder->transaction_status)->afterCommit()->delay(now()->addSeconds(10));
                 $orderService = new TransactionService($order);
                 $orderService->sendEventOrder();
             }

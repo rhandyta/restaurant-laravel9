@@ -8,8 +8,13 @@ use App\Http\Controllers\API\Order\OrderController;
 use App\Http\Controllers\API\Order\PaymentNotificationHandler;
 use App\Http\Controllers\API\Transaction\TransactionController;
 use App\Http\Controllers\API\Utils\UtilsController;
+use App\Models\Order;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Log;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,3 +70,23 @@ Route::group(['middleware' => 'auth:sanctum', 'prefix' => 'transaction'], functi
 // LandingPage
 Route::get('top-selling', [ProductController::class, 'topSelling']);
 Route::get('regular-menu', [ProductController::class, 'regularMenu']);
+
+
+Route::post('pusher/auth', function (Request $request) {
+    $user = App\Models\User::find($request->input('userId'))->toArray();
+    $socketId = $request->input('socket_id');
+    // $socketId = $request->input('socketId');
+    // $transactionId = $request->input('transactionId');
+
+    $pusher = new \Pusher\Pusher(config('broadcasting.connections.pusher.app_id'), config('broadcasting.connections.pusher.secret'), config('broadcasting.connections.pusher.app_id'));
+
+    return $pusher->authenticateUser($socketId, $user);
+
+    // return $pusher->socket_auth('transaction.' . $transactionId, $socketId);
+});
+
+Route::get('broadcasting/auth', function () {
+    Broadcast::channel('orders.{orderId}', function (User $user, int $orderId) {
+        return $user->id === Order::findOrNew($orderId)->user_id;
+    });
+});

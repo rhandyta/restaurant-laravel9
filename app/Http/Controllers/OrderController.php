@@ -222,9 +222,10 @@ class OrderController extends Controller
                 $order->update([
                     'transaction_status' => $request->input('transaction_status'),
                     'transaction_code' => 200
-                ]);
+                ]);            
                 $orderService = new TransactionService($order);
                 $orderService->sendEventOrder();
+                $orderService->sendConfirmOrderToUser();
                 return response()->json([
                     'status_code' => Response::HTTP_OK,
                     'messages' => 'transaction has been updated'

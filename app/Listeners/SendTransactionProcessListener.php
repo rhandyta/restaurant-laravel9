@@ -5,6 +5,7 @@ namespace App\Listeners;
 use App\Events\TransactionProcessEvent;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Log;
 
 class SendTransactionProcessListener
 {
@@ -26,6 +27,8 @@ class SendTransactionProcessListener
      */
     public function handle(TransactionProcessEvent $event)
     {
-        //
+        Log::debug('isi dari event confirm', [
+            'event' => $event
+        ]);
     }
 }

@@ -1,0 +1,16 @@
+POST https://kape.test/broadcasting/auth
+X-CSRF-TOKEN: eyJpdiI6IkZqL1pvbnNMRGV0VjBvUGFwdXJXVUE9PSIsInZhbHVlIjoiZmxlaGhGeHY2V3RVa0xmQmpuQUZUT2RMNzlabUxMSEYvWWM3RkZBeTR3ZC93a2gxNGxOT1I2LzVBSjc5a2F6M3BTdVRWVkNFaFMyUnN4OGxXSnJTbDZ3YWRLSWwxb3FSRFI1WUtycW5tUm9xUDVjTFkzOVJrMWRvYXB4S093aWciLCJtYWMiOiJkNWVhNWJhN2FhNzhjZDk4MzFhZjdhODNmYjZhODZmZmM2MThjYmQ0MWU3OTliMmViYzhkNGRlYTJhZTJiZTlmIiwidGFnIjoiIn0%3D
+
+###
+GET https://kape.test/sanctum/csrf-cookie
+Authorization: Bearer 13|fHQ6uT7GK4wQB1hCeJTQyEx1O4J6kov2Hpj2yw9S
+
+
+###
+POST https://kape.test/api/pusher/auth 
+Content-Type: "application/json"
+
+{
+    "transactionId": "eeffa23a-0341-4017-a60c-afd0059a30b5",
+    "socketId": "24540.16702"
+}
