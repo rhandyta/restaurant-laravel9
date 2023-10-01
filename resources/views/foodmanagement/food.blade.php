@@ -111,12 +111,10 @@
 
                         <div class="modal-footer">
                             <button type="button" class="btn" data-bs-dismiss="modal">
-                                <i class="bx bx-x d-block d-sm-none"></i>
-                                <span class="d-none d-sm-block">Close</span>
+                                <span class="d-sm-block">Close</span>
                             </button>
                             <button type="submit" class="btn btn-primary ml-1" data-bs-dismiss="modal">
-                                <i class="bx bx-check d-block d-sm-none"></i>
-                                <span class="d-none d-sm-block">Add Food</span>
+                                <span class="d-sm-block">Add Food</span>
                             </button>
                         </div>
                     </form>
@@ -190,12 +188,10 @@
 
                         <div class="modal-footer">
                             <button type="button" class="btn" data-bs-dismiss="modal">
-                                <i class="bx bx-x d-block d-sm-none"></i>
-                                <span class="d-none d-sm-block">Close</span>
+                                <span class="d-sm-block">Close</span>
                             </button>
                             <button type="submit" class="btn btn-primary ml-1" data-bs-dismiss="modal">
-                                <i class="bx bx-check d-block d-sm-none"></i>
-                                <span class="d-none d-sm-block">Edit Food</span>
+                                <span class="d-sm-block">Edit Food</span>
                             </button>
                         </div>
                     </form>
