@@ -571,7 +571,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
   
         if (currentDate.getDate() - selectedDate.getDate() < 7 && selectedDate.getMonth() == lastWeekDate.getMonth() && formatDate(selectedDate) != formatDate(currentDate)) {
-          inputEndDateWeekly.setAttribute('max', formatDate(currentDate));
+          inputEndDateWeekly.setAttribute('max', formatDate(nextWeekDate));
         }
   
         if (formatDate(selectedDate) === formatDate(currentDate)) {
