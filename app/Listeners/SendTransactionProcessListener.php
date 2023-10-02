@@ -3,6 +3,9 @@
 namespace App\Listeners;
 
 use App\Events\TransactionProcessEvent;
+use App\Jobs\MailOrderJob;
+use App\Mail\MailTransaction;
+use App\Models\Order;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Log;
@@ -28,13 +31,16 @@ class SendTransactionProcessListener
      */
     public function handle(TransactionProcessEvent $event)
     {
-        // $pusher = new \Pusher\Pusher(config('broadcasting.connections.pusher.app_id'), config('broadcasting.connections.pusher.secret'), config('broadcasting.connections.pusher.app_id'));
 
-        // $pusher->trigger('transaction.' . 7, 'subscription_succeeded', [
-        //     'event' => $event,
-        //   ]);
-        Log::debug('isi dari event confirm', [
-            'event' => $event
-        ]);
+        $transaction = Order::query()
+        ->with(['detailorders' => function ($q) {
+          $q->with(['foodlist' => function ($q) {
+            $q->with('foodimages');
+          }]);
+        }])
+        ->where('id', '=', $event->transaction['id'])->first();
+        Log::info('datanya adalah' . $event->transaction['id']);
+        Log::info('transaction adalah' . $transaction);
+        MailOrderJob::dispatch($transaction, $transaction->email, $transaction->transaction_status)->delay(now()->addSeconds(10));
     }
 }
