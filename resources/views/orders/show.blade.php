@@ -8,9 +8,9 @@
                     <a href="{{ url()->previous() }}"><button class="btn btn-info btn-sm icon">
                             <i class="bi bi-arrow-return-left"></i>
                         </button></a>
-                    <button class="btn btn-success btn-sm icon">
+                    <a class="btn btn-success btn-sm icon" href="{{ route('receipt') }}" target="_blank">
                         <i class="bi bi-printer"></i>
-                    </button>
+                    </a>
                 </div>
                 <div class="row">
                     <div class="col-12 col-md-6">

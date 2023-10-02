@@ -66,6 +66,9 @@ Route::group(['middleware' => ['isManager', 'isMenu'], 'prefix' => 'manager'], f
     Route::get('orders', [OrderController::class, 'index'])->name('orders-manager.index');
     Route::get('orders/{order:order_id}/show', [OrderController::class, 'show'])->name('orders-cashier.show');
 
+    // Receipt
+    Route::get('receipt', [ReceiptController::class, 'receipt']);
+
     // Reports
     Route::get('financial-reports', [ReportController::class, 'index'])->name('report.index');
     Route::post('financial-reports/daily-reports', [ReportController::class, 'dailyReport'])->name('report-manager.daily');
@@ -110,7 +113,7 @@ Route::group(['middleware' => ['isCashier', 'isMenu'], 'prefix' => 'cashier'], f
     Route::post('financial-reports/monthly-reports', [ReportController::class, 'monthlyReport'])->name('report.monthly');
 
     // Receipt
-    Route::get('receipt', [ReceiptController::class, 'receipt']);
+    Route::get('receipt', [ReceiptController::class, 'receipt'])->name('receipt');
 
     Route::get('logout', function () {
         Auth::logout();
