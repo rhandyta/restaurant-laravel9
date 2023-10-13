@@ -75,6 +75,7 @@ class CallbackService extends Midtrans
       }
       $orderTransactionStatus = new TransactionService($transactionUpdate);
       $orderTransactionStatus->sendEventOrder();
+      $orderTransactionStatus->sendConfirmOrderToUser();
       DB::commit();
       return response()->json([
         'status_code' => 200,
