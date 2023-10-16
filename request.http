@@ -9,8 +9,3 @@ Authorization: Bearer 13|fHQ6uT7GK4wQB1hCeJTQyEx1O4J6kov2Hpj2yw9S
 ###
 POST https://kape.test/api/pusher/auth 
 Content-Type: "application/json"
-
-{
-    "transactionId": "eeffa23a-0341-4017-a60c-afd0059a30b5",
-    "socketId": "24540.16702"
-}
