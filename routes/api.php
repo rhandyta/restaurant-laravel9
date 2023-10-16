@@ -10,7 +10,7 @@ use App\Http\Controllers\API\Transaction\TransactionController;
 use App\Http\Controllers\API\Utils\UtilsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Support\Facades\Auth;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -31,6 +31,18 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('register', RegisterController::class);
     Route::post('login', LoginController::class);
 });
+
+Route::get('logout', function () {
+	$user = request()->user(); //or Auth::user()
+
+// Revoke current user token
+$user->tokens()->where('id', $user->currentAccessToken()->id)->delete();
+	return response()->json([
+	'status' => true,
+	'status_code' => 200,
+	'message' => "logout success"
+	], 200);
+})->middleware(['auth:sanctum']);
 
 // Cart
 Route::group(['prefix' => 'cart', 'middleware' => 'auth:sanctum'], function () {
