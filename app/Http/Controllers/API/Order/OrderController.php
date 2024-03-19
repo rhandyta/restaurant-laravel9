@@ -100,6 +100,9 @@ class OrderController extends Controller
                     'telephone' => $auth->telephone
                 ];
                 $order = Order::create($createOrder);
+                MailOrderJob::dispatch($createOrder, $auth, $createOrder["transaction_status"])->afterCommit()->delay(now()->addSeconds(10));
+                $orderService = new TransactionService($order);
+                $orderService->sendEventOrder();
             } else {
                 $createOrder = new stdClass;
                 $createOrder->order_id = $orderId;
@@ -155,8 +158,8 @@ class OrderController extends Controller
         } catch (Exception $e) {
             return response()->json([
                 'messages' => $e->getMessage(),
-                'status_code' => Response::HTTP_BAD_REQUEST
-            ], Response::HTTP_BAD_REQUEST);
+                'status_code' => Response::HTTP_INTERNAL_SERVER_ERROR
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }
