@@ -29,21 +29,24 @@ class FoodListController extends Controller
         try {
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $image) {
-                    $path = cloudinary()->uploadApi()->upload($image->getRealPath(), [
+                    $path = cloudinary()->uploadApi()->upload($image->getPathName(), [
                         'folder' => 'restaurant/food',
                     ]);
+                    
                     $uploadedImages[] = [
                         'image_url' => $path['secure_url'],
                         'public_id' => $path['public_id']
                     ];
                 }
             }
+        
             $food = FoodList::create([
                 'food_category_id' => (int)$request->input('food_category_id'),
                 'food_name' => $request->input('food_name'),
                 'food_description' => $request->input('food_description'),
                 'price' => (int)$request->input('price'),
             ]);
+  
             $food->foodimages()->createMany($uploadedImages);
 
             return response()->json([
@@ -51,6 +54,7 @@ class FoodListController extends Controller
                 'message' => "Data has been created"
             ], 201);
         } catch (Exception $e) {
+            dd($e);
             return response()->json([
                 'status_code' => $e->getCode(),
                 'messages' => $e->getMessage()

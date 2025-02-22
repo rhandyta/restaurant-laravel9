@@ -31,6 +31,11 @@ class LabelMenuManagementSeeder extends Seeder
                     'label_title' => "Logout",
                     'role' => 'both',
                     'important' => 100
+                ],
+                [
+                    "label_title" => "Reports",
+                    "role" => "both",
+                    "important" => 2
                 ]
             ]
         );

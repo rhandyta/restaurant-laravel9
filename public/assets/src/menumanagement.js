@@ -39,7 +39,7 @@ async function manipulateSubMenu(results) {
             aElement1.classList.add("sidebar-link");
             aElement1.setAttribute("href", `${auth}${menu.path}`);
             iElement1.classList.add("bi");
-            iElement1.classList.add(`${menu.icon}`);
+            iElement1.classList.add(`${menu.icon.split(" ")}`);
             spanElement1.textContent = menu.label_menu;
 
             liElement2.appendChild(aElement1);

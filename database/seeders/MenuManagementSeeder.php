@@ -77,6 +77,14 @@ class MenuManagementSeeder extends Seeder
                 'icon' => "fa-solid fa-list-check",
                 'important' => 5
             ],
+            [
+                'labelmenu_id' => 5,
+                'label_menu' => "Reports",
+                'role' => "both",
+                'path' => "/financial-reports",
+                'icon' => "fa-solid fa-list-check",
+                'important' => 1
+            ],
         ]);
     }
 }
